@@ -37,4 +37,7 @@ def create_app(test_config=None):
     from . import tournaments
     app.register_blueprint(tournaments.bp)
 
+    from . import jumpers
+    app.register_blueprint(jumpers.bp)
+
     return app

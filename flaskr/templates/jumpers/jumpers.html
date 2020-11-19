@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block header %}
+    <h1>{% block title %}Skoczkowie:{% endblock %}</h1>
+    <a class="action" href="{{ url_for('jumpers.create') }}">Nowy skoczek</a>
+{% endblock %}
+
+{% block content %}
+    {% for post in jumpers %}
+        <article class="post">
+            <div>
+                {{ post['name'] }} <a class="action" href="{{ url_for('jumpers.update', id=post['id'])  }}">Edytuj</a>
+            </div>
+        </article>
+        {% if not loop.last %}
+        <hr>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

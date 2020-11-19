@@ -1,19 +1,13 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>{% block title%}Nowe zawody{% endblock %}</h1>
+    <h1>{% block title%}Nowy skoczek{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
     <form method="post">
-        <label for="place">Gdzie:</label>
-        <input name="place" id="place" value="{{ request.form['place'] }}" required>
-        <label for="typ">Indywidualne / Drużynowe</label>
-        <input name="typ" id="typ" value="{{ request.form['typ'] }}" required>
-        <label for="status">KONIEC / NASTĘPNE / PRZYSZLE</label>
-        <input name="status" id="status" value="{{ request.form['status'] }}" required>
-        <label for="date_time">Data</label>
-        <input name="date_time" id="date_time" value="{{ request.form['date_time'] }}" required>
+        <label for="name">Nazwisko:</label>
+        <input name="name" id="name" value="{{ request.form['name'] }}" required>
         <input type="submit" value="Save">
     </form>
 {% endblock %}
