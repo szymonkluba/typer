@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Edytuj "{{ tournament['place'] }} {{ tournament['type'] }} - {{ tournament['date_time'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <label for="place">Gdzie:</label>
+        <input name="place" id="place"
+               value="{{ request.form['place'] or tournament['place'] }}" required>
+        <label for="type">Indywidualne / Drużynowe:</label>
+        <input name="type" id="type"
+               value="{{ request.form['type'] or tournament['type'] }}" required>
+        <label for="status">Koniec / Następne / Przyszłe:</label>
+        <input name="status" id="status"
+               value="{{ request.form['status'] or tournament['status'] }}" required>
+        <label for="date_time">Data:</label>
+        <input name="date_time" id="date_time"
+               value="{{ request.form['date_time'] or tournament['date_time'] }}" required>
+        <label for="first_place">Pierwsze miejsce:</label>
+        <input name="first_place" id="first_place"
+               value="{{ request.form['first_place'] or tournament['first_place'] }}" required>
+        <label for="second_place">Drugie miejsce:</label>
+        <input name="second_place" id="second_place"
+               value="{{ request.form['second_place'] or tournament['second_place'] }}" required>
+        <label for="third_place">Trzecie miejsce:</label>
+        <input name="third_place" id="third_place"
+               value="{{ request.form['third_place'] or tournament['third_place'] }}" required>
+        <input type="submit" value="Save">
+    </form>
+    <hr>
+    <form action="{{ url_for('tournaments.delete', id=tournament['id']) }}" method="post">
+        <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure');">
+    </form>
+{% endblock %}

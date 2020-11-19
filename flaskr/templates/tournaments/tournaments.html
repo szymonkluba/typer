@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block header %}
+    <h1>{% block title %}Zawody:{% endblock %}</h1>
+    <a class="action" href="{{ url_for('tournaments.create') }}">Nowe zawody</a>
+{% endblock %}
+
+{% block content %}
+    {% for post in tournaments %}
+        <article class="post">
+            <header>
+                <div>
+                    <h1>{{ post['place'] }} - {{ post['type'] }} - {{ post['date_time'].strftime('%d.%m.%Y') }}</h1>
+                </div>
+                <a class="action" href="{{ url_for('tournaments.update', id=post['id'])  }}">Edytuj</a>
+            </header>
+            <p class="body">
+                <ol>
+                    <li>Pierwsze miejsce {{ post['first_place'] }}</li>
+                    <li>Drugie miejsce {{ post['second_place'] }}</li>
+                    <li>Trzecie miejsce {{ post['third_place'] }}</li>
+                </ol>
+            </p>
+        </article>
+        {% if not loop.last %}
+        <hr>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

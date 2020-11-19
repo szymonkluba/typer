@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block header %}
+    <h1>{% block title %}Ostatnie typy:{% endblock %}</h1>
+    {% if g.user %}
+        <a class="action" href="{{ url_for('typer.create') }}">Typuj</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% for post in posts %}
+        <article class="post">
+            <header>
+                <div>
+                    <h1>{{ post['tournament'] }} {{ post['type'] }} {{ post['tournament'] }} - {{ post['date_time'].strftime('%d.%m.%Y') }}</h1>
+                    <div class="about">przez {{ post['username'] }} z {{ post['created'].strftime('%d.%m.%Y') }}</div>
+                </div>
+                {% if g.user['id'] == post['user_id'] %}
+                    <a class="action" href="{{ url_for('typer.update', id=post['id'])  }}">Edit</a>
+                {% endif %}
+            </header>
+            <p class="body">
+                <ol>
+                    <li>Pierwsze miejsce {{ post['first_place'] }}</li>
+                    <li>Drugie miejsce {{ post['second_place'] }}</li>
+                    <li>Trzecie miejsce {{ post['third_place'] }}</li>
+                </ol>
+            </p>
+        </article>
+        {% if not loop.last %}
+        <hr>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

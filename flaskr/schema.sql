@@ -1,0 +1,48 @@
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS bets;
+DROP TABLE IF EXISTS tournaments;
+DROP TABLE IF EXISTS jumpers;
+DROP TABLE IF EXISTS countries;
+
+CREATE TABLE user(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    times_bet INTEGER NOT NULL DEFAULT 0,
+    times_exact INTEGER NOT NULL DEFAULT 0,
+    points INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE bets(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    first_place TEXT NOT NULL,
+    second_place TEXT NOT NULL,
+    third_place TEXT NOT NULL,
+    tournament_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user (id),
+    FOREIGN KEY (tournament_id) REFERENCES tournaments (id)
+);
+
+CREATE TABLE tournaments(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    place TEXT NOT NULL,
+    type TEXT NOT NULL,
+    date_time DATE NOT NULL,
+    first_place TEXT NOT NULL DEFAULT "TBA",
+    second_place TEXT NOT NULL DEFAULT "TBA",
+    third_place TEXT NOT NULL DEFAULT "TBA",
+    status TEXT NOT NULL
+);
+
+CREATE TABLE jumpers(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+);
+
+CREATE TABLE countries(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+)
+
