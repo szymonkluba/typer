@@ -6,27 +6,58 @@
 
 {% block content %}
     <form method="post">
+        <datalist id="jumpers">
+            {% for jumper in jumpers %}
+                <option>{{ jumper['name'] }}</option>
+            {% endfor %}
+        </datalist>
+        <datalist id="statusy">
+            <option>koniec</option>
+            <option>następne</option>
+            <option>przyszłe</option>
+        </datalist>
+        <datalist id="typy">
+            <option>indywidualne</option>
+            <option>drużynowe</option>
+        </datalist>
         <label for="place">Gdzie:</label>
         <input name="place" id="place"
                value="{{ request.form['place'] or tournament['place'] }}" required>
         <label for="type">Indywidualne / Drużynowe:</label>
-        <input name="type" id="type"
+        <input name="type"
+               id="type"
+               list="typy"
                value="{{ request.form['type'] or tournament['type'] }}" required>
         <label for="status">Koniec / Następne / Przyszłe:</label>
-        <input name="status" id="status"
-               value="{{ request.form['status'] or tournament['status'] }}" required>
+        <input name="status"
+               id="status"
+               list="statusy"
+               value="{{ request.form['status'] or tournament['status'] }}"
+               required>
         <label for="date_time">Data:</label>
-        <input name="date_time" id="date_time"
-               value="{{ request.form['date_time'] or tournament['date_time'] }}" required>
+        <input name="date_time"
+               id="date_time"
+               type="datetime-local"
+               value="{{ request.form['date_time'] or tournament['date_time'] }}"
+               required>
         <label for="first_place">Pierwsze miejsce:</label>
-        <input name="first_place" id="first_place"
-               value="{{ request.form['first_place'] or tournament['first_place'] }}" required>
+        <input name="first_place"
+               id="first_place"
+               list="jumpers"
+               value="{{ request.form['first_place'] or tournament['first_place'] }}"
+               required>
         <label for="second_place">Drugie miejsce:</label>
-        <input name="second_place" id="second_place"
-               value="{{ request.form['second_place'] or tournament['second_place'] }}" required>
+        <input name="second_place"
+               id="second_place"
+               list="jumpers"
+               value="{{ request.form['second_place'] or tournament['second_place'] }}"
+               required>
         <label for="third_place">Trzecie miejsce:</label>
-        <input name="third_place" id="third_place"
-               value="{{ request.form['third_place'] or tournament['third_place'] }}" required>
+        <input name="third_place"
+               id="third_place"
+               list="jumpers"
+               value="{{ request.form['third_place'] or tournament['third_place'] }}"
+               required>
         <input type="submit" value="Save">
     </form>
     <hr>

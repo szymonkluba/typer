@@ -5,6 +5,7 @@ from werkzeug.exceptions import abort
 
 from flaskr.auth import login_required
 from flaskr.db import get_db
+from flaskr.typer import get_jumpers
 
 bp = Blueprint('tournaments', __name__, url_prefix='/tournaments')
 
@@ -63,7 +64,7 @@ def get_tournament(id):
 @login_required
 def update(id):
     tournament = get_tournament(id)
-
+    jumpers = get_jumpers(tournament)
     if request.method == "POST":
         place = request.form['place']
         typ = request.form['type']
@@ -86,7 +87,7 @@ def update(id):
             db.commit()
             return redirect(url_for('tournaments.tournaments'))
 
-    return render_template('tournaments/update.html', tournament=tournament)
+    return render_template('tournaments/update.html', tournament=tournament, jumpers=jumpers)
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))
