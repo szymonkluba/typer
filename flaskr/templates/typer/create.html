@@ -1,15 +1,19 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>{% block title%}New post{% endblock %}</h1>
+    <h1>{% block title%}Nowe typowanie{% endblock %}</h1>
+    <h3>{{ tournament['place'] }} - {{ tournament['type'] }}
+        data: {{  tournament['date_time']  }}</h3>
 {% endblock %}
 
 {% block content %}
     <form method="post">
-        <label for="title">Title</label>
-        <input name="title" id="title" value="{{ request.form['title'] }}" required>
-        <label for="body">Body</label>
-        <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+        <label for="first_place">Pierwsze miejsce:</label>
+        <input name="first_place" id="first_place" value="{{ request.form['first_place'] }}" required>
+        <label for="second_place">Drugie miejsce:</label>
+        <input name="second_place" id="second_place" value="{{ request.form['second_place'] }}" required>
+        <label for="third_place">Trzecie miejsce:</label>
+        <input name="third_place" id="third_place" value="{{ request.form['third_place'] }}" required>
         <input type="submit" value="Save">
     </form>
 {% endblock %}

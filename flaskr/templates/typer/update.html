@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>{% block title %}Edit "{{ post['title'] }}"{% endblock %}</h1>
+    <h1>{% block title%}Edytuj typowanie{% endblock %}</h1>
+    <h3>{{ post['place'] }} - {{ post['type'] }}
+        data: {{  post['date_time']  }}</h3>
 {% endblock %}
 
 {% block content %}
     <form method="post">
-        <label for="title">Title</label>
-        <input name="title" id="title"
-               value="{{ request.form['title'] or post['title'] }}" required>
-        <label for="body">Body</label>
-        <textarea name="body" id="body">{{ request.form[body] or post[body] }}</textarea>
+        <label for="first_place">Pierwsze miejsce:</label>
+        <input name="first_place" id="first_place" value="{{ request.form['first_place'] or post['first_place'] }}" required>
+        <label for="second_place">Drugie miejsce:</label>
+        <input name="second_place" id="second_place" value="{{ request.form['second_place'] or post['second_place'] }}" required>
+        <label for="third_place">Trzecie miejsce:</label>
+        <input name="third_place" id="third_place" value="{{ request.form['third_place'] or post['third_place'] }}" required>
         <input type="submit" value="Save">
     </form>
     <hr>

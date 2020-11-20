@@ -9,7 +9,7 @@
         <article class="post">
             <header>
                 <div>
-                    <h1>{{ post['place'] }} - {{ post['type'] }} - {{ post['date_time'].strftime('%d.%m.%Y') }}</h1>
+                    <h1>{{ post['place'] }} - {{ post['type'] }} - {{ post['date_time'] }}</h1>
                 </div>
                 <a class="action" href="{{ url_for('tournaments.update', id=post['id'])  }}">Edytuj</a>
             </header>

@@ -29,7 +29,7 @@ CREATE TABLE tournaments(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     place TEXT NOT NULL,
     type TEXT NOT NULL,
-    date_time DATE NOT NULL,
+    date_time DATETIME NOT NULL,
     first_place TEXT NOT NULL DEFAULT "TBA",
     second_place TEXT NOT NULL DEFAULT "TBA",
     third_place TEXT NOT NULL DEFAULT "TBA",

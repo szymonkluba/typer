@@ -11,8 +11,8 @@
         <article class="post">
             <header>
                 <div>
-                    <h1>{{ post['tournament'] }} {{ post['type'] }} {{ post['tournament'] }} - {{ post['date_time'].strftime('%d.%m.%Y') }}</h1>
-                    <div class="about">przez {{ post['username'] }} z {{ post['created'].strftime('%d.%m.%Y') }}</div>
+                    <h1>{{ post['place'] }} - {{ post['type'] }} - {{ post['date_time'] }}</h1>
+                    <div class="about">przez {{ post['username'] }} z {{ post['created'] }}</div>
                 </div>
                 {% if g.user['id'] == post['user_id'] %}
                     <a class="action" href="{{ url_for('typer.update', id=post['id'])  }}">Edit</a>
