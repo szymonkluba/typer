@@ -19,7 +19,9 @@ def index():
         ' JOIN tournaments t ON p.tournament_id = t.id'
         ' ORDER BY created DESC'
     ).fetchall()
-    return render_template('typer/index.html', posts=posts)
+    duplicate = dict()
+    duplicate['duplicate'] = check_for_duplicates()
+    return render_template('typer/index.html', posts=posts, duplicate=duplicate)
 
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -146,4 +148,17 @@ def check_type_of_tournament(selected_tournament=None):
         type_of_tournament = selected_tournament
         if type_of_tournament['type'] == 'indywidualne':
             return True
+    return False
+
+
+def check_for_duplicates():
+    current_tournament = get_db().execute(
+        'SELECT id FROM tournaments WHERE status LIKE "następne"'
+    ).fetchone()
+    duplicate = get_db().execute(
+        'SELECT * FROM bets WHERE user_id LIKE ? AND tournament_id LIKE ?',
+        (g.user['id'], current_tournament['id'])
+    ).fetchone()
+    if duplicate is not None:
+        return True
     return False

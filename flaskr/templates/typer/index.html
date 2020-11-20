@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block header %}
     <h1>{% block title %}Ostatnie typy:{% endblock %}</h1>
-    {% if g.user %}
+    {% if g.user and not duplicate['duplicate'] %}
         <a class="action" href="{{ url_for('typer.create') }}">Typuj</a>
     {% endif %}
 {% endblock %}
