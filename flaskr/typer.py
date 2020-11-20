@@ -30,6 +30,7 @@ def create():
         'SELECT id, place, type, date_time FROM tournaments'
         ' WHERE status = "następne"'
     ).fetchone()
+    jumpers = get_jumpers()
 
     if request.method == 'POST':
         first_place = request.form['first_place']
@@ -51,7 +52,7 @@ def create():
             db.commit()
             return redirect(url_for('typer.index'))
 
-    return render_template('typer/create.html', tournament=tournament)
+    return render_template('typer/create.html', tournament=tournament, jumpers=jumpers)
 
 
 def get_post(id, check_author=True):
@@ -77,7 +78,7 @@ def get_post(id, check_author=True):
 @login_required
 def update(id):
     post = get_post(id)
-
+    jumpers = get_jumpers()
     if request.method == "POST":
         first_place = request.form['first_place']
         second_place = request.form['second_place']
@@ -99,7 +100,7 @@ def update(id):
             db.commit()
             return redirect(url_for('typer.index'))
 
-    return render_template('typer/update.html', post=post)
+    return render_template('typer/update.html', post=post, jumpers=jumpers)
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))
@@ -112,4 +113,22 @@ def delete(id):
     return redirect(url_for('typer.index'))
 
 
+def get_jumpers():
+    if check_type_of_tournament():
+        jumpers = get_db().execute(
+            'SELECT * FROM jumpers'
+        ).fetchall()
+    else:
+        jumpers = get_db().execute(
+            'SELECT * FROM countries'
+        ).fetchall()
+    return jumpers
 
+
+def check_type_of_tournament():
+    type_of_tournament = get_db().execute(
+        'SELECT type FROM tournaments WHERE status LIKE "następne"'
+    ).fetchone()
+    if type_of_tournament['type'] == 'indywidualne':
+        return True
+    return False

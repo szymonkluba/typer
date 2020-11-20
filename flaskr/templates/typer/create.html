@@ -8,12 +8,29 @@
 
 {% block content %}
     <form method="post">
+        <datalist id="jumpers">
+            {% for jumper in jumpers %}
+                <option>{{ jumper['name'] }}</option>
+            {% endfor %}
+        </datalist>
         <label for="first_place">Pierwsze miejsce:</label>
-        <input name="first_place" id="first_place" value="{{ request.form['first_place'] }}" required>
+        <input name="first_place"
+               id="first_place"
+               list="jumpers"
+               value="{{ request.form['first_place'] }}"
+               required>
         <label for="second_place">Drugie miejsce:</label>
-        <input name="second_place" id="second_place" value="{{ request.form['second_place'] }}" required>
+        <input name="second_place"
+               id="second_place"
+               list="jumpers"
+               value="{{ request.form['second_place'] }}"
+               required>
         <label for="third_place">Trzecie miejsce:</label>
-        <input name="third_place" id="third_place" value="{{ request.form['third_place'] }}" required>
+        <input name="third_place"
+               id="third_place"
+               list="jumpers"
+               value="{{ request.form['third_place'] }}"
+               required>
         <input type="submit" value="Save">
     </form>
 {% endblock %}
