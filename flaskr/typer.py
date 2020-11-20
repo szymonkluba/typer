@@ -19,9 +19,8 @@ def index():
         ' JOIN tournaments t ON p.tournament_id = t.id'
         ' ORDER BY created DESC'
     ).fetchall()
-    duplicate = dict()
-    duplicate['duplicate'] = check_for_duplicates()
-    return render_template('typer/index.html', posts=posts, duplicate=duplicate)
+    check_for_duplicates()
+    return render_template('typer/index.html', posts=posts, duplicate=check_for_duplicates())
 
 
 @bp.route('/create', methods=('GET', 'POST'))
