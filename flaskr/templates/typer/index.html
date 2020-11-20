@@ -14,7 +14,7 @@
                     <h1>{{ post['place'] }} - {{ post['type'] }} - {{ post['date_time'] }}</h1>
                     <div class="about">przez {{ post['username'] }} z {{ post['created'] }}</div>
                 </div>
-                {% if g.user['id'] == post['user_id'] %}
+                {% if g.user['id'] == post['user_id'] and post['status'] != 'koniec' %}
                     <a class="action" href="{{ url_for('typer.update', id=post['id'])  }}">Edit</a>
                 {% endif %}
             </header>

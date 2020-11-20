@@ -14,7 +14,7 @@ def index():
     db = get_db()
     posts = db.execute(
         'SELECT p.id, p.first_place, p.second_place, p.third_place, created, user_id, username, tournament_id,'
-        ' place, type, date_time FROM bets p'
+        ' place, type, date_time, status FROM bets p'
         ' JOIN user u ON p.user_id = u.id'
         ' JOIN tournaments t ON p.tournament_id = t.id'
         ' ORDER BY created DESC'
@@ -78,7 +78,7 @@ def get_post(id, check_author=True):
 @login_required
 def update(id):
     post = get_post(id)
-    jumpers = get_jumpers()
+    jumpers = get_jumpers(post)
     if request.method == "POST":
         first_place = request.form['first_place']
         second_place = request.form['second_place']
@@ -113,22 +113,37 @@ def delete(id):
     return redirect(url_for('typer.index'))
 
 
-def get_jumpers():
-    if check_type_of_tournament():
-        jumpers = get_db().execute(
-            'SELECT * FROM jumpers'
-        ).fetchall()
+def get_jumpers(selected_tournament=None):
+    if selected_tournament is None:
+        if check_type_of_tournament():
+            jumpers = get_db().execute(
+                'SELECT * FROM jumpers'
+            ).fetchall()
+        else:
+            jumpers = get_db().execute(
+                'SELECT * FROM countries'
+            ).fetchall()
     else:
-        jumpers = get_db().execute(
-            'SELECT * FROM countries'
-        ).fetchall()
+        if check_type_of_tournament(selected_tournament):
+            jumpers = get_db().execute(
+                'SELECT * FROM jumpers'
+            ).fetchall()
+        else:
+            jumpers = get_db().execute(
+                'SELECT * FROM countries'
+            ).fetchall()
     return jumpers
 
 
-def check_type_of_tournament():
-    type_of_tournament = get_db().execute(
-        'SELECT type FROM tournaments WHERE status LIKE "następne"'
-    ).fetchone()
-    if type_of_tournament['type'] == 'indywidualne':
-        return True
+def check_type_of_tournament(selected_tournament=None):
+    if selected_tournament is None:
+        type_of_tournament = get_db().execute(
+            'SELECT type FROM tournaments WHERE status LIKE "następne"'
+        ).fetchone()
+        if type_of_tournament['type'] == 'indywidualne':
+            return True
+    else:
+        type_of_tournament = selected_tournament
+        if type_of_tournament['type'] == 'indywidualne':
+            return True
     return False

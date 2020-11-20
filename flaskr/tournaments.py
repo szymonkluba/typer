@@ -38,8 +38,8 @@ def create():
             db = get_db()
             db.execute(
                 'INSERT INTO tournaments (place, type, status, date_time, first_place, second_place, third_place)'
-                ' VALUES (?, ?, ?, ?, "TBA", "TBA", "TBA")',
-                (place, typ, status, date_time)
+                ' VALUES (?, ?, ?, ?, ?, ?, ?)',
+                (place, typ, status, date_time, 'TBA', 'TBA', 'TBA')
             )
             db.commit()
             return redirect(url_for('tournaments.tournaments'))
@@ -67,7 +67,7 @@ def update(id):
     if request.method == "POST":
         place = request.form['place']
         typ = request.form['type']
-        status = request.form['third_place']
+        status = request.form['status']
         date_time = request.form['date_time']
         first_place = request.form['first_place']
         second_place = request.form['second_place']
