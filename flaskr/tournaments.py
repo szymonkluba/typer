@@ -85,6 +85,9 @@ def update(id):
                 (place, typ, status, date_time, first_place, second_place, third_place, id)
             )
             db.commit()
+            if status == "koniec" and first_place != "TBA" and second_place != 'TBA' and third_place != 'TBA':
+                from flaskr.points import calculate_points
+                calculate_points()
             return redirect(url_for('tournaments.tournaments'))
 
     return render_template('tournaments/update.html', tournament=tournament, jumpers=jumpers)

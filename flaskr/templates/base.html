@@ -1,15 +1,17 @@
 <!doctype html>
-<title>{% block tittle %}{% endblock %} - Typer</title>
+<title>Typer</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <nav>
-    <h1>Typer</h1>
+    <h1><a href="{{ url_for('typer.index') }}">Typer</a></h1>
     <ul>
         {% if g.user %}
-            <li><span>{{ g.user['username'] }}</span></li>
-            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+            <li><a href="{{ url_for('tournaments.tournaments') }}">Zawody</a></li>
+            <li><a href="{{ url_for('jumpers.jumpers') }}">Skoczkowie</a></li>
+            <li><span>zalogowany: {{ g.user['username'] }}</span></li>
+            <li><a href="{{ url_for('auth.logout') }}">Wyloguj</a></li>
         {% else %}
-            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-            <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+            <li><a href="{{ url_for('auth.register') }}">Zarejestruj</a></li>
+            <li><a href="{{ url_for('auth.login') }}">Zaloguj</a></li>
         {% endif %}
     </ul>
 </nav>

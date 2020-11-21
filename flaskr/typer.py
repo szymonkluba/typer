@@ -10,6 +10,7 @@ bp = Blueprint('typer', __name__)
 
 
 @bp.route('/')
+@login_required
 def index():
     db = get_db()
     posts = db.execute(
@@ -151,13 +152,14 @@ def check_type_of_tournament(selected_tournament=None):
 
 
 def check_for_duplicates():
-    current_tournament = get_db().execute(
-        'SELECT id FROM tournaments WHERE status LIKE "następne"'
-    ).fetchone()
-    duplicate = get_db().execute(
-        'SELECT * FROM bets WHERE user_id LIKE ? AND tournament_id LIKE ?',
-        (g.user['id'], current_tournament['id'])
-    ).fetchone()
+    if g.user['id'] is not None:
+        current_tournament = get_db().execute(
+            'SELECT id FROM tournaments WHERE status LIKE "następne"'
+        ).fetchone()
+        duplicate = get_db().execute(
+            'SELECT * FROM bets WHERE user_id LIKE ? AND tournament_id LIKE ?',
+            (g.user['id'], current_tournament['id'])
+        ).fetchone()
     if duplicate is not None:
         return True
     return False
