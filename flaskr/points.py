@@ -2,8 +2,6 @@ from flaskr.db import get_db
 
 
 def calculate_points():
-    points = 0
-    exact_bets = 0
     tournaments = get_tournaments()
     if tournaments is not None:
         for tournament in tournaments:
@@ -11,6 +9,8 @@ def calculate_points():
             places = [tournament['first_place'], tournament['second_place'], tournament['third_place']]
             if bets is not None:
                 for bet in bets:
+                    points = 0
+                    exact_bets = 0
                     if bet['first_place'] in places:
                         points += 1
                     if bet['second_place'] in places:
