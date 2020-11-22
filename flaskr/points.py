@@ -8,21 +8,22 @@ def calculate_points():
     if tournaments is not None:
         for tournament in tournaments:
             bets = get_bets(tournament)
+            places = [tournament['first_place'], tournament['second_place'], tournament['third_place']]
             if bets is not None:
                 for bet in bets:
-                    if bet['first_place'] in list(tournament.values()):
+                    if bet['first_place'] in places:
                         points += 1
-                    if bet['second_place'] in list(tournament.values()):
+                    if bet['second_place'] in places:
                         points += 1
-                    if bet['third_place'] in list(tournament.values()):
+                    if bet['third_place'] in places:
                         points += 1
-                    if bet['first_place'] == tournament['first_place']:
+                    if bet['first_place'] == places[0]:
                         points += 2
                         exact_bets += 1
-                    if bet['second_place'] == tournament['second_place']:
+                    if bet['second_place'] == places[1]:
                         points += 2
                         exact_bets += 1
-                    if bet['third_place'] == tournament['third_place']:
+                    if bet['third_place'] == places[2]:
                         points += 2
                         exact_bets += 1
                     db = get_db()
@@ -52,7 +53,7 @@ def get_bets(tournament):
     if tournament is not None:
         bets = get_db().execute(
             'SELECT user_id, first_place, second_place, third_place'
-            'FROM bets WHERE tournament_id = ?',
+            ' FROM bets WHERE tournament_id = ?',
             (tournament['id'],)
         ).fetchall()
     return bets

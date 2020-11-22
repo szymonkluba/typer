@@ -156,10 +156,11 @@ def check_for_duplicates():
         current_tournament = get_db().execute(
             'SELECT id FROM tournaments WHERE status LIKE "następne"'
         ).fetchone()
-        duplicate = get_db().execute(
-            'SELECT * FROM bets WHERE user_id LIKE ? AND tournament_id LIKE ?',
-            (g.user['id'], current_tournament['id'])
-        ).fetchone()
-    if duplicate is not None:
-        return True
+        if current_tournament is not None:
+            duplicate = get_db().execute(
+                'SELECT * FROM bets WHERE user_id LIKE ? AND tournament_id LIKE ?',
+                (g.user['id'], current_tournament['id'])
+            ).fetchone()
+            if duplicate is not None:
+                return True
     return False
