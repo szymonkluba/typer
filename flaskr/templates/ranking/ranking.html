@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block header %}
+    <h1>Ranking</h1>
+{% endblock %}
+
+{% block content %}
+    <table style="width:100%">
+        <tr>
+            <th style="width:25%">Użytkownik</th>
+            <th style="width:25%">Punkty</th>
+            <th style="width:25%">Ile razy typował</th>
+            <th style="width:25%">Ile razy za 3</th>
+        </tr>
+        {% for user in users %}
+            <tr style="border-bottom:1px">
+                {% if user['id'] == g.user['id'] %}
+                <td style="font-weight:bold">{{ user['username'] }}</td>
+                {% else %}
+                <td style="text-align:center">{{ user['username'] }}</td>
+                {% endif %}
+                <td style="text-align:center">{{ user['points'] }}</td>
+                <td style="text-align:center">{{ user['times_bet'] }}</td>
+                <td style="text-align:center">{{ user['times_exact'] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

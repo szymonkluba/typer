@@ -40,4 +40,7 @@ def create_app(test_config=None):
     from . import jumpers
     app.register_blueprint(jumpers.bp)
 
+    from . import ranking
+    app.register_blueprint(ranking.bp)
+
     return app

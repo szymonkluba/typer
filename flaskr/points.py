@@ -4,7 +4,6 @@ from flaskr.db import get_db
 def calculate_points():
     points = 0
     exact_bets = 0
-    times_bet = 0
     tournaments = get_tournaments()
     if tournaments is not None:
         for tournament in tournaments:
@@ -28,7 +27,7 @@ def calculate_points():
                         exact_bets += 1
                     db = get_db()
                     db.execute(
-                        'UPDATE users SET points = points + ?, times_exact = times_exact + ?, times_bet = times_bet + 1'
+                        'UPDATE user SET points = points + ?, times_exact = times_exact + ?, times_bet = times_bet + 1'
                         ' WHERE id = ?',
                         (points, exact_bets, bet['user_id'])
                     )
