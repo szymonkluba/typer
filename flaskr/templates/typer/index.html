@@ -15,14 +15,14 @@
                     <div class="about">przez {{ post['username'] }} z {{ post['created'] }}</div>
                 </div>
                 {% if g.user['id'] == post['user_id'] and post['status'] != 'koniec' and post['status'] != 'archiwum' %}
-                    <a class="action" href="{{ url_for('typer.update', id=post['id'])  }}">Edit</a>
+                    <a class="action" href="{{ url_for('typer.update', id=post['id'])  }}">Edytuj</a>
                 {% endif %}
             </header>
             <p class="body">
                 <ol>
-                    <li>Pierwsze miejsce {{ post['first_place'] }}</li>
-                    <li>Drugie miejsce {{ post['second_place'] }}</li>
-                    <li>Trzecie miejsce {{ post['third_place'] }}</li>
+                    <li>Pierwsze miejsce:  {{ post['first_place'] }}</li>
+                    <li>Drugie miejsce:  {{ post['second_place'] }}</li>
+                    <li>Trzecie miejsce:  {{ post['third_place'] }}</li>
                 </ol>
             </p>
         </article>

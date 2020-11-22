@@ -17,16 +17,16 @@
         </datalist>
         <label for="place">Gdzie:</label>
         <input name="place" id="place" value="{{ request.form['place'] }}" required>
-        <label for="typ">Indywidualne / Drużynowe</label>
+        <label for="typ">Typ: indywidualne / drużynowe</label>
         <input name="typ" id="typ" list="typy" value="{{ request.form['typ'] }}" required>
-        <label for="status">KONIEC / NASTĘPNE / PRZYSZLE</label>
+        <label for="status">Status: koniec / następne / przyszłe</label>
         <input name="status" id="status" list="statusy" value="{{ request.form['status'] }}" required>
-        <label for="date_time">Data</label>
+        <label for="date_time">Data:</label>
         <input name="date_time"
                id="date_time"
                type="datetime-local"
                value="{{ request.form['date_time'] }}"
                required>
-        <input type="submit" value="Save">
+        <input type="submit" value="Zapisz">
     </form>
 {% endblock %}

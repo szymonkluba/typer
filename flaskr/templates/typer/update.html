@@ -31,10 +31,10 @@
                list="jumpers"
                value="{{ request.form['third_place'] or post['third_place'] }}"
                required>
-        <input type="submit" value="Save">
+        <input type="submit" value="Zapisz">
     </form>
     <hr>
     <form action="{{ url_for('typer.delete', id=post['id']) }}" method="post">
-        <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure');">
+        <input class="danger" type="submit" value="Usuń" onclick="return confirm('Jesteś pewien?');">
     </form>
 {% endblock %}

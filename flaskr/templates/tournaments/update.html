@@ -23,12 +23,12 @@
         <label for="place">Gdzie:</label>
         <input name="place" id="place"
                value="{{ request.form['place'] or tournament['place'] }}" required>
-        <label for="type">Indywidualne / Drużynowe:</label>
+        <label for="type">Typ: indywidualne / drużynowe</label>
         <input name="type"
                id="type"
                list="typy"
                value="{{ request.form['type'] or tournament['type'] }}" required>
-        <label for="status">Koniec / Następne / Przyszłe:</label>
+        <label for="status">Status: koniec / następne / przyszłe</label>
         <input name="status"
                id="status"
                list="statusy"
@@ -58,10 +58,10 @@
                list="jumpers"
                value="{{ request.form['third_place'] or tournament['third_place'] }}"
                required>
-        <input type="submit" value="Save">
+        <input type="submit" value="Zapisz">
     </form>
     <hr>
     <form action="{{ url_for('tournaments.delete', id=tournament['id']) }}" method="post">
-        <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure');">
+        <input class="danger" type="submit" value="Usuń" onclick="return confirm('Jesteś pewien?');">
     </form>
 {% endblock %}
