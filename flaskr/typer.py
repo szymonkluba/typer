@@ -163,4 +163,6 @@ def check_for_duplicates():
             ).fetchone()
             if duplicate is not None:
                 return True
+        else:
+            return True
     return False
