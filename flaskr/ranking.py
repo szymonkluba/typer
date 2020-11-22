@@ -14,6 +14,7 @@ def ranking():
     db = get_db()
     users = db.execute(
         'SELECT id, username, points, times_bet, times_exact FROM user'
+        ' ORDER BY points DESC'
     ).fetchall()
 
     return render_template('ranking/ranking.html', users=users)
