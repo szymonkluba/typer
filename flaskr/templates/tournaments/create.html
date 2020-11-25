@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>{% block title%}Nowe zawody{% endblock %}</h1>
+    <h2 class="p-3">{% block title%}Nowe zawody{% endblock %}</h2>
 {% endblock %}
 
 {% block content %}
@@ -15,18 +15,37 @@
             <option>indywidualne</option>
             <option>drużynowe</option>
         </datalist>
-        <label for="place">Gdzie:</label>
-        <input name="place" id="place" value="{{ request.form['place'] }}" required>
-        <label for="typ">Typ: indywidualne / drużynowe</label>
-        <input name="typ" id="typ" list="typy" value="{{ request.form['typ'] }}" required>
-        <label for="status">Status: koniec / następne / przyszłe</label>
-        <input name="status" id="status" list="statusy" value="{{ request.form['status'] }}" required>
-        <label for="date_time">Data:</label>
-        <input name="date_time"
-               id="date_time"
-               type="datetime-local"
-               value="{{ request.form['date_time'] }}"
-               required>
-        <input type="submit" value="Zapisz">
+        <div class="form-group p-3">
+            <label for="place">Gdzie:</label>
+            <input name="place"
+                   id="place"
+                   class="form-control w-50"
+                   value="{{ request.form['place'] }}"
+                   required>
+            <label for="typ">Typ: indywidualne / drużynowe</label>
+            <input name="typ"
+                   id="typ"
+                   list="typy"
+                   class="form-control w-50"
+                   value="{{ request.form['typ'] }}"
+                   required>
+            <label for="status">Status: koniec / następne / przyszłe</label>
+            <input name="status"
+                   id="status"
+                   list="statusy"
+                   class="form-control w-50"
+                   value="{{ request.form['status'] }}"
+                   required>
+            <label for="date_time">Data:</label>
+            <input name="date_time"
+                   id="date_time"
+                   type="datetime-local"
+                   class="form-control w-50"
+                   value="{{ request.form['date_time'] }}"
+                   required>
+        </div>
+        <div class="text-center">
+            <input class="btn btn-dark w-25" type="submit" value="Zapisz">
+        </div>
     </form>
 {% endblock %}
