@@ -1,18 +1,42 @@
 {% extends 'base.html' %}
 {% block header %}
-    <h1>{% block title %}Skoczkowie:{% endblock %}</h1>
-    <a class="action" href="{{ url_for('jumpers.create') }}">Nowy skoczek</a>
+<div class="container mt-3">
+    <div class="row">
+        <div class="col">
+            <h2>{% block title %}Skoczkowie:{% endblock %}</h2>
+        </div>
+        <div class="col text-right">
+            <a class="btn btn-dark" role="button" href="{{ url_for('jumpers.create') }}">
+                Nowy skoczek
+            </a>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block content %}
+        <div class="list-group list-group-horizontal-md p-1">
     {% for post in jumpers %}
-        <article class="post">
-            <div>
-                {{ post['name'] }} <a class="action" href="{{ url_for('jumpers.update', id=post['id'])  }}">Edytuj</a>
+        {% if loop.index % 3 == 0 or loop.last %}
+            <div class="list-group-item w-50 d-flex justify-content-between border-dark">
+                {{ post['name'] }}
+                <a class="btn btn-dark p-1"
+                   role="button"
+                   href="{{ url_for('jumpers.update', id=post['id'])  }}">
+                    Edytuj
+                </a>
             </div>
-        </article>
-        {% if not loop.last %}
-        <hr>
+        </div>
+        <div class="list-group list-group-horizontal-md p-1">
+        {% else %}
+            <div class="list-group-item w-50 d-flex justify-content-between border-dark">
+                {{ post['name'] }}
+                <a class="btn btn-dark p-1"
+                   role="button"
+                   href="{{ url_for('jumpers.update', id=post['id'])  }}">
+                    Edytuj
+                </a>
+            </div>
         {% endif %}
     {% endfor %}
 {% endblock %}
