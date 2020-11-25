@@ -92,3 +92,25 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
+
+
+@bp.route('/reset_password', methods=('GET', 'POST'))
+def reset_password():
+    db = get_db()
+    user = db.execute(
+        'SELECT id, username FROM user WHERE password LIKE "empty"'
+    ).fetchone()
+
+    if user is None:
+        return redirect(url_for('index'))
+    else:
+        if request.method == 'POST':
+            password = request.form['password']
+            db.execute(
+                'UPDATE user SET password = ? WHERE id = ?',
+                (generate_password_hash(password), user['id'])
+            )
+            db.commit()
+            return redirect(url_for('auth.login'))
+
+    return render_template('auth/reset_password.html', user=user)
