@@ -25,7 +25,7 @@ def register():
         elif db.execute(
                 'SELECT id FROM user WHERE username = ?', (username,)
         ).fetchone() is not None:
-            error = f'User {username} is already registered'
+            error = f'Użytkownik {username} już istnieje'
 
         if error is None:
             db.execute(
