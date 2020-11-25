@@ -1,27 +1,35 @@
 {% extends 'base.html' %}
 {% block header %}
-    <h1>Ranking</h1>
+    <h2>Ranking</h2>
 {% endblock %}
 
 {% block content %}
-    <table style="width:100%">
-        <tr>
-            <th style="width:25%">Użytkownik</th>
-            <th style="width:25%">Punkty</th>
-            <th style="width:25%">Ile razy typował</th>
-            <th style="width:25%">Ile razy za 3</th>
-        </tr>
-        {% for user in users %}
-            <tr style="border-bottom:1px">
-                {% if user['id'] == g.user['id'] %}
-                <td style="font-weight:bold">{{ user['username'] }}</td>
-                {% else %}
-                <td style="text-align:center">{{ user['username'] }}</td>
-                {% endif %}
-                <td style="text-align:center">{{ user['points'] }}</td>
-                <td style="text-align:center">{{ user['times_bet'] }}</td>
-                <td style="text-align:center">{{ user['times_exact'] }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+    <div class="table-responsive-lg">
+        <table class="table table-sm table-striped text-center">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Użytkownik</th>
+                    <th scope="col">Punkty</th>
+                    <th scope="col">Ile razy typował</th>
+                    <th scope="col">Ile razy za 3</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr style="border-bottom:1px">
+                    <th scope="row">{{ loop.index }}</th>
+                    {% if user['id'] == g.user['id'] %}
+                    <td class="font-weight-bold">{{ user['username'] }}</td>
+                    {% else %}
+                    <td>{{ user['username'] }}</td>
+                    {% endif %}
+                    <td>{{ user['points'] }}</td>
+                    <td>{{ user['times_bet'] }}</td>
+                    <td>{{ user['times_exact'] }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
