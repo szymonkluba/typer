@@ -1,18 +1,29 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>{% block title %}Edytuj "{{ jumper['name'] }}"{% endblock %}</h1>
+    <h2 class="p-3">{% block title %}Edytuj "{{ jumper['name'] }}"{% endblock %}</h2>
 {% endblock %}
 
 {% block content %}
     <form method="post">
-        <label for="name">Nazwisko:</label>
-        <input name="name" id="name"
-               value="{{ request.form['name'] or jumper['name'] }}" required>
-        <input type="submit" value="Zapisz">
+        <div class="form-group">
+            <label for="name">Nazwisko:</label>
+            <input name="name"
+                   id="name"
+                   class="form-control w-50"
+                   value="{{ request.form['name'] or jumper['name'] }}"
+                   required>
+        </div>
+        <div class="text-center">
+            <input type="submit" class="btn btn-dark w-25" value="Zapisz">
+        </div>
     </form>
     <hr>
-    <form action="{{ url_for('jumpers.delete', id=jumper['id']) }}" method="post">
-        <input class="danger" type="submit" value="Usuń" onclick="return confirm('Jesteś pewien?');">
+    <form class="text-right" action="{{ url_for('jumpers.delete', id=jumper['id']) }}"
+          method="post">
+        <input class="btn btn-danger w-25"
+               type="submit"
+               value="Usuń"
+               onclick="return confirm('Jesteś pewien?');">
     </form>
 {% endblock %}

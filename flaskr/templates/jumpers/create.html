@@ -1,13 +1,21 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>{% block title%}Nowy skoczek{% endblock %}</h1>
+    <h2 class="p-3">{% block title%}Nowy skoczek{% endblock %}</h2>
 {% endblock %}
 
 {% block content %}
     <form method="post">
-        <label for="name">Nazwisko:</label>
-        <input name="name" id="name" value="{{ request.form['name'] }}" required>
-        <input type="submit" value="Zapisz">
+        <div class="form-group">
+            <label for="name">Nazwisko:</label>
+            <input name="name"
+                   id="name"
+                   value="{{ request.form['name'] }}"
+                   class="form-control w-50"
+                   required>
+        </div>
+        <div class="text-center">
+            <input class="btn btn-dark w-25" type="submit" value="Zapisz">
+        </div>
     </form>
 {% endblock %}
