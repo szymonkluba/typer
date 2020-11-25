@@ -1,27 +1,66 @@
 <!doctype html>
+<head>
 <title>Typer</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<nav>
-    <h1><a href="{{ url_for('typer.index') }}">Typer</a></h1>
-    <ul>
-        {% if g.user %}
-            <li><a href="{{ url_for('ranking.ranking') }}">Ranking</a></li>
-            <li><a href="{{ url_for('tournaments.tournaments') }}">Zawody</a></li>
-            <li><a href="{{ url_for('jumpers.jumpers') }}">Skoczkowie</a></li>
-            <li><span>zalogowany: {{ g.user['username'] }}</span></li>
-            <li><a href="{{ url_for('auth.logout') }}">Wyloguj</a></li>
-        {% else %}
-            <li><a href="{{ url_for('auth.register') }}">Zarejestruj</a></li>
-            <li><a href="{{ url_for('auth.login') }}">Zaloguj</a></li>
-        {% endif %}
-    </ul>
-</nav>
-<section class="content">
-    <header>
-        {% block header %}{% endblock %}
-    </header>
-    {% for message in get_flashed_messages() %}
-        <div class="flash">{{ message }}</div>
-    {% endfor %}
-    {% block content %}{% endblock %}
-</section>
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+</head>
+<body class="bg-secondary">
+<div class="container">
+    <div class="row justify-content-lg-center">
+        <div class="col bg-dark">
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+                <a class="navbar-brand" href="{{ url_for('typer.index') }}">Typer</a>
+                <button class="navbar-toggler" type="button"
+                        data-toggle="collapse" data-target="#navbarText"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav mr-auto">
+                        {% if g.user %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('ranking.ranking') }}">Ranking</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('tournaments.tournaments') }}">Zawody</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('jumpers.jumpers') }}">Skoczkowie</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('auth.logout') }}">Wyloguj</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('auth.register') }}">Zarejestruj</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('auth.login') }}">Zaloguj</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    {% if g.user %}
+                    <span class="navbar-text">
+                        Zalogowany: {{ g.user['username'] }}
+                    </span>
+                    {% endif %}
+                </div>
+            </nav>
+    <div class="row justify-content-lg-center">
+        <div class="col bg-light">
+            <header>
+                {% block header %}{% endblock %}
+            </header>
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    <div class="row justify-content-lg-center">
+        <div class="col bg-light"><br></div>
+    </div>
+</div>>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
