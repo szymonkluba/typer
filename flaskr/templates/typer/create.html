@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>{% block title%}Nowe typowanie{% endblock %}</h1>
-    <h3>{{ tournament['place'] }} - {{ tournament['type'] }}
-        data: {{  tournament['date_time']  }}</h3>
+    <h2 class="p-3">{% block title%}Nowe typowanie{% endblock %}</h2>
+    <h5 class="pr-3 pl-3">{{ tournament['place'] }} - {{ tournament['type'] }} -
+        data: {{  tournament['date_time']  }}</h5>
 {% endblock %}
 
 {% block content %}
@@ -13,24 +13,31 @@
                 <option>{{ jumper['name'] }}</option>
             {% endfor %}
         </datalist>
-        <label for="first_place">Pierwsze miejsce:</label>
-        <input name="first_place"
-               id="first_place"
-               list="jumpers"
-               value="{{ request.form['first_place'] }}"
-               required>
-        <label for="second_place">Drugie miejsce:</label>
-        <input name="second_place"
-               id="second_place"
-               list="jumpers"
-               value="{{ request.form['second_place'] }}"
-               required>
-        <label for="third_place">Trzecie miejsce:</label>
-        <input name="third_place"
-               id="third_place"
-               list="jumpers"
-               value="{{ request.form['third_place'] }}"
-               required>
-        <input type="submit" value="Zapisz">
+        <div class="form-group p-3">
+            <label for="first_place">Pierwsze miejsce:</label>
+            <input name="first_place"
+                   id="first_place"
+                   list="jumpers"
+                   class="form-control w-50"
+                   value="{{ request.form['first_place'] }}"
+                   required>
+            <label for="second_place">Drugie miejsce:</label>
+            <input name="second_place"
+                   id="second_place"
+                   list="jumpers"
+                   class="form-control w-50"
+                   value="{{ request.form['second_place'] }}"
+                   required>
+            <label for="third_place">Trzecie miejsce:</label>
+            <input name="third_place"
+                   id="third_place"
+                   list="jumpers"
+                   class="form-control w-50"
+                   value="{{ request.form['third_place'] }}"
+                   required>
+        </div>
+        <div class="text-center">
+            <input class="btn btn-dark w-25" type="submit" value="Zapisz">
+        </div>
     </form>
 {% endblock %}
