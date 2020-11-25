@@ -20,8 +20,28 @@ def index():
         ' JOIN tournaments t ON p.tournament_id = t.id'
         ' ORDER BY created DESC'
     ).fetchall()
-    check_for_duplicates()
-    return render_template('typer/index.html', posts=posts, duplicate=check_for_duplicates())
+    return render_template('typer/index.html',
+                           posts=posts,
+                           duplicate=check_for_duplicates())
+
+
+@bp.route('/my_bets')
+@login_required
+def my_bets():
+    db = get_db()
+    if g.user['id'] is not None:
+        posts = db.execute(
+            'SELECT p.id, p.first_place, p.second_place, p.third_place, created, user_id, username, tournament_id,'
+            ' place, type, date_time, status FROM bets p'
+            ' JOIN user u ON p.user_id = u.id'
+            ' JOIN tournaments t ON p.tournament_id = t.id'
+            ' WHERE user_id = ?'
+            ' ORDER BY created DESC',
+            (g.user['id'],)
+        ).fetchall()
+        return render_template('typer/index.html',
+                               posts=posts,
+                               duplicate=check_for_duplicates())
 
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -54,7 +74,9 @@ def create():
             db.commit()
             return redirect(url_for('typer.index'))
 
-    return render_template('typer/create.html', tournament=tournament, jumpers=jumpers)
+    return render_template('typer/create.html',
+                           tournament=tournament,
+                           jumpers=jumpers)
 
 
 def get_post(id, check_author=True):
