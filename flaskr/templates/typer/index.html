@@ -15,31 +15,34 @@
 {% endblock %}
 
 {% block content %}
-    {% for post in posts %}
+    {% for bet in bets %}
+    {% set d_t = bet.tournament_id.date_time.split('T') %}
         <div class="card border-dark m-1">
             <div class="card-header">
-                <h5 class="card-title">{{ post['place'] }} - {{ post['type'] }} - {{ post['date_time'] }}</h5>
-                <h6 class="card-subtitle text-muted">przez {{ post['username'] }} z {{ post['created'] }}</h6>
+                <h5 class="card-title">{{ bet.tournament_id.place }} -
+                    {{ bet.tournament_id.type }} -
+                    {{ d_t[0] }} {{ d_t[1] }}</h5>
+                <h6 class="card-subtitle text-muted">przez {{ bet.user_id.username }} z {{ bet.created }}</h6>
             </div>
             <div class="card-body p-0">
                     <ol class="list-group list-group-flush p-1">
                         <li class="list-group-item p-1">
                             <span class="badge badge-secondary">1</span>
-                            {{ post['first_place'] }}
+                            {{ bet.first_place }}
                         </li>
                         <li class="list-group-item p-1">
                             <span class="badge badge-secondary">2</span>
-                            {{ post['second_place'] }}
+                            {{ bet.second_place }}
                         </li>
                         <li class="list-group-item p-1">
                             <span class="badge badge-secondary">3</span>
-                            {{ post['third_place'] }}
+                            {{ bet.third_place }}
                         </li>
                     </ol>
             </div>
             <div class="card-footer text-right">
-                {% if g.user['id'] == post['user_id'] and post['status'] != 'koniec' and post['status'] != 'archiwum' %}
-                <a class="btn btn-dark" role="button" href="{{ url_for('typer.update', id=post['id'])  }}">Edytuj</a>
+                {% if g.user['id'] == bet.user_id.id and bet.tournament_id.status != 'koniec' and bet.tournament_id.status != 'archiwum' %}
+                <a class="btn btn-dark" role="button" href="{{ url_for('typer.update', id=bet.id)  }}">Edytuj</a>
                 {% endif %}
             </div>
         </div>

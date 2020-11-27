@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from pony.flask import Pony
 
 
 def create_app(test_config=None):
@@ -8,6 +9,12 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+        PONY={
+            'provider': 'sqlite',
+            'filename': 'flaskr.sqlite',
+            'create_db': True
+        }
+
     )
 
     if test_config is None:
@@ -19,6 +26,8 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    Pony(app)
 
     @app.route("/hello")
     def hello():

@@ -5,7 +5,7 @@ from werkzeug.exceptions import abort
 
 from flaskr.auth import login_required
 from flaskr.db import get_db
-from flaskr.typer import get_jumpers
+from flaskr.typer import get_competitors
 
 bp = Blueprint('tournaments', __name__, url_prefix='/tournaments')
 
@@ -64,7 +64,7 @@ def get_tournament(id):
 @login_required
 def update(id):
     tournament = get_tournament(id)
-    jumpers = get_jumpers(tournament)
+    jumpers = get_competitors(tournament)
     if request.method == "POST":
         place = request.form['place']
         typ = request.form['type']
