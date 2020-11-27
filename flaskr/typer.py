@@ -30,7 +30,7 @@ def my_bets():
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
-    tournament = pony_db.get_current_tournament()
+    tournament = pony_db.get_tournament_by_status('następne')
     jumpers = get_competitors()
 
     if request.method == 'POST':
@@ -109,7 +109,7 @@ def get_competitors(selected_tournament=None):
 
 def check_type_of_tournament(selected_tournament=None):
     if selected_tournament is None:
-        type_of_tournament = pony_db.get_current_tournament()
+        type_of_tournament = pony_db.get_tournament_by_status('następne')
         if 'indywidualne' == type_of_tournament.type:
             return True
     else:
@@ -121,7 +121,7 @@ def check_type_of_tournament(selected_tournament=None):
 
 def check_for_duplicates():
     if g.user.id is not None:
-        current_tournament = pony_db.get_current_tournament()
+        current_tournament = pony_db.get_tournament_by_status('następne')
         if current_tournament is not None:
             return pony_db.duplicate_bet_exists(g.user.id, current_tournament)
         else:
