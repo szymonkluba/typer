@@ -115,6 +115,26 @@ def get_jumpers():
     return jumpers
 
 
+def get_jumper(id):
+    jumper = Jumpers.get(lambda j: j.id == id)
+    return jumper
+
+
+def create_jumper(name):
+    Jumpers(name=name)
+    commit()
+
+
+def update_jumper(id, name):
+    Jumpers[id].set(name=name)
+    commit()
+
+
+def delete_jumper(id):
+    Jumpers[id].delete()
+    commit()
+
+
 def get_countries():
     countries = Countries.select()
     return countries

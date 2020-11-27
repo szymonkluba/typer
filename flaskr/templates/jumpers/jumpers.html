@@ -16,13 +16,13 @@
 
 {% block content %}
         <div class="list-group list-group-horizontal-md p-1">
-    {% for post in jumpers %}
+    {% for jumper in jumpers %}
         {% if loop.index % 3 == 0 or loop.last %}
             <div class="list-group-item w-50 d-flex justify-content-between border-dark">
-                {{ post['name'] }}
+                {{ jumper.name }}
                 <a class="btn btn-dark p-1"
                    role="button"
-                   href="{{ url_for('jumpers.update', id=post['id'])  }}">
+                   href="{{ url_for('jumpers.update', id=jumper.id)  }}">
                     Edytuj
                 </a>
             </div>
@@ -30,10 +30,10 @@
         <div class="list-group list-group-horizontal-md p-1">
         {% else %}
             <div class="list-group-item w-50 d-flex justify-content-between border-dark">
-                {{ post['name'] }}
+                {{ jumper.name }}
                 <a class="btn btn-dark p-1"
                    role="button"
-                   href="{{ url_for('jumpers.update', id=post['id'])  }}">
+                   href="{{ url_for('jumpers.update', id=jumper.id)  }}">
                     Edytuj
                 </a>
             </div>

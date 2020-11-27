@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h2 class="p-3">{% block title %}Edytuj "{{ jumper['name'] }}"{% endblock %}</h2>
+    <h2 class="p-3">{% block title %}Edytuj "{{ jumper.name }}"{% endblock %}</h2>
 {% endblock %}
 
 {% block content %}
@@ -11,7 +11,7 @@
             <input name="name"
                    id="name"
                    class="form-control w-50"
-                   value="{{ request.form['name'] or jumper['name'] }}"
+                   value="{{ request.form['name'] or jumper.name }}"
                    required>
         </div>
         <div class="text-center">
@@ -19,7 +19,7 @@
         </div>
     </form>
     <hr>
-    <form class="text-right" action="{{ url_for('jumpers.delete', id=jumper['id']) }}"
+    <form class="text-right" action="{{ url_for('jumpers.delete', id=jumper.id) }}"
           method="post">
         <input class="btn btn-danger w-25"
                type="submit"
