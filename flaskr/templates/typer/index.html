@@ -16,12 +16,11 @@
 
 {% block content %}
     {% for bet in bets %}
-    {% set d_t = bet.tournament_id.date_time.split('T') %}
         <div class="card border-dark m-1">
             <div class="card-header">
                 <h5 class="card-title">{{ bet.tournament_id.place }} -
                     {{ bet.tournament_id.type }} -
-                    {{ d_t[0] }} {{ d_t[1] }}</h5>
+                    {{ bet.tournament_id.date_time }}</h5>
                 <h6 class="card-subtitle text-muted">przez {{ bet.user_id.username }} z {{ bet.created }}</h6>
             </div>
             <div class="card-body p-0">

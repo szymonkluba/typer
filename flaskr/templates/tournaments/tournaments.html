@@ -18,10 +18,9 @@
 
 {% block content %}
     {% for post in tournaments %}
-    {% set dt = post.date_time.split('T') %}
         <div class="card border-dark m-1">
             <div class="card-header">
-                <h5>{{ post.place }} - {{ post.type }} - {{ dt[0] }} godzina: {{ dt[1] }}</h5>
+                <h5>{{ post.place }} - {{ post.type }} - {{ post.date_time }}</h5>
             </div>
             <div class="card-body p-0">
                 <ol class="list-group list-group-flush p-1">

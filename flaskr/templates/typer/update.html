@@ -1,15 +1,12 @@
 {% extends 'base.html' %}
 
 {% block header %}
-{% set d_t = bet.tournament_id.date_time.split('T') %}
     <h2 class="p-3">{% block title%}Edytuj typowanie{% endblock %}</h2>
     <h5 class="pr-3 pl-3">
         {{ bet.tournament_id.place }} -
         {{ bet.tournament_id.type }} -
         data:
-        {{ d_t[0] }}
-        godzina:
-        {{ d_t[1] }}
+        {{ bet.tournament_id.date_time }}
     </h5>
 {% endblock %}
 {% block content %}

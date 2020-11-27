@@ -1,11 +1,9 @@
 {% extends 'base.html' %}
 
 {% block header %}
-{% set dt = tournament.date_time.split('T') %}
     <h2 class="p-3">{% block title %}Edytuj{% endblock %}</h2>
     <h5 class="pr-3 pl-3">{{ tournament.place }} - {{ tournament.type }} -
-        data: {{ dt[0] }}
-        godzina: {{ dt[1] }}
+        {{ tournament.date_time }}
     </h5>
 {% endblock %}
 
