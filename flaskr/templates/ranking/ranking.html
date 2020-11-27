@@ -19,14 +19,14 @@
             {% for user in users %}
                 <tr style="border-bottom:1px">
                     <th scope="row">{{ loop.index }}</th>
-                    {% if user['id'] == g.user['id'] %}
-                    <td class="font-weight-bold">{{ user['username'] }}</td>
+                    {% if user.id == g.user['id'] %}
+                    <td class="font-weight-bold">{{ user.username }}</td>
                     {% else %}
-                    <td>{{ user['username'] }}</td>
+                    <td>{{ user.username }}</td>
                     {% endif %}
-                    <td>{{ user['points'] }}</td>
-                    <td>{{ user['times_bet'] }}</td>
-                    <td>{{ user['times_exact'] }}</td>
+                    <td>{{ user.points }}</td>
+                    <td>{{ user.times_bet }}</td>
+                    <td>{{ user.times_exact }}</td>
                 </tr>
             {% endfor %}
             </tbody>

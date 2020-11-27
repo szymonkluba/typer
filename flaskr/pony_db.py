@@ -105,6 +105,11 @@ def get_users():
     return users
 
 
+def get_users_ranking():
+    users = User.select().sort_by(desc(User.points))
+    return users
+
+
 def get_jumpers():
     jumpers = Jumpers.select()
     return jumpers
