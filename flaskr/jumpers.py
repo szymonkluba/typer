@@ -4,7 +4,6 @@ from flask import (
 from werkzeug.exceptions import abort
 
 from flaskr.auth import login_required
-from flaskr.db import get_db
 import flaskr.pony_db as pony_db
 
 bp = Blueprint('jumpers', __name__, url_prefix='/jumpers')
