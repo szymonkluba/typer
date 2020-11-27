@@ -60,6 +60,11 @@ def get_bets(id=None):
     return bets
 
 
+def get_bets_by_status(status):
+    bets = Bets.select(lambda b: b.tournament_id.status == status)
+    return bets
+
+
 def get_bet(id):
     bet = Bets.get(lambda b: b.id == id)
     return bet
@@ -100,8 +105,13 @@ def get_tournament(id):
     return tournament
 
 
+def get_tournament_by_status(status):
+    current_tournament = Tournaments.get(lambda t: t.status == status)
+    return current_tournament
+
+
 def create_tournament(place, type, status, date_time, first_place='TBA', second_place='TBA', third_place='TBA'):
-    Tournaments(palce=place,
+    Tournaments(place=place,
                 type=type,
                 status=status,
                 date_time=date_time,
@@ -112,13 +122,18 @@ def create_tournament(place, type, status, date_time, first_place='TBA', second_
 
 
 def update_tournament(id, place, type, status, date_time, first_place='TBA', second_place='TBA', third_place='TBA'):
-    Tournaments[id].set(palce=place,
+    Tournaments[id].set(place=place,
                         type=type,
                         status=status,
                         date_time=date_time,
                         first_place=first_place,
                         second_place=second_place,
                         third_place=third_place)
+    commit()
+
+
+def update_tournament_status(id, status):
+    Tournaments[id].set(status=status)
     commit()
 
 
@@ -163,6 +178,13 @@ def update_user(id, password):
     commit()
 
 
+def update_user_stats(id, points, times_exact):
+    User[id].points += points
+    User[id].times_exact += times_exact
+    User[id].times_bet += 1
+    commit()
+
+
 def get_jumpers():
     jumpers = Jumpers.select()
     return jumpers
@@ -191,8 +213,3 @@ def delete_jumper(id):
 def get_countries():
     countries = Countries.select()
     return countries
-
-
-def get_current_tournament():
-    current_tournament = Tournaments.get(lambda t: t.status == 'następne')
-    return current_tournament
