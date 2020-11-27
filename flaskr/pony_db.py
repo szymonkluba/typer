@@ -11,9 +11,9 @@ class User(db.Entity):
     id = PrimaryKey(int, auto=True)
     username = Required(str, unique=True)
     password = Required(str)
-    times_bet = Optional(int)
-    times_exact = Optional(int)
-    points = Optional(int)
+    times_bet = Optional(int, default=0)
+    times_exact = Optional(int, default=0)
+    points = Optional(int, default=0)
     bets = Set("Bets")
 
 
@@ -56,7 +56,7 @@ def get_bets(id=None):
     if id is None:
         bets = Bets.select().sort_by(desc(Bets.created))
     else:
-        bets = select(lambda b: b.user_id == id).sort_by(desc(Bets.created))
+        bets = Bets.select(lambda b: b.user_id.id == id).sort_by(desc(Bets.created))
     return bets
 
 
@@ -132,9 +132,35 @@ def get_users():
     return users
 
 
+def get_user(id=None, username=None, password=None):
+    if id is not None:
+        user = User.get(lambda u: u.id == id)
+        return user
+    if username is not None:
+        user = User.get(lambda u: u.username == username)
+        return user
+    if password is not None:
+        user = User.get(lambda u: u.password == password)
+        return user
+
+
 def get_users_ranking():
     users = User.select().sort_by(desc(User.points))
     return users
+
+
+def user_exists(username):
+    return exists(u for u in User if u.username == username)
+
+
+def create_user(username, password):
+    User(username=username, password=password)
+    commit()
+
+
+def update_user(id, password):
+    User[id].set(password=password)
+    commit()
 
 
 def get_jumpers():

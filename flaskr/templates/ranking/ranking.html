@@ -19,7 +19,7 @@
             {% for user in users %}
                 <tr style="border-bottom:1px">
                     <th scope="row">{{ loop.index }}</th>
-                    {% if user.id == g.user['id'] %}
+                    {% if user.id == g.user.id %}
                     <td class="font-weight-bold">{{ user.username }}</td>
                     {% else %}
                     <td>{{ user.username }}</td>

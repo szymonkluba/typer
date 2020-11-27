@@ -41,7 +41,7 @@
                     </ol>
             </div>
             <div class="card-footer text-right">
-                {% if g.user['id'] == bet.user_id.id and bet.tournament_id.status != 'koniec' and bet.tournament_id.status != 'archiwum' %}
+                {% if g.user.id == bet.user_id.id and bet.tournament_id.status != 'koniec' and bet.tournament_id.status != 'archiwum' %}
                 <a class="btn btn-dark" role="button" href="{{ url_for('typer.update', id=bet.id)  }}">Edytuj</a>
                 {% endif %}
             </div>

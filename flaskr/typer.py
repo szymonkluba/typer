@@ -20,10 +20,10 @@ def index():
 @bp.route('/my_bets')
 @login_required
 def my_bets():
-    if g.user['id'] is not None:
-        posts = pony_db.get_bet(g.user['id'])
+    if g.user.id is not None:
+        posts = pony_db.get_bets(g.user.id)
         return render_template('typer/index.html',
-                               posts=posts,
+                               bets=posts,
                                duplicate=check_for_duplicates())
 
 
@@ -48,7 +48,7 @@ def create():
             pony_db.create_bet(first_place,
                                second_place,
                                third_place,
-                               g.user['id'],
+                               g.user.id,
                                tournament.id)
             return redirect(url_for('typer.index'))
 
@@ -120,10 +120,10 @@ def check_type_of_tournament(selected_tournament=None):
 
 
 def check_for_duplicates():
-    if g.user['id'] is not None:
+    if g.user.id is not None:
         current_tournament = pony_db.get_current_tournament()
         if current_tournament is not None:
-            return pony_db.duplicate_bet_exists(g.user['id'], current_tournament)
+            return pony_db.duplicate_bet_exists(g.user.id, current_tournament)
         else:
             return True
     return False
