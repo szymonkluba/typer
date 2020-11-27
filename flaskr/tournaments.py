@@ -6,17 +6,15 @@ from werkzeug.exceptions import abort
 from flaskr.auth import login_required
 from flaskr.db import get_db
 from flaskr.typer import get_competitors
+import flaskr.pony_db as pony_db
+
 
 bp = Blueprint('tournaments', __name__, url_prefix='/tournaments')
 
 
 @bp.route('/')
 def tournaments():
-    db = get_db()
-    tournaments = db.execute(
-        'SELECT id, place, type, date_time, first_place, second_place, third_place'
-        ' FROM tournaments ORDER BY date_time DESC'
-    ).fetchall()
+    tournaments = pony_db.get_tournaments()
     return render_template("tournaments/tournaments.html", tournaments=tournaments)
 
 
@@ -36,34 +34,18 @@ def create():
         if error is not None:
             flash(error)
         else:
-            db = get_db()
-            db.execute(
-                'INSERT INTO tournaments (place, type, status, date_time, first_place, second_place, third_place)'
-                ' VALUES (?, ?, ?, ?, ?, ?, ?)',
-                (place, typ, status, date_time, 'TBA', 'TBA', 'TBA')
-            )
-            db.commit()
+            pony_db.create_tournament(place, typ, status, date_time)
             return redirect(url_for('tournaments.tournaments'))
 
     return render_template('tournaments/create.html')
 
 
-def get_tournament(id):
-    tournament = get_db().execute(
-        'SELECT * FROM tournaments WHERE id = ?',
-        (id,)
-    ).fetchone()
-
-    if tournament is None:
-        abort(404, f"Post id {id} does not exist.")
-
-    return tournament
-
-
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
-    tournament = get_tournament(id)
+    tournament = pony_db.get_tournament(id)
+    if tournament is None:
+        abort(404, f"Post id {id} does not exist.")
     jumpers = get_competitors(tournament)
     if request.method == "POST":
         place = request.form['place']
@@ -78,13 +60,7 @@ def update(id):
         if error is not None:
             flash(error)
         else:
-            db = get_db()
-            db.execute(
-                'UPDATE tournaments SET place = ?, type = ?, status = ?, date_time = ?,'
-                "first_place = ?, second_place = ?, third_place = ? WHERE id = ?",
-                (place, typ, status, date_time, first_place, second_place, third_place, id)
-            )
-            db.commit()
+            pony_db.update_tournament(id, place, typ, status, date_time, first_place, second_place, third_place)
             if status == "koniec" and first_place != "TBA" and second_place != 'TBA' and third_place != 'TBA':
                 from flaskr.points import calculate_points
                 calculate_points()
@@ -96,8 +72,8 @@ def update(id):
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
-    get_tournament(id)
-    db = get_db()
-    db.execute('DELETE FROM tournaments WHERE id = ?', (id,))
-    db.commit()
+    tournament = pony_db.get_tournament(id)
+    if tournament is None:
+        abort(404, f"Post id {id} does not exist.")
+    pony_db.delete_tournament(id)
     return redirect(url_for('tournaments.tournaments'))

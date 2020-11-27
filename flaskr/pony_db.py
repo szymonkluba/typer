@@ -91,13 +91,40 @@ def duplicate_bet_exists(user_id, tournament_id):
 
 
 def get_tournaments():
-    tournaments = Tournaments.select()
+    tournaments = Tournaments.select().sort_by(desc(Tournaments.date_time))
     return tournaments
 
 
 def get_tournament(id):
     tournament = Tournaments.get(lambda t: t.id == id)
     return tournament
+
+
+def create_tournament(place, type, status, date_time, first_place='TBA', second_place='TBA', third_place='TBA'):
+    Tournaments(palce=place,
+                type=type,
+                status=status,
+                date_time=date_time,
+                first_place=first_place,
+                second_place=second_place,
+                third_place=third_place)
+    commit()
+
+
+def update_tournament(id, place, type, status, date_time, first_place='TBA', second_place='TBA', third_place='TBA'):
+    Tournaments[id].set(palce=place,
+                        type=type,
+                        status=status,
+                        date_time=date_time,
+                        first_place=first_place,
+                        second_place=second_place,
+                        third_place=third_place)
+    commit()
+
+
+def delete_tournament(id):
+    Tournaments[id].delete()
+    commit()
 
 
 def get_users():
