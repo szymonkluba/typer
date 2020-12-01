@@ -287,6 +287,11 @@ def get_country_by_name(name):
     return country
 
 
+def create_country(name):
+    Countries(name=name)
+    commit()
+
+
 def bet_places_individual(first, second, third, id=None):
     if id:
         first_place = FirstPlaces.get(lambda x: x.bet_id == id)

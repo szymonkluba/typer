@@ -2,6 +2,7 @@ from lxml import html
 from pony.orm import *
 import requests
 import flaskr.pony_db as pony_db
+import flaskr.constants as constants
 from datetime import datetime, timedelta
 
 PATH_RACES = 'https://www.fis-ski.com/DB/general/results.html?sectorcode=JP&raceid='
@@ -72,6 +73,14 @@ def get_active_jumpers():
     for jumper in list_of_jumpers:
         with db_session:
             pony_db.create_jumper(jumper)
+
+
+def get_countries_from_list():
+    for country in constants.COUNTRIES:
+        with db_session:
+            pony_db.create_country(country)
+
+
 
 # for name in names_temp:
 #     name = name.replace('\n', '').strip()
