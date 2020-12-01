@@ -81,6 +81,7 @@ def get_countries_from_list():
             pony_db.create_country(country)
 
 
+check_new_tournaments()
 
 # for name in names_temp:
 #     name = name.replace('\n', '').strip()

@@ -22,22 +22,41 @@
             <div class="card-header">
                 <h5>{{ post.place }} - {{ post.type }} - {{ post.date_time }}</h5>
             </div>
+            {% if post.type == "drużynowe" %}
             <div class="card-body p-0">
                 <ol class="list-group list-group-flush p-1">
                     <li class="list-group-item p-1">
                         <span class="badge badge-secondary">1</span>
-                        {{ post.first_place }}
+                        {{ post.first_place.country_id.name }}
                     </li>
                     <li class="list-group-item p-1">
                         <span class="badge badge-secondary">2</span>
-                        {{ post.second_place }}
+                        {{ post.second_place.country_id.name }}
                     </li>
                     <li class="list-group-item p-1">
                         <span class="badge badge-secondary">3</span>
-                        {{ post.third_place }}
+                        {{ post.third_place.country_id.name }}
                     </li>
                 </ol>
            </div>
+            {% else %}
+            <div class="card-body p-0">
+                <ol class="list-group list-group-flush p-1">
+                    <li class="list-group-item p-1">
+                        <span class="badge badge-secondary">1</span>
+                        {{ post.first_place.jumper_id.name }}
+                    </li>
+                    <li class="list-group-item p-1">
+                        <span class="badge badge-secondary">2</span>
+                        {{ post.second_place.jumper_id.name }}
+                    </li>
+                    <li class="list-group-item p-1">
+                        <span class="badge badge-secondary">3</span>
+                        {{ post.third_place.jumper_id.name }}
+                    </li>
+                </ol>
+           </div>
+            {% endif %}
             <div class="card-footer text-right p-1">
                 <a class="btn btn-dark"
                    role="button"
