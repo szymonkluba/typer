@@ -23,6 +23,9 @@ class Jumpers(db.Entity):
     first_place = Set('FirstPlaces')
     second_place = Set('SecondPlaces')
     third_place = Set('ThirdPlaces')
+    first_ten = Set('FirstTen')
+    second_ten = Set('SecondTen')
+    third_ten = Set('ThirdTen')
 
 
 class Countries(db.Entity):
@@ -75,6 +78,21 @@ class Bets(db.Entity):
     first_place = Optional('FirstPlaces')
     second_place = Optional('SecondPlaces')
     third_place = Optional('ThirdPlaces')
+
+
+class FirstTen(db.Entity):
+    tournament_id = Required(Tournaments)
+    jumper_id = Required(Jumpers)
+
+
+class SecondTen(db.Entity):
+    tournament_id = Required(Tournaments)
+    jumper_id = Required(Jumpers)
+
+
+class ThirdTen(db.Entity):
+    tournament_id = Required(Tournaments)
+    jumper_id = Required(Jumpers)
 
 
 db.generate_mapping(create_tables=True)
