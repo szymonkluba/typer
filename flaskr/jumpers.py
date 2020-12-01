@@ -38,7 +38,7 @@ def create():
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
-    jumper = pony_db.get_jumper(id)
+    jumper = pony_db.get_jumper_by_id(id)
     if jumper is None:
         abort(404, f"Post id {id} does not exist.")
 
@@ -58,7 +58,7 @@ def update(id):
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
-    jumper = pony_db.get_jumper(id)
+    jumper = pony_db.get_jumper_by_id(id)
     if jumper is None:
         abort(404, f"Post id {id} does not exist.")
     pony_db.delete_jumper(id)
