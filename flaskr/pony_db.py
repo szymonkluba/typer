@@ -26,6 +26,7 @@ class Tournaments(db.Entity):
     second_place = Required(str)
     third_place = Required(str)
     status = Required(str)
+    fis_id = Required(int)
     bets = Set('Bets')
 
 
@@ -37,6 +38,9 @@ class Bets(db.Entity):
     second_place = Required(str)
     third_place = Required(str)
     tournament_id = Required(Tournaments)
+    first_ten = Set("Jumpers")
+    second_ten = Set("Jumpers")
+    third_ten = Set("Jumpers")
 
 
 class Jumpers(db.Entity):
@@ -110,14 +114,20 @@ def get_tournament_by_status(status):
     return current_tournament
 
 
-def create_tournament(place, type, status, date_time, first_place='TBA', second_place='TBA', third_place='TBA'):
+def get_last_fis_id():
+    fis_id = select(t.fis_id for t in Tournaments).max()
+    return fis_id
+
+
+def create_tournament(place, type, status, date_time, fis_id, first_place='TBA', second_place='TBA', third_place='TBA'):
     Tournaments(place=place,
                 type=type,
                 status=status,
                 date_time=date_time,
                 first_place=first_place,
                 second_place=second_place,
-                third_place=third_place)
+                third_place=third_place,
+                fis_id=fis_id)
     commit()
 
 
