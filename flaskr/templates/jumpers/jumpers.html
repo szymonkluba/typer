@@ -17,7 +17,8 @@
 {% block content %}
         <div class="list-group list-group-horizontal-md p-1">
     {% for jumper in jumpers %}
-        {% if loop.index % 3 == 0 or loop.last %}
+        {% if jumper.name != "TBA" %}
+        {% if loop.index % 2 == 1 or loop.last %}
             <div class="list-group-item w-50 d-flex justify-content-between border-dark">
                 {{ jumper.name }}
                 <a class="btn btn-dark p-1"
@@ -37,6 +38,7 @@
                     Edytuj
                 </a>
             </div>
+        {% endif %}
         {% endif %}
     {% endfor %}
 {% endblock %}
