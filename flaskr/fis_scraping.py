@@ -4,13 +4,9 @@ import requests
 import flaskr.pony_db as pony_db
 from datetime import datetime, timedelta
 
-PATH = 'https://www.fis-ski.com/DB/general/results.html?sectorcode=JP&raceid='
-DUPLICATE_SURNAMES = [
-    'PREVC',
-    'ITO',
-    'SATO',
-    'HUBER'
-]
+PATH_RACES = 'https://www.fis-ski.com/DB/general/results.html?sectorcode=JP&raceid='
+PATH_JUMPERS = 'https://www.fis-ski.com/DB/ski-jumping/biographies.html?lastname=&firstname=&sectorcode=JP&gendercode' \
+               '=M&birthyear=1980-2020&skiclub=&skis=&nationcode=&fiscode=&status=O&search=true '
 
 
 def check_woman(field):
@@ -37,13 +33,12 @@ def team_or_individual(field):
     return False
 
 
-def create_new_tournament(tree, typ, fis_id):
+def create_new_tournament(tree, typ, fis_id, time_starts):
     place = tree.xpath('//*[@class="event-header__name heading_off-sm-style"]/h1/text()')
     place = place[0].replace('\n', '').strip()
     place = place[:place.index(' (')]
     date = tree.xpath('//*[@class="date__full"]/text()')
     date = datetime.strptime(date[0], '%B %d, %Y')
-    time_starts = tree.xpath('//*[@class="time__value"]/text()')
     time_starts = time_starts[0].split(':')
     date_time = date + timedelta(hours=int(time_starts[0]), minutes=int(time_starts[1]))
     with db_session():
@@ -55,21 +50,28 @@ def check_new_tournaments():
         last_fis_id = pony_db.get_last_fis_id()
     while True:
         last_fis_id += 1
-        page = requests.get(f'{PATH}{last_fis_id}')
+        page = requests.get(f'{PATH_RACES}{last_fis_id}')
         tree = html.fromstring(page.content)
         subtitle = tree.xpath('//*[@class="event-header__subtitle"]/text()')
         kind = tree.xpath('//*[@class="event-header__kind"]/text()')
+        time_starts = tree.xpath('//*[@class="time__value"]/text()')
+        if not time_starts:
+            break
         if not check_woman(kind) and not check_children(subtitle):
             if check_world_cup(subtitle):
                 if team_or_individual(kind):
-                    create_new_tournament(tree, 'drużynowe', last_fis_id)
-                    break
+                    create_new_tournament(tree, 'drużynowe', last_fis_id, time_starts)
                 else:
-                    create_new_tournament(tree, 'indywidualne', last_fis_id)
-                    break
+                    create_new_tournament(tree, 'indywidualne', last_fis_id, time_starts)
 
 
-check_new_tournaments()
+def get_active_jumpers():
+    page = requests.get(PATH_JUMPERS)
+    tree = html.fromstring(page.content)
+    list_of_jumpers = tree.xpath('//*[@id="athletes-search"]/div/a/div/div[2]/text()')
+    for jumper in list_of_jumpers:
+        with db_session:
+            pony_db.create_jumper(jumper)
 
 # for name in names_temp:
 #     name = name.replace('\n', '').strip()
