@@ -11,7 +11,9 @@
     <form method="post">
         <datalist id="jumpers">
             {% for jumper in jumpers %}
+                {% if jumper.name != "TBA" %}
                 <option>{{ jumper.name }}</option>
+                {% endif %}
             {% endfor %}
         </datalist>
         <div class="form-group p-3">

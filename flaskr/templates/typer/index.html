@@ -25,18 +25,33 @@
             </div>
             <div class="card-body p-0">
                     <ol class="list-group list-group-flush p-1">
+                        {% if bet.tournament_id.type == "drużynowe" %}
                         <li class="list-group-item p-1">
                             <span class="badge badge-secondary">1</span>
-                            {{ bet.first_place }}
+                            {{ bet.first_place.country_id.name }}
                         </li>
                         <li class="list-group-item p-1">
                             <span class="badge badge-secondary">2</span>
-                            {{ bet.second_place }}
+                            {{ bet.second_place.country_id.name }}
                         </li>
                         <li class="list-group-item p-1">
                             <span class="badge badge-secondary">3</span>
-                            {{ bet.third_place }}
+                            {{ bet.third_place.country_id.name }}
                         </li>
+                        {% else %}
+                        <li class="list-group-item p-1">
+                            <span class="badge badge-secondary">1</span>
+                            {{ bet.first_place.jumper_id.name }}
+                        </li>
+                        <li class="list-group-item p-1">
+                            <span class="badge badge-secondary">2</span>
+                            {{ bet.second_place.jumper_id.name }}
+                        </li>
+                        <li class="list-group-item p-1">
+                            <span class="badge badge-secondary">3</span>
+                            {{ bet.third_place.jumper_id.name }}
+                        </li>
+                        {% endif %}
                     </ol>
             </div>
             <div class="card-footer text-right">

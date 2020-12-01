@@ -13,31 +13,57 @@
     <form method="post">
         <datalist id="jumpers">
             {% for jumper in jumpers %}
+                {% if jumper.name != "TBA" %}
                 <option>{{ jumper.name }}</option>
+                {% endif %}
             {% endfor %}
         </datalist>
         <div class="form-group p-3">
+            {% if bet.tournament_id.type == "drużynowe" %}
             <label for="first_place">Pierwsze miejsce:</label>
             <input name="first_place"
                    id="first_place"
                    list="jumpers"
                    class="form-control w-50"
-                   value="{{ request.form['first_place'] or bet.first_place }}"
+                   value="{{ request.form['first_place'] or bet.first_place.country_id.name }}"
                    required>
             <label for="second_place">Drugie miejsce:</label>
             <input name="second_place"
                    id="second_place"
                    list="jumpers"
                    class="form-control w-50"
-                   value="{{ request.form['second_place'] or bet.second_place }}"
+                   value="{{ request.form['second_place'] or bet.second_place.country_id.name }}"
                    required>
             <label for="third_place">Trzecie miejsce:</label>
             <input name="third_place"
                    id="third_place"
                    list="jumpers"
                    class="form-control w-50"
-                   value="{{ request.form['third_place'] or bet.third_place }}"
+                   value="{{ request.form['third_place'] or bet.third_place.country_id.name }}"
                    required>
+            {% else %}
+            <label for="first_place">Pierwsze miejsce:</label>
+            <input name="first_place"
+                   id="first_place"
+                   list="jumpers"
+                   class="form-control w-50"
+                   value="{{ request.form['first_place'] or bet.first_place.jumper_id.name }}"
+                   required>
+            <label for="second_place">Drugie miejsce:</label>
+            <input name="second_place"
+                   id="second_place"
+                   list="jumpers"
+                   class="form-control w-50"
+                   value="{{ request.form['second_place'] or bet.second_place.jumper_id.name }}"
+                   required>
+            <label for="third_place">Trzecie miejsce:</label>
+            <input name="third_place"
+                   id="third_place"
+                   list="jumpers"
+                   class="form-control w-50"
+                   value="{{ request.form['third_place'] or bet.third_place.jumper_id.name }}"
+                   required>
+            {% endif %}
         </div>
         <div class="text-center">
             <input class="btn btn-dark w-25" type="submit" value="Zapisz">
