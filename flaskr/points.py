@@ -7,24 +7,35 @@ def calculate_points():
         bets = pony_db.get_bets_by_status('koniec')
         if bets is not None:
             for bet in bets:
-                places = [bet.tournament_id.first_place,
-                          bet.tournament_id.second_place,
-                          bet.tournament_id.third_place]
+                if bet.tournament_id.type == 'drużynowe':
+                    places = [bet.tournament_id.first_place.country_id.id,
+                              bet.tournament_id.second_place.country_id.id,
+                              bet.tournament_id.third_place.country_id.id]
+                    first_place = bet.first_place.country_id.id
+                    second_place = bet.second_place.country_id.id
+                    third_place = bet.third_place.country_id.id
+                else:
+                    places = [bet.tournament_id.first_place.jumper_id.id,
+                              bet.tournament_id.second_place.jumper_id.id,
+                              bet.tournament_id.third_place.jumper_id.id]
+                    first_place = bet.first_place.jumper_id.id
+                    second_place = bet.second_place.jumper_id.id
+                    third_place = bet.third_place.jumper_id.id
                 points = 0
                 exact_bets = 0
-                if bet.first_place in places:
+                if first_place in places:
                     points += 1
-                if bet.second_place in places:
+                if second_place in places:
                     points += 1
-                if bet.third_place in places:
+                if third_place in places:
                     points += 1
-                if bet.first_place == places[0]:
+                if first_place == places[0]:
                     points += 2
                     exact_bets += 1
-                if bet.second_place == places[1]:
+                if second_place == places[1]:
                     points += 2
                     exact_bets += 1
-                if bet.third_place == places[2]:
+                if third_place == places[2]:
                     points += 2
                     exact_bets += 1
                 pony_db.update_user_stats(bet.user_id.id, points, exact_bets)
