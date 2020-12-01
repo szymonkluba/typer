@@ -49,7 +49,7 @@ def create():
                                second_place,
                                third_place,
                                g.user.id,
-                               tournament.id)
+                               tournament)
             return redirect(url_for('typer.index'))
 
     return render_template('typer/create.html',
