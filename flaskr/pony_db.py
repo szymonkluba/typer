@@ -202,6 +202,12 @@ def get_last_fis_id():
         return 5787
 
 
+def open_next_tournament():
+    tournament = Tournaments.select(lambda t: t.status == "przyszłe").sort_by(Tournaments.date_time).first()
+    tournament.set(status="następne")
+    commit()
+
+
 def create_tournament(place, type, status, date_time, fis_id):
     tournament = Tournaments(place=place,
                              type=type,
@@ -420,9 +426,9 @@ def add_to_third_five(tournament_id, name):
 
 
 def get_tens_for_tournament(id):
-    first_ten = FirstTen.select(lambda x: x.tournament_id == id)
-    second_ten = SecondTen.select(lambda x: x.tournament_id == id)
-    third_ten = ThirdTen.select(lambda x: x.tournament_id == id)
+    first_ten = FirstTen.select(lambda x: x.tournament_id.id == id)
+    second_ten = SecondTen.select(lambda x: x.tournament_id.id == id)
+    third_ten = ThirdTen.select(lambda x: x.tournament_id.id == id)
     first_ten = [x.jumper_id for x in first_ten]
     second_ten = [x.jumper_id for x in second_ten]
     third_ten = [x.jumper_id for x in third_ten]
@@ -430,9 +436,9 @@ def get_tens_for_tournament(id):
 
 
 def get_fives_for_tournament(id):
-    first_five = FirstFive.select(lambda x: x.tournament_id == id)
-    second_five = SecondFive.select(lambda x: x.tournament_id == id)
-    third_five = ThirdFive.select(lambda x: x.tournament_id == id)
+    first_five = FirstFive.select(lambda x: x.tournament_id.id == id)
+    second_five = SecondFive.select(lambda x: x.tournament_id.id == id)
+    third_five = ThirdFive.select(lambda x: x.tournament_id.id == id)
     fives = []
     if first_five:
         fives.append([x.country_id for x in first_five])
