@@ -236,7 +236,7 @@ def update_tournament_podium(id, type, first_place, second_place, third_place):
 
 
 def update_tournament_places(type, table, place, id):
-    row = table.get(lambda t: t.tournament.id == id)
+    row = table.get(lambda t: t.tournament_id.id == id)
     if type == 'drużynowe':
         row.set(country_id=get_country_by_name(place).id)
     elif type == "indywidualne":
