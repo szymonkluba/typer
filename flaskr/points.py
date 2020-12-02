@@ -3,7 +3,11 @@ import flaskr.pony_db as pony_db
 
 def calculate_points():
     tournament = pony_db.get_tournament_by_status('koniec')
-    if tournament is not None:
+    if tournament:
+        if tournament.type == 'drużynowe':
+            results = pony_db.get_fives_for_tournament(tournament.id)
+        else:
+            results = pony_db.get_tens_for_tournament(tournament.id)
         bets = pony_db.get_bets_by_status('koniec')
         if bets is not None:
             for bet in bets:
@@ -33,10 +37,31 @@ def calculate_points():
                     points += 2
                     exact_bets += 1
                 if second_place == places[1]:
-                    points += 2
+                    points += 1
                     exact_bets += 1
                 if third_place == places[2]:
-                    points += 2
+                    points += 1
                     exact_bets += 1
+                try:
+                    if first_place in results[1]:
+                        points -= 1
+                    elif first_place in results[2]:
+                        points -= 2
+                except IndexError:
+                    pass
+                try:
+                    if second_place in results[1]:
+                        points -= 1
+                    elif second_place in results[2]:
+                        points -= 2
+                except IndexError:
+                    pass
+                try:
+                    if third_place in results[1]:
+                        points -= 1
+                    elif third_place in results[2]:
+                        points -= 2
+                except IndexError:
+                    pass
                 pony_db.update_user_stats(bet.user_id.id, points, exact_bets)
     pony_db.update_tournament_status(tournament.id, 'archiwum')
