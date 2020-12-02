@@ -34,6 +34,9 @@ class Countries(db.Entity):
     first_place = Set('FirstPlaces')
     second_place = Set('SecondPlaces')
     third_place = Set('ThirdPlaces')
+    first_five = Set('FirstFive')
+    second_five = Set('SecondFive')
+    third_five = Set('ThirdFive')
 
 
 class FirstPlaces(db.Entity):
@@ -68,6 +71,9 @@ class Tournaments(db.Entity):
     first_ten = Set('FirstTen')
     second_ten = Set('SecondTen')
     third_ten = Set('ThirdTen')
+    first_five = Set('FirstFive')
+    second_five = Set('SecondFive')
+    third_five = Set('ThirdFive')
     status = Required(str)
     fis_id = Required(int)
     bets = Set('Bets')
@@ -100,17 +106,17 @@ class ThirdTen(db.Entity):
 
 class FirstFive(db.Entity):
     tournament_id = Required(Tournaments)
-    jumper_id = Required(Jumpers)
+    country_id = Required(Countries)
 
 
 class SecondFive(db.Entity):
     tournament_id = Required(Tournaments)
-    jumper_id = Required(Jumpers)
+    country_id = Required(Countries)
 
 
 class ThirdFive(db.Entity):
     tournament_id = Required(Tournaments)
-    jumper_id = Required(Jumpers)
+    country_id = Required(Countries)
 
 
 db.generate_mapping(create_tables=True)
@@ -381,3 +387,33 @@ def get_jumpers_tba():
         tba = Jumpers(name='TBA')
         commit()
         return tba
+
+
+def add_to_first_ten(tournament_id, name):
+    jumper = get_jumper_by_name(name)
+    FirstTen(tournament_id=tournament_id, jumper_id=jumper.id)
+
+
+def add_to_second_ten(tournament_id, name):
+    jumper = get_jumper_by_name(name)
+    SecondTen(tournament_id=tournament_id, jumper_id=jumper.id)
+
+
+def add_to_third_ten(tournament_id, name):
+    jumper = get_jumper_by_name(name)
+    ThirdTen(tournament_id=tournament_id, jumper_id=jumper.id)
+
+
+def add_to_first_five(tournament_id, name):
+    country = get_country_by_name(name)
+    FirstFive(tournament_id=tournament_id, country_id=country.id)
+
+
+def add_to_second_five(tournament_id, name):
+    country = get_country_by_name(name)
+    SecondFive(tournament_id=tournament_id, country_id=country.id)
+
+
+def add_to_third_five(tournament_id, name):
+    country = get_country_by_name(name)
+    ThirdFive(tournament_id=tournament_id, country_id=country.id)
