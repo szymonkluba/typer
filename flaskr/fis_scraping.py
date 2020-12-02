@@ -8,6 +8,9 @@ from datetime import datetime, timedelta
 PATH_RACES = 'https://www.fis-ski.com/DB/general/results.html?sectorcode=JP&raceid='
 PATH_JUMPERS = 'https://www.fis-ski.com/DB/ski-jumping/biographies.html?lastname=&firstname=&sectorcode=JP&gendercode' \
                '=M&birthyear=1980-2020&skiclub=&skis=&nationcode=&fiscode=&status=O&search=true '
+PATH_COLUMNS_HEADERS_PREF = '//*[@id="ajx_results"]/section/div/div/div/div[2]/div[1]/div/div/div/div/div['
+PATH_RESULTS = '//*[@id="events-info-results"]/div/a/div/div/div['
+
 
 
 def check_woman(field):
@@ -82,9 +85,9 @@ def get_countries_from_list():
 
 
 def get_results():
-    # with db_session:
-    #     tournament = pony_db.get_tournament_by_status('koniec')
-    # if tournament:
+    with db_session:
+        tournament = pony_db.get_tournament_by_status('koniec')
+    if tournament:
         page = requests.get(f'{PATH_RACES}{5787}')
         tree = html.fromstring(page.content)
         podium = tree.xpath('//*[@class="result-card__name"]/text()')
@@ -94,9 +97,39 @@ def get_results():
                 if podium[i] in constants.COUNTRIES.keys():
                     podium[i] = constants.COUNTRIES[podium[i]]
             podium = [x for x in podium if x != '']
-            pony_db.update_tournament_podium(tournament.id, tournament.type, *podium)
-
-
+            with db_session:
+                pony_db.update_tournament_podium(tournament.id, tournament.type, *podium)
+        column_index = 1
+        column = tree.xpath(f'{PATH_COLUMNS_HEADERS_PREF}{column_index}]/text()')[0]
+        while column != 'Athlete' and column != 'Name':
+            column_index += 1
+            column = tree.xpath(f'{PATH_COLUMNS_HEADERS_PREF}{column_index}]/text()')[0]
+        if tournament.type == 'drużynowe':
+            results = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
+            results_team = []
+            for result in results:
+                result = result.replace('\n', '').strip()
+                if result in constants.COUNTRIES:
+                    results_team.append(result)
+            with db_session:
+                for i in range(len(results_team)):
+                    if i < 5:
+                        pony_db.add_to_first_five(tournament.id, constants.COUNTRIES[results[i]])
+                    elif i < 10:
+                        pony_db.add_to_second_five(tournament.id, constants.COUNTRIES[results[i]])
+                    elif i < 15:
+                        pony_db.add_to_third_five(tournament.id, constants.COUNTRIES[results[i]])
+        else:
+            results = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
+            with db_session:
+                for i in range(len(results)):
+                    results[i] = results[i].replace('\n', '').strip()
+                    if i < 10:
+                        pony_db.add_to_first_ten(tournament.id, results[i])
+                    elif i < 20:
+                        pony_db.add_to_second_ten(tournament.id, results[i])
+                    elif i < 30:
+                        pony_db.add_to_third_ten(tournament.id, results[i])
 
 get_results()
 
