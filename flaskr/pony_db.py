@@ -98,6 +98,21 @@ class ThirdTen(db.Entity):
     jumper_id = Required(Jumpers)
 
 
+class FirstFive(db.Entity):
+    tournament_id = Required(Tournaments)
+    jumper_id = Required(Jumpers)
+
+
+class SecondFive(db.Entity):
+    tournament_id = Required(Tournaments)
+    jumper_id = Required(Jumpers)
+
+
+class ThirdFive(db.Entity):
+    tournament_id = Required(Tournaments)
+    jumper_id = Required(Jumpers)
+
+
 db.generate_mapping(create_tables=True)
 
 
