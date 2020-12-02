@@ -26,7 +26,7 @@ def check_children(field):
 
 
 def check_world_cup(field):
-    if 'World Cup' in field[0]:
+    if 'World Cup' in field[0] or 'World Championship' in field[0]:
         return True
     return False
 
@@ -88,7 +88,7 @@ def get_results():
     with db_session:
         tournament = pony_db.get_tournament_by_status('koniec')
     if tournament:
-        page = requests.get(f'{PATH_RACES}{5787}')
+        page = requests.get(f'{PATH_RACES}{tournament.fis_id}')
         tree = html.fromstring(page.content)
         podium = tree.xpath('//*[@class="result-card__name"]/text()')
         if podium:
@@ -99,37 +99,37 @@ def get_results():
             podium = [x for x in podium if x != '']
             with db_session:
                 pony_db.update_tournament_podium(tournament.id, tournament.type, *podium)
-        column_index = 1
-        column = tree.xpath(f'{PATH_COLUMNS_HEADERS_PREF}{column_index}]/text()')[0]
-        while column != 'Athlete' and column != 'Name':
-            column_index += 1
+            column_index = 1
             column = tree.xpath(f'{PATH_COLUMNS_HEADERS_PREF}{column_index}]/text()')[0]
-        if tournament.type == 'drużynowe':
-            results = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
-            results_team = []
-            for result in results:
-                result = result.replace('\n', '').strip()
-                if result in constants.COUNTRIES:
-                    results_team.append(result)
-            with db_session:
-                for i in range(len(results_team)):
-                    if i < 5:
-                        pony_db.add_to_first_five(tournament.id, constants.COUNTRIES[results[i]])
-                    elif i < 10:
-                        pony_db.add_to_second_five(tournament.id, constants.COUNTRIES[results[i]])
-                    elif i < 15:
-                        pony_db.add_to_third_five(tournament.id, constants.COUNTRIES[results[i]])
-        else:
-            results = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
-            with db_session:
-                for i in range(len(results)):
-                    results[i] = results[i].replace('\n', '').strip()
-                    if i < 10:
-                        pony_db.add_to_first_ten(tournament.id, results[i])
-                    elif i < 20:
-                        pony_db.add_to_second_ten(tournament.id, results[i])
-                    elif i < 30:
-                        pony_db.add_to_third_ten(tournament.id, results[i])
+            while column != 'Athlete' and column != 'Name':
+                column_index += 1
+                column = tree.xpath(f'{PATH_COLUMNS_HEADERS_PREF}{column_index}]/text()')[0]
+            if tournament.type == 'drużynowe':
+                results = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
+                results_team = []
+                for result in results:
+                    result = result.replace('\n', '').strip()
+                    if result in constants.COUNTRIES:
+                        results_team.append(result)
+                with db_session:
+                    for i in range(len(results_team)):
+                        if i < 5:
+                            pony_db.add_to_first_five(tournament.id, constants.COUNTRIES[results[i]])
+                        elif i < 10:
+                            pony_db.add_to_second_five(tournament.id, constants.COUNTRIES[results[i]])
+                        elif i < 15:
+                            pony_db.add_to_third_five(tournament.id, constants.COUNTRIES[results[i]])
+            else:
+                results = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
+                with db_session:
+                    for i in range(len(results)):
+                        results[i] = results[i].replace('\n', '').strip()
+                        if i < 10:
+                            pony_db.add_to_first_ten(tournament.id, results[i])
+                        elif i < 20:
+                            pony_db.add_to_second_ten(tournament.id, results[i])
+                        elif i < 30:
+                            pony_db.add_to_third_ten(tournament.id, results[i])
 
 get_results()
 
