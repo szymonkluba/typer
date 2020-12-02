@@ -1,5 +1,6 @@
 from lxml import html
 from pony.orm import *
+from schedule import clear
 import requests
 import flaskr.pony_db as pony_db
 import flaskr.constants as constants
@@ -130,8 +131,10 @@ def get_results():
                             pony_db.add_to_second_ten(tournament.id, results[i])
                         elif i < 30:
                             pony_db.add_to_third_ten(tournament.id, results[i])
+            clear("checking_results")
 
-get_results()
+
+
 
 # for name in names_temp:
 #     name = name.replace('\n', '').strip()
