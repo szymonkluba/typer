@@ -81,7 +81,24 @@ def get_countries_from_list():
             pony_db.create_country(country)
 
 
-check_new_tournaments()
+def get_results():
+    # with db_session:
+    #     tournament = pony_db.get_tournament_by_status('koniec')
+    # if tournament:
+        page = requests.get(f'{PATH_RACES}{5787}')
+        tree = html.fromstring(page.content)
+        podium = tree.xpath('//*[@class="result-card__name"]/text()')
+        if podium:
+            for i in range(len(podium)):
+                podium[i] = podium[i].replace('\n', '').strip()
+                if podium[i] in constants.COUNTRIES.keys():
+                    podium[i] = constants.COUNTRIES[podium[i]]
+            podium = [x for x in podium if x != '']
+            pony_db.update_tournament_podium(tournament.id, tournament.type, *podium)
+
+
+
+get_results()
 
 # for name in names_temp:
 #     name = name.replace('\n', '').strip()
