@@ -207,6 +207,13 @@ def update_tournament(id, place, type, status, date_time, first_place, second_pl
     commit()
 
 
+def update_tournament_podium(id, type, first_place, second_place, third_place):
+    update_tournament_places(type, FirstPlaces, first_place, id)
+    update_tournament_places(type, SecondPlaces, second_place, id)
+    update_tournament_places(type, ThirdPlaces, third_place, id)
+    commit()
+
+
 def update_tournament_places(type, table, place, id):
     row = table.get(lambda t: t.tournament.id == id)
     if type == 'drużynowe':
