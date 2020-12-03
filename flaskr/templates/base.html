@@ -7,8 +7,8 @@
 </head>
 <body class="bg-secondary">
 <div class="container">
-    <div class="row justify-content-lg-center">
-        <div class="col bg-dark">
+    <div class="row bg-dark">
+        <div class="col">
             <nav class="navbar navbar-expand-md navbar-dark bg-dark">
                 <a class="navbar-brand" href="{{ url_for('typer.index') }}">Typer</a>
                 <button class="navbar-toggler" type="button"
@@ -50,7 +50,9 @@
                     {% endif %}
                 </div>
             </nav>
-    <div class="row justify-content-lg-center">
+        </div>
+    </div>
+    <div class="row p-0">
         <div class="col bg-light pb-3 justify-content-center">
             <header>
                 {% block header %}{% endblock %}
@@ -60,19 +62,8 @@
             {% endfor %}
             {% block content %}{% endblock %}
         </div>
-        <div class="col-auto border-dark bg-secondary pb-3 justify-content-center">
-            {% for news in news_feed %}
-            <div class="card border-dark m-1">
-                <div class="card-header">
-                    <h5><span class="badge badge-pill badge-{{ news.level }}">{{ news.header }}</span></h5>
-                    <p class="card-subtitle text-muted">{{ news.created }}</p>
-                </div>
-                <div class="card-body pt-1 pb-1">
-                    <h6>{{ news.body }}</h6>
-
-                </div>
-            </div>
-            {% endfor %}
+        <div class="col-auto bg-light pr-2 justify-content-center">
+            {% block news %}{% endblock %}
         </div>
     </div>
 </div>

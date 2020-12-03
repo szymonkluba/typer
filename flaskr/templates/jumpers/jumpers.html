@@ -15,11 +15,10 @@
 {% endblock %}
 
 {% block content %}
-        <div class="list-group list-group-horizontal-md p-1">
+        <div class="list-group p-1">
     {% for jumper in jumpers %}
         {% if jumper.name != "TBA" %}
-        {% if loop.index % 2 == 1 or loop.last %}
-            <div class="list-group-item w-50 d-flex justify-content-between border-dark">
+            <div class="list-group-item d-flex justify-content-between border-dark">
                 {{ jumper.name }}
                 <a class="btn btn-dark p-1"
                    role="button"
@@ -27,18 +26,22 @@
                     Edytuj
                 </a>
             </div>
-        </div>
-        <div class="list-group list-group-horizontal-md p-1">
-        {% else %}
-            <div class="list-group-item w-50 d-flex justify-content-between border-dark">
-                {{ jumper.name }}
-                <a class="btn btn-dark p-1"
-                   role="button"
-                   href="{{ url_for('jumpers.update', id=jumper.id)  }}">
-                    Edytuj
-                </a>
-            </div>
-        {% endif %}
         {% endif %}
     {% endfor %}
+        </div>
+{% endblock %}
+
+{% block news %}
+<h5>Nowe wydarzenia</h5>
+            {% for _ in level %}
+            <div class="card border-dark m-1 p-1 w-100">
+                <div class="card-header p-1">
+                    <h5><span class="badge badge-pill badge-{{ level[loop.index0] }}">{{ header[loop.index0] }}</span></h5>
+                    <small class="card-subtitle text-muted">{{ created[loop.index0] }}</small>
+                </div>
+                <div class="card-body p-1">
+                    <small>{{ body[loop.index0] }}</small>
+                </div>
+            </div>
+            {% endfor %}
 {% endblock %}

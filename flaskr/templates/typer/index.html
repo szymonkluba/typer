@@ -73,3 +73,18 @@
         </div>
     {% endfor %}
 {% endblock %}
+
+{% block news %}
+<h5>Nowe wydarzenia</h5>
+            {% for _ in level %}
+            <div class="card border-dark m-1 p-1 w-100">
+                <div class="card-header p-1">
+                    <h5><span class="badge badge-pill badge-{{ level[loop.index0] }}">{{ header[loop.index0] }}</span></h5>
+                    <small class="card-subtitle text-muted">{{ created[loop.index0] }}</small>
+                </div>
+                <div class="card-body p-1">
+                    <small>{{ body[loop.index0] }}</small>
+                </div>
+            </div>
+            {% endfor %}
+{% endblock %}
