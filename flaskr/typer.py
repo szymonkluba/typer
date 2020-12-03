@@ -14,7 +14,8 @@ bp = Blueprint('typer', __name__)
 def index():
     return render_template('typer/index.html',
                            bets=pony_db.get_bets(),
-                           duplicate=check_for_duplicates())
+                           duplicate=check_for_duplicates(),
+                           current_tournament=pony_db.get_tournament_by_status('następne'))
 
 
 @bp.route('/my_bets')
@@ -24,7 +25,8 @@ def my_bets():
         posts = pony_db.get_bets(g.user.id)
         return render_template('typer/index.html',
                                bets=posts,
-                               duplicate=check_for_duplicates())
+                               duplicate=check_for_duplicates(),
+                               current_tournament=pony_db.get_tournament_by_status('następne'))
 
 
 @bp.route('/create', methods=('GET', 'POST'))

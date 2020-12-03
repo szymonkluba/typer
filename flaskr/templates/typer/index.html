@@ -1,15 +1,26 @@
 {% extends 'base.html' %}
 {% block header %}
     <div class="container mt-3">
+        {% if current_tournament %}
         <div class="row">
-            <div class="col">
+            <div class="card border-dark m-1 w-100">
+                <div class="card-header">
+                    <h4 class="card-title">Obecnie typujemy:</h4>
+                </div>
+                <div class="card-body pt-1 pb-1">
+                    <h5>{{ current_tournament.place }} - {{ current_tournament.type }}</h5>
+                    <h6>{{ current_tournament.date_time.strftime('%d.%m.%Y godzina: %H:%M') }}</h6>
+                </div>
+                <div class="card-footer text-right">
+                    {% if g.user and not duplicate %}
+                    <a class="btn btn-danger w-25" role="button" href="{{ url_for('typer.create') }}">Typuj</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="row">
                 <h2>{% block title %}Ostatnie typy:{% endblock %}</h2>
-            </div>
-            <div class="col text-right">
-                {% if g.user and not duplicate %}
-                <a class="btn btn-dark" role="button" href="{{ url_for('typer.create') }}">Typuj</a>
-                {% endif %}
-            </div>
         </div>
     </div>
 {% endblock %}
