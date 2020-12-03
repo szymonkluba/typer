@@ -65,6 +65,49 @@
                     Edytuj
                 </a>
                 {% endif %}
+                {% if post.status == "archiwum" %}
+                <div class="row text-left mt-1">
+                    <div class="col pr-1">
+                        <ul class="list-group">
+                            {% if post.type == "drużynowe" %}
+                            {% for country in post.first_five|sort(attribute="id") %}
+                                <li class="list-group-item p-0 pl-1"><small>{{loop.index}}. {{ country.country_id.name }}</small></li>
+                            {% endfor %}
+                            {% else %}
+                            {% for jumper in post.first_ten|sort(attribute="id") %}
+                                <li class="list-group-item p-0 pl-1"><small>{{loop.index}}. {{ jumper.jumper_id.name }}</small></li>
+                            {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="col pl-1 pr-1">
+                        <ul class="list-group">
+                            {% if post.type == "drużynowe" %}
+                            {% for country in post.second_five|sort(attribute="id") %}
+                                <li class="list-group-item p-0 pl-1 pr-1"><small>{{loop.index + 5}}. {{ country.country_id.name }}</small></li>
+                            {% endfor %}
+                            {% else %}
+                            {% for jumper in post.second_ten|sort(attribute="id") %}
+                                <li class="list-group-item p-0 pl-1 pr-1"><small>{{loop.index + 10}}. {{ jumper.jumper_id.name }}</small></li>
+                            {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="col pl-1">
+                        <ul class="list-group">
+                            {% if post.type == "drużynowe" %}
+                            {% for country in post.third_five|sort(attribute="id") %}
+                                <li class="list-group-item p-0 pl-1 pr-1"><small>{{loop.index + 10}}. {{ country.country_id.name }}</small></li>
+                            {% endfor %}
+                            {% else %}
+                            {% for jumper in post.third_ten|sort(attribute="id") %}
+                                <li class="list-group-item p-0 pl-1 pr-1"><small>{{loop.index + 20}}. {{ jumper.jumper_id.name }}</small></li>
+                            {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     {% endfor %}
