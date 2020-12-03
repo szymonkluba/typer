@@ -194,6 +194,11 @@ def get_tournament_by_status(status):
     return current_tournament
 
 
+def select_tournaments_for_update():
+    tournaments = Tournaments.select(lambda t: t.status == 'następne' or t.status == 'przyszłe')
+    return tournaments
+
+
 def get_last_fis_id():
     fis_id = select(t.fis_id for t in Tournaments).max()
     if fis_id:
@@ -251,6 +256,11 @@ def update_tournament_places(type, table, place, id):
 
 def update_tournament_status(id, status):
     Tournaments[id].set(status=status)
+    commit()
+
+
+def update_tournament_date_time(id, date_time):
+    Tournaments[id].set(date_time=date_time)
     commit()
 
 

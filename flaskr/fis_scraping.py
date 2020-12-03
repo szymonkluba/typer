@@ -11,6 +11,10 @@ PATH_JUMPERS = 'https://www.fis-ski.com/DB/ski-jumping/biographies.html?lastname
                '=M&birthyear=1980-2020&skiclub=&skis=&nationcode=&fiscode=&status=O&search=true '
 PATH_COLUMNS_HEADERS_PREF = '//*[@id="ajx_results"]/section/div/div/div/div[2]/div[1]/div/div/div/div/div['
 PATH_RESULTS = '//*[@id="events-info-results"]/div/a/div/div/div['
+XPATH_KIND = '//*[@class="event-header__kind"]/text()'
+XPATH_SUBTITLE = '//*[@class="event-header__subtitle"]/text()'
+XPATH_DATE = '//*[@class="date__full"]/text()'
+XPATH_TIME = '//*[@class="time__value"]/text()'
 
 
 def check_woman(field):
@@ -41,7 +45,7 @@ def create_new_tournament(tree, typ, fis_id, time_starts):
     place = tree.xpath('//*[@class="event-header__name heading_off-sm-style"]/h1/text()')
     place = place[0].replace('\n', '').strip()
     place = place[:place.index(' (')]
-    date = tree.xpath('//*[@class="date__full"]/text()')
+    date = tree.xpath(XPATH_DATE)
     date = datetime.strptime(date[0], '%B %d, %Y')
     time_starts = time_starts[0].split(':')
     date_time = date + timedelta(hours=int(time_starts[0]), minutes=int(time_starts[1]))
@@ -56,9 +60,9 @@ def check_new_tournaments():
         last_fis_id += 1
         page = requests.get(f'{PATH_RACES}{last_fis_id}')
         tree = html.fromstring(page.content)
-        subtitle = tree.xpath('//*[@class="event-header__subtitle"]/text()')
-        kind = tree.xpath('//*[@class="event-header__kind"]/text()')
-        time_starts = tree.xpath('//*[@class="time__value"]/text()')
+        subtitle = tree.xpath(XPATH_SUBTITLE)
+        kind = tree.xpath(XPATH_KIND)
+        time_starts = tree.xpath(XPATH_TIME)
         if not time_starts:
             break
         if not check_woman(kind) and not check_children(subtitle):
@@ -67,6 +71,26 @@ def check_new_tournaments():
                     create_new_tournament(tree, 'drużynowe', last_fis_id, time_starts)
                 else:
                     create_new_tournament(tree, 'indywidualne', last_fis_id, time_starts)
+
+
+def check_tournament_updates():
+    with db_session:
+        tournaments = pony_db.select_tournaments_for_update()
+    for tournament in tournaments:
+        page = requests.get(f'{PATH_RACES}{tournament.fis_id}')
+        tree = html.fromstring(page.content)
+        cancelled = tree.xpath('//*[@class="event-status event-status_cancelled"]/.')
+        time_starts = tree.xpath(XPATH_TIME)
+        date = tree.xpath(XPATH_DATE)
+        date = datetime.strptime(date[0], '%B %d, %Y')
+        time_starts = time_starts[0].split(':')
+        date_time = date + timedelta(hours=int(time_starts[0]), minutes=int(time_starts[1]))
+        if cancelled:
+            with db_session:
+                pony_db.update_tournament_status(tournament.id, 'odwołane')
+        if date_time != tournament.date_time:
+            with db_session:
+                pony_db.update_tournament_date_time(tournament.id, date_time)
 
 
 def get_active_jumpers():
@@ -130,10 +154,10 @@ def get_results():
                             pony_db.add_to_second_ten(tournament.id, results[i])
                         elif i < 30:
                             pony_db.add_to_third_ten(tournament.id, results[i])
-            # clear("checking_results")
+            clear("checking_results")
 
 
-get_results()
+check_tournament_updates()
 
 # for name in names_temp:
 #     name = name.replace('\n', '').strip()
