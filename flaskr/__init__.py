@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 from pony.flask import Pony
+from flaskr.pony_db import get_news
 
 
 def create_app(test_config=None):
@@ -47,5 +48,10 @@ def create_app(test_config=None):
 
     from . import ranking
     app.register_blueprint(ranking.bp)
+
+    @app.context_processor
+    def inject_news_feed():
+        news_feed = get_news()
+        return news_feed
 
     return app

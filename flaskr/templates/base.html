@@ -60,6 +60,20 @@
             {% endfor %}
             {% block content %}{% endblock %}
         </div>
+        <div class="col-auto border-dark bg-secondary pb-3 justify-content-center">
+            {% for news in news_feed %}
+            <div class="card border-dark m-1">
+                <div class="card-header">
+                    <h5><span class="badge badge-pill badge-{{ news.level }}">{{ news.header }}</span></h5>
+                    <p class="card-subtitle text-muted">{{ news.created }}</p>
+                </div>
+                <div class="card-body pt-1 pb-1">
+                    <h6>{{ news.body }}</h6>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
