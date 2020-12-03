@@ -20,11 +20,13 @@
         {% if jumper.name != "TBA" %}
             <div class="list-group-item d-flex justify-content-between border-dark">
                 {{ jumper.name }}
+                {% if g.user.id == 1 %}
                 <a class="btn btn-dark p-1"
                    role="button"
                    href="{{ url_for('jumpers.update', id=jumper.id)  }}">
                     Edytuj
                 </a>
+                {% endif %}
             </div>
         {% endif %}
     {% endfor %}
