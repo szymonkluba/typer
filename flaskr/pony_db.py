@@ -199,7 +199,7 @@ def get_last_fis_id():
     if fis_id:
         return fis_id
     else:
-        return 5787
+        return 5786
 
 
 def open_next_tournament():

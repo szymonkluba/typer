@@ -13,7 +13,6 @@ PATH_COLUMNS_HEADERS_PREF = '//*[@id="ajx_results"]/section/div/div/div/div[2]/d
 PATH_RESULTS = '//*[@id="events-info-results"]/div/a/div/div/div['
 
 
-
 def check_woman(field):
     if 'Women' in field[0]:
         return True
@@ -115,11 +114,11 @@ def get_results():
                 with db_session:
                     for i in range(len(results_team)):
                         if i < 5:
-                            pony_db.add_to_first_five(tournament.id, constants.COUNTRIES[results[i]])
+                            pony_db.add_to_first_five(tournament.id, constants.COUNTRIES[results_team[i]])
                         elif i < 10:
-                            pony_db.add_to_second_five(tournament.id, constants.COUNTRIES[results[i]])
+                            pony_db.add_to_second_five(tournament.id, constants.COUNTRIES[results_team[i]])
                         elif i < 15:
-                            pony_db.add_to_third_five(tournament.id, constants.COUNTRIES[results[i]])
+                            pony_db.add_to_third_five(tournament.id, constants.COUNTRIES[results_team[i]])
             else:
                 results = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
                 with db_session:
@@ -131,10 +130,10 @@ def get_results():
                             pony_db.add_to_second_ten(tournament.id, results[i])
                         elif i < 30:
                             pony_db.add_to_third_ten(tournament.id, results[i])
-            clear("checking_results")
+            # clear("checking_results")
 
 
-
+get_results()
 
 # for name in names_temp:
 #     name = name.replace('\n', '').strip()
