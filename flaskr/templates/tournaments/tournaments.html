@@ -3,7 +3,7 @@
 <div class="container mt-3">
         <div class="row">
             <div class="col">
-                <h2>{% block title %}Zawody:{% endblock %}</h2>
+                <h2><span class="badge badge-pill badge-secondary">{% block title %}Zawody:{% endblock %}</span></h2>
             </div>
             <div class="col text-right">
                 <a class="btn btn-dark"
@@ -20,7 +20,7 @@
     {% for post in tournaments %}
         <div class="card border-dark m-1">
             <div class="card-header">
-                <h5>{{ post.place }} - {{ post.type }} - {{ post.date_time }}</h5>
+                <h5>{{ post.place }} - {{ post.type }} - {{ post.date_time.strftime("%d.%m.%Y godzina: %H:%M") }}</h5>
             </div>
             {% if post.type == "drużynowe" %}
             <div class="card-body p-0">
@@ -71,7 +71,7 @@
 {% endblock %}
 
 {% block news %}
-<h5>Nowe wydarzenia</h5>
+<h2><span class="badge badge-pill badge-secondary">Nowe wydarzenia</span></h2>
             {% for _ in level %}
             <div class="card border-dark m-1 p-1 w-100">
                 <div class="card-header p-1">

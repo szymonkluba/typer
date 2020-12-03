@@ -3,7 +3,7 @@
 <div class="container mt-3">
     <div class="row">
         <div class="col">
-            <h2>{% block title %}Skoczkowie:{% endblock %}</h2>
+            <h2><span class="badge badge-pill badge-secondary">{% block title %}Skoczkowie:{% endblock %}</span></h2>
         </div>
         <div class="col text-right">
             <a class="btn btn-dark" role="button" href="{{ url_for('jumpers.create') }}">
@@ -34,7 +34,7 @@
 {% endblock %}
 
 {% block news %}
-<h5>Nowe wydarzenia</h5>
+<h2><span class="badge badge-pill badge-secondary">Nowe wydarzenia</span></h2>
             {% for _ in level %}
             <div class="card border-dark m-1 p-1 w-100">
                 <div class="card-header p-1">

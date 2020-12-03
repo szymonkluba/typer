@@ -3,13 +3,13 @@
     <div class="container mt-3">
         {% if current_tournament %}
         <div class="row">
-            <div class="card border-dark m-1 w-100">
+            <div class="card w-100">
                 <div class="card-header">
-                    <h4 class="card-title">Obecnie typujemy:</h4>
+                    <h2 class="card-title"><span class="badge badge-pill badge-secondary">Aktualnie typujemy:</span></h2>
                 </div>
                 <div class="card-body pt-1 pb-1">
                     <h5>{{ current_tournament.place }} - {{ current_tournament.type }}</h5>
-                    <h6>{{ current_tournament.date_time.strftime('%d.%m.%Y godzina: %H:%M') }}</h6>
+                    <h6 class="text-muted">{{ current_tournament.date_time.strftime('%d.%m.%Y godzina: %H:%M') }}</h6>
                 </div>
                 <div class="card-footer text-right">
                     {% if g.user and not duplicate %}
@@ -20,7 +20,7 @@
         </div>
         {% endif %}
         <div class="row">
-                <h2>{% block title %}Ostatnie typy:{% endblock %}</h2>
+            <h2><span class="badge badge-pill badge-secondary ml-4">{% block title %}Ostatnie typy:{% endblock %}</span></h2>
         </div>
     </div>
 {% endblock %}
@@ -31,8 +31,8 @@
             <div class="card-header">
                 <h5 class="card-title">{{ bet.tournament_id.place }} -
                     {{ bet.tournament_id.type }} -
-                    {{ bet.tournament_id.date_time }}</h5>
-                <h6 class="card-subtitle text-muted">przez {{ bet.user_id.username }} z {{ bet.created }}</h6>
+                    {{ bet.tournament_id.date_time.strftime("%d.%m.%Y godzina: %H:%M") }}</h5>
+                <h6 class="card-subtitle text-muted">przez {{ bet.user_id.username }} z {{ bet.created.strftime("%d.%m.%Y %H:%M:%S") }}</h6>
             </div>
             <div class="card-body p-0">
                     <ol class="list-group list-group-flush p-1">
@@ -75,7 +75,7 @@
 {% endblock %}
 
 {% block news %}
-<h5>Nowe wydarzenia</h5>
+<h2><span class="badge badge-pill badge-secondary">Nowe wydarzenia</span></h2>
             {% for _ in level %}
             <div class="card border-dark m-1 p-1 w-100">
                 <div class="card-header p-1">

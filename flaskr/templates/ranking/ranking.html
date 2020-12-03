@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block header %}
-    <h2 class="p-3">Ranking</h2>
+<h2 class="p-3"><span class="badge badge-pill badge-secondary">Ranking</span></h2>
 {% endblock %}
 
 {% block content %}
@@ -35,7 +35,7 @@
 {% endblock %}
 
 {% block news %}
-<h5>Nowe wydarzenia</h5>
+<h2><span class="badge badge-pill badge-secondary">Nowe wydarzenia</span></h2>
             {% for _ in level %}
             <div class="card border-dark m-1 p-1 w-100">
                 <div class="card-header p-1">
