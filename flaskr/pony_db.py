@@ -119,6 +119,14 @@ class ThirdFive(db.Entity):
     country_id = Required(Countries)
 
 
+class NewsFeed(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    level = Required(str)
+    header = Required(str)
+    body = Required(str)
+    created = Required(datetime, sql_default='CURRENT_TIMESTAMP')
+
+
 db.generate_mapping(create_tables=True)
 
 
@@ -210,6 +218,10 @@ def get_last_fis_id():
 def open_next_tournament():
     tournament = Tournaments.select(lambda t: t.status == "przyszłe").sort_by(Tournaments.date_time).first()
     tournament.set(status="następne")
+    body = f'{tournament.place} - {tournament.type}\n' \
+           f'{datetime.strftime(tournament.date_time, "%d.%m.%Y")} ' \
+           f'godzina: {datetime.strftime(tournament.date_time, "%H:%M")}'
+    new_info('success', 'Nowe zawody do typowania', body)
     commit()
 
 
@@ -458,3 +470,11 @@ def get_fives_for_tournament(id):
         fives.append([x.country_id for x in third_five])
     return fives
 
+
+def new_info(level, header, body):
+    NewsFeed(level=level, header=header, body=body)
+
+
+def get_news():
+    news_feed = NewsFeed.select().sort_by(desc(NewsFeed.created))
+    return news_feed

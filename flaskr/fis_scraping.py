@@ -51,6 +51,9 @@ def create_new_tournament(tree, typ, fis_id, time_starts):
     date_time = date + timedelta(hours=int(time_starts[0]), minutes=int(time_starts[1]))
     with db_session():
         pony_db.create_tournament(place, typ, 'przyszłe', date_time, fis_id)
+        body = f'{place} - {typ}\n' \
+               f'{datetime.strftime(date_time, "%d.%m.%Y")} godzina: {datetime.strftime(date_time, "%H:%M")}'
+        pony_db.new_info('info', 'Nowe zaowdy', body)
 
 
 def check_new_tournaments():
@@ -88,9 +91,18 @@ def check_tournament_updates():
         if cancelled:
             with db_session:
                 pony_db.update_tournament_status(tournament.id, 'odwołane')
+                body = f'{tournament.place} - {tournament.type}\n' \
+                       f'{datetime.strftime(tournament.date_time, "%d.%m.%Y")} ' \
+                       f'godzina: {datetime.strftime(tournament.date_time, "%H:%M")}'
+                pony_db.new_info('danger', 'Zawody odwołane', body)
+
         if date_time != tournament.date_time:
             with db_session:
                 pony_db.update_tournament_date_time(tournament.id, date_time)
+                body = f'{tournament.place} - {tournament.type}\n' \
+                       f'{datetime.strftime(date_time, "%d.%m.%Y")} ' \
+                       f'godzina: {datetime.strftime(date_time, "%H:%M")}'
+                pony_db.new_info('warning', 'Zmiana terminu rozpoczęcia!', body)
 
 
 def get_active_jumpers():
@@ -154,6 +166,11 @@ def get_results():
                             pony_db.add_to_second_ten(tournament.id, results[i])
                         elif i < 30:
                             pony_db.add_to_third_ten(tournament.id, results[i])
+            with db_session:
+                body = f'{tournament.place} - {tournament.type}\n' \
+                       f'{datetime.strftime(tournament.date_time, "%d.%m.%Y")} ' \
+                       f'godzina: {tournament.datetime.strftime(tournament.date_time, "%H:%M")}'
+                pony_db.new_info('success', '', body)
             clear("checking_results")
 
 
