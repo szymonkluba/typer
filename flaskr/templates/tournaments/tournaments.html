@@ -19,8 +19,16 @@
 {% block content %}
     {% for post in tournaments %}
         <div class="card border-dark m-1">
-            <div class="card-header">
-                <h5>{{ post.place }} - {{ post.type }} - {{ post.date_time.strftime("%d.%m.%Y godzina: %H:%M") }}</h5>
+
+                <div class="card-header">
+                    <div class="row">
+                    <div class="col">
+                        <h5>{{ post.place }} - {{ post.type }} - {{ post.date_time.strftime("%d.%m.%Y godzina: %H:%M") }}</h5>
+                    </div>
+                    <div class="col-auto p-0">
+                        <h4><span class="badge badge-pill badge-secondary">{{post.status}}</span></h4>
+                    </div>
+                </div>
             </div>
             {% if post.type == "drużynowe" %}
             <div class="card-body p-0">
