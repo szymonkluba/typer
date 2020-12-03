@@ -476,5 +476,17 @@ def new_info(level, header, body):
 
 
 def get_news():
-    news_feed = NewsFeed.select().sort_by(desc(NewsFeed.created))
-    return news_feed
+    with db_session:
+        news_feed = NewsFeed.select().sort_by(desc(NewsFeed.created))
+        level = []
+        header = []
+        body = []
+        created = []
+        for news in news_feed:
+            level.append(news.level)
+            header.append(news.header)
+            body.append(news.body)
+            created.append(news.created)
+    return dict(level=level, header=header, body=body, created=created)
+
+
