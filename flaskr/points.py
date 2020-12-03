@@ -5,9 +5,13 @@ def calculate_points():
     tournament = pony_db.get_tournament_by_status('koniec')
     if tournament:
         if tournament.type == 'drużynowe':
-            results = pony_db.get_fives_for_tournament(tournament.id)
+            first_part = pony_db.get_first_five(tournament.id)
+            second_part = pony_db.get_second_five(tournament.id)
         else:
-            results = pony_db.get_tens_for_tournament(tournament.id)
+            first_part = pony_db.get_first_ten(tournament.id)
+            second_part = pony_db.get_second_ten(tournament.id)
+        print(first_part)
+        print(second_part)
         bets = pony_db.get_bets_by_status('koniec')
         if bets is not None:
             for bet in bets:
@@ -42,26 +46,36 @@ def calculate_points():
                 if third_place == places[2]:
                     points += 1
                     exact_bets += 1
-                try:
-                    if first_place in results[1]:
+                if check_fives_or_tens(first_place, first_part):
+                    points -= 1
+                    print(f'{pony_db.Jumpers[first_place].name}')
+                    print('Nie ma w pierwszej części_________________________')
+                    if check_fives_or_tens(first_place, second_part):
                         points -= 1
-                    elif first_place in results[2]:
-                        points -= 2
-                except IndexError:
-                    pass
-                try:
-                    if second_place in results[1]:
+                        print(f'{pony_db.Jumpers[first_place].name}')
+                        print('Nie ma w drugiej części--------------------------')
+                if check_fives_or_tens(second_place, first_part):
+                    points -= 1
+                    print(f'{pony_db.Jumpers[second_place].name}')
+                    print('Nie ma w pierwszej części_________________________')
+                    if check_fives_or_tens(second_place, second_part):
                         points -= 1
-                    elif second_place in results[2]:
-                        points -= 2
-                except IndexError:
-                    pass
-                try:
-                    if third_place in results[1]:
+                        print(f'{pony_db.Jumpers[second_place].name}')
+                        print('Nie ma w drugiej części--------------------------')
+                if check_fives_or_tens(third_place, first_part):
+                    points -= 1
+                    print(f'{pony_db.Jumpers[third_place].name}')
+                    print('Nie ma w pierwszej części_________________________')
+                    if check_fives_or_tens(third_place, second_part):
                         points -= 1
-                    elif third_place in results[2]:
-                        points -= 2
-                except IndexError:
-                    pass
+                        print(f'{pony_db.Jumpers[third_place].name}')
+                        print('Nie ma w drugiej części--------------------------')
                 pony_db.update_user_stats(bet.user_id.id, points, exact_bets)
     pony_db.update_tournament_status(tournament.id, 'archiwum')
+
+
+def check_fives_or_tens(place, list_of_places):
+    for i in list_of_places:
+        if place == i:
+            return False
+    return True

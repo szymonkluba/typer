@@ -40,6 +40,7 @@ class Countries(db.Entity):
 
 
 class FirstPlaces(db.Entity):
+    id = PrimaryKey(int, auto=True)
     tournament_id = Optional('Tournaments')
     bet_id = Optional('Bets')
     jumper_id = Optional('Jumpers')
@@ -47,6 +48,7 @@ class FirstPlaces(db.Entity):
 
 
 class SecondPlaces(db.Entity):
+    id = PrimaryKey(int, auto=True)
     tournament_id = Optional('Tournaments')
     bet_id = Optional('Bets')
     jumper_id = Optional('Jumpers')
@@ -54,6 +56,7 @@ class SecondPlaces(db.Entity):
 
 
 class ThirdPlaces(db.Entity):
+    id = PrimaryKey(int, auto=True)
     tournament_id = Optional('Tournaments')
     bet_id = Optional('Bets')
     jumper_id = Optional('Jumpers')
@@ -84,9 +87,9 @@ class Bets(db.Entity):
     user_id = Required(User)
     created = Required(datetime, sql_default='CURRENT_TIMESTAMP')
     tournament_id = Required(Tournaments)
-    first_place = Optional('FirstPlaces')
-    second_place = Optional('SecondPlaces')
-    third_place = Optional('ThirdPlaces')
+    first_place = Optional(FirstPlaces)
+    second_place = Optional(SecondPlaces)
+    third_place = Optional(ThirdPlaces)
 
 
 class FirstTen(db.Entity):
@@ -169,6 +172,23 @@ def create_bet(first_place, second_place, third_place, user_id, tournament_id):
     commit()
 
 
+def create_bet_temp(first_place, second_place, third_place, user_id, tournament_id, date_time):
+    bet = Bets(user_id=user_id, tournament_id=tournament_id, created=date_time)
+    bet.flush()
+    tournament = Tournaments.get(lambda t: t.id == tournament_id)
+    if tournament.type == "drużynowe":
+        first_place = get_country_by_name(first_place)
+        second_place = get_country_by_name(second_place)
+        third_place = get_country_by_name(third_place)
+        bet_places_team(first_place, second_place, third_place, bet.id, update=False)
+    elif tournament.type == "indywidualne":
+        first_place = get_jumper_by_name(first_place)
+        second_place = get_jumper_by_name(second_place)
+        third_place = get_jumper_by_name(third_place)
+        bet_places_individual(first_place, second_place, third_place, bet.id, update=False)
+    commit()
+
+
 def update_bet(first_place, second_place, third_place, id):
     if Bets[id].tournament_id.type == 'drużynowe':
         first_place = get_country_by_name(first_place)
@@ -180,7 +200,36 @@ def update_bet(first_place, second_place, third_place, id):
         second_place = get_jumper_by_name(second_place)
         third_place = get_jumper_by_name(third_place)
         bet_places_individual(first_place, second_place, third_place, id)
+
     commit()
+
+
+def bet_places_individual(first, second, third, id, update=True):
+    if update:
+        first_place = FirstPlaces.get(lambda x: x.bet_id.id == id)
+        second_place = SecondPlaces.get(lambda x: x.bet_id.id == id)
+        third_place = ThirdPlaces.get(lambda x: x.bet_id.id == id)
+        first_place.set(jumper_id=first.id)
+        second_place.set(jumper_id=second.id)
+        third_place.set(jumper_id=third.id)
+    else:
+        FirstPlaces(bet_id=id, jumper_id=first.id)
+        SecondPlaces(bet_id=id, jumper_id=second.id)
+        ThirdPlaces(bet_id=id, jumper_id=third.id)
+
+
+def bet_places_team(first, second, third, id, update=True):
+    if update:
+        first_place = FirstPlaces.get(lambda x: x.bet_id == id)
+        second_place = SecondPlaces.get(lambda x: x.bet_id == id)
+        third_place = ThirdPlaces.get(lambda x: x.bet_id == id)
+        first_place.set(jumper_id=first.id)
+        second_place.set(jumper_id=second.id)
+        third_place.set(jumper_id=third.id)
+    else:
+        FirstPlaces(bet_id=id, country_id=first.id)
+        SecondPlaces(bet_id=id, country_id=second.id)
+        ThirdPlaces(bet_id=id, country_id=third.id)
 
 
 def duplicate_bet_exists(user_id, tournament_id):
@@ -208,11 +257,14 @@ def select_tournaments_for_update():
 
 
 def get_last_fis_id():
-    fis_id = select(t.fis_id for t in Tournaments).max()
+    fis_id = select(t.fis_id for t in Tournaments if t.status == 'następne' or t.status == 'przyszłe').min()
     if fis_id:
         return fis_id
-    else:
-        return 5786
+    return 5787
+
+
+def fis_id_exists(fis_id):
+    return exists(t for t in Tournaments if t.fis_id == fis_id)
 
 
 def open_next_tournament():
@@ -369,34 +421,6 @@ def create_country(name):
     commit()
 
 
-def bet_places_individual(first, second, third, id, update=True):
-    if update:
-        first_place = FirstPlaces.get(lambda x: x.bet_id.id == id)
-        second_place = SecondPlaces.get(lambda x: x.bet_id.id == id)
-        third_place = ThirdPlaces.get(lambda x: x.bet_id.id == id)
-        first_place.set(jumper_id=first.id)
-        second_place.set(jumper_id=second.id)
-        third_place.set(jumper_id=third.id)
-    else:
-        FirstPlaces(bet_id=id, jumper_id=first.id)
-        SecondPlaces(bet_id=id, jumper_id=second.id)
-        ThirdPlaces(bet_id=id, jumper_id=third.id)
-
-
-def bet_places_team(first, second, third, id, update=True):
-    if update:
-        first_place = FirstPlaces.get(lambda x: x.bet_id == id)
-        second_place = SecondPlaces.get(lambda x: x.bet_id == id)
-        third_place = ThirdPlaces.get(lambda x: x.bet_id == id)
-        first_place.set(jumper_id=first.id)
-        second_place.set(jumper_id=second.id)
-        third_place.set(jumper_id=third.id)
-    else:
-        FirstPlaces(bet_id=id, country_id=first.id)
-        SecondPlaces(bet_id=id, country_id=second.id)
-        ThirdPlaces(bet_id=id, country_id=third.id)
-
-
 def get_countries_tba():
     tba = Countries.get(lambda c: c.name == 'TBA')
     if tba:
@@ -447,28 +471,30 @@ def add_to_third_five(tournament_id, name):
     ThirdFive(tournament_id=tournament_id, country_id=country.id)
 
 
-def get_tens_for_tournament(id):
+def get_first_ten(id):
     first_ten = FirstTen.select(lambda x: x.tournament_id.id == id)
+    first_ten = [x.jumper_id.id for x in first_ten]
+    return first_ten
+
+
+def get_second_ten(id):
     second_ten = SecondTen.select(lambda x: x.tournament_id.id == id)
-    third_ten = ThirdTen.select(lambda x: x.tournament_id.id == id)
-    first_ten = [x.jumper_id for x in first_ten]
-    second_ten = [x.jumper_id for x in second_ten]
-    third_ten = [x.jumper_id for x in third_ten]
-    return [first_ten, second_ten, third_ten]
+    second_ten = [x.jumper_id.id for x in second_ten]
+    return second_ten
 
 
-def get_fives_for_tournament(id):
+def get_first_five(id):
     first_five = FirstFive.select(lambda x: x.tournament_id.id == id)
-    second_five = SecondFive.select(lambda x: x.tournament_id.id == id)
-    third_five = ThirdFive.select(lambda x: x.tournament_id.id == id)
-    fives = []
     if first_five:
-        fives.append([x.country_id for x in first_five])
+        return [x.country_id.id for x in first_five]
+    return []
+
+
+def get_second_five(id):
+    second_five = SecondFive.select(lambda x: x.tournament_id.id == id)
     if second_five:
-        fives.append([x.country_id for x in second_five])
-    if third_five:
-        fives.append([x.country_id for x in third_five])
-    return fives
+        return [x.country_id.id for x in second_five]
+    return []
 
 
 def new_info(level, header, body):
@@ -488,5 +514,3 @@ def get_news():
             body.append(news.body)
             created.append(news.created)
     return dict(level=level, header=header, body=body, created=created)
-
-

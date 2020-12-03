@@ -4,6 +4,7 @@ from schedule import clear
 import requests
 import flaskr.pony_db as pony_db
 import flaskr.constants as constants
+from flaskr.points import calculate_points
 from datetime import datetime, timedelta
 
 PATH_RACES = 'https://www.fis-ski.com/DB/general/results.html?sectorcode=JP&raceid='
@@ -53,27 +54,28 @@ def create_new_tournament(tree, typ, fis_id, time_starts):
         pony_db.create_tournament(place, typ, 'przyszłe', date_time, fis_id)
         body = f'{place} - {typ}\n' \
                f'{datetime.strftime(date_time, "%d.%m.%Y")} godzina: {datetime.strftime(date_time, "%H:%M")}'
-        pony_db.new_info('info', 'Nowe zaowdy', body)
+        pony_db.new_info('info', 'Nowe zawody', body)
 
 
 def check_new_tournaments():
     with db_session():
         last_fis_id = pony_db.get_last_fis_id()
-    while True:
-        last_fis_id += 1
-        page = requests.get(f'{PATH_RACES}{last_fis_id}')
-        tree = html.fromstring(page.content)
-        subtitle = tree.xpath(XPATH_SUBTITLE)
-        kind = tree.xpath(XPATH_KIND)
-        time_starts = tree.xpath(XPATH_TIME)
-        if not time_starts:
-            break
-        if not check_woman(kind) and not check_children(subtitle):
-            if check_world_cup(subtitle):
-                if team_or_individual(kind):
-                    create_new_tournament(tree, 'drużynowe', last_fis_id, time_starts)
-                else:
-                    create_new_tournament(tree, 'indywidualne', last_fis_id, time_starts)
+    for fis_id in range(last_fis_id, 5900):
+        if not pony_db.fis_id_exists(fis_id):
+            page = requests.get(f'{PATH_RACES}{fis_id}')
+            tree = html.fromstring(page.content)
+            time_starts = tree.xpath(XPATH_TIME)
+            if not time_starts:
+                continue
+            subtitle = tree.xpath(XPATH_SUBTITLE)
+            kind = tree.xpath(XPATH_KIND)
+            if not check_woman(kind) and not check_children(subtitle):
+                if check_world_cup(subtitle):
+                    if team_or_individual(kind):
+                        create_new_tournament(tree, 'drużynowe', fis_id, time_starts)
+                    else:
+                        create_new_tournament(tree, 'indywidualne', fis_id, time_starts)
+            last_fis_id += 1
 
 
 def check_tournament_updates():
@@ -102,7 +104,7 @@ def check_tournament_updates():
                 body = f'{tournament.place} - {tournament.type}\n' \
                        f'{datetime.strftime(date_time, "%d.%m.%Y")} ' \
                        f'godzina: {datetime.strftime(date_time, "%H:%M")}'
-                pony_db.new_info('warning', 'Zmiana terminu rozpoczęcia!', body)
+                pony_db.new_info('warning', 'Zmiana terminu rozpoczęcia', body)
 
 
 def get_active_jumpers():
@@ -115,7 +117,7 @@ def get_active_jumpers():
 
 
 def get_countries_from_list():
-    for country in constants.COUNTRIES:
+    for country in constants.COUNTRIES.values():
         with db_session:
             pony_db.create_country(country)
 
@@ -169,21 +171,19 @@ def get_results():
             with db_session:
                 body = f'{tournament.place} - {tournament.type}\n' \
                        f'{datetime.strftime(tournament.date_time, "%d.%m.%Y")} ' \
-                       f'godzina: {tournament.datetime.strftime(tournament.date_time, "%H:%M")}'
-                pony_db.new_info('success', '', body)
+                       f'godzina: {datetime.strftime(tournament.date_time, "%H:%M")}'
+                pony_db.new_info('success', 'Podsumowanie wyników', body)
+            with db_session:
+                calculate_points()
             clear("checking_results")
 
 
-check_tournament_updates()
-
-# for name in names_temp:
-#     name = name.replace('\n', '').strip()
-#     name = name.split()
-#     if name[0] in DUPLICATE_SURNAMES:
-#         names.append(f'{name[0]} {name[1][0]}')
-#     else:
-#         names.append(name[0])
-# standings = [[places[i], names[i]] for i in range(len(places))]
-#
-# for standing in standings:
-#     print(f'place: {standing[0]} name: {standing[1]}')
+# get_results()
+# get_active_jumpers()
+# get_countries_from_list()
+# with db_session:
+#     check_new_tournaments()
+# with db_session:
+#     for bet in constants.BETS_TEMP:
+#         date_time = datetime.strptime(bet[5], "%Y-%m-%d %H:%M")
+#         pony_db.create_bet_temp(bet[2], bet[3], bet[4], bet[0], bet[1], date_time)

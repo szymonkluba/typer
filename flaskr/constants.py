@@ -31,3 +31,28 @@ COUNTRIES = {
     'HUNGARY': 'WĘGRY',
     'ITALY': 'WŁOCHY'
 }
+
+BETS_TEMP = [
+    # [5, 1, "POLSKA", "NIEMCY", "AUSTRIA", "2020-11-20 21:13"],
+    # [4, 1, "NIEMCY", "POLSKA", "NORWEGIA", "2020-11-20 21:50"],
+    # [7, 1, "POLSKA", "AUSTRIA", "NIEMCY", "2020-11-20 22:17"],
+    # [3, 1, "POLSKA", "NIEMCY", "NORWEGIA", "2020-11-20 22:30"],
+    # [8, 1, "POLSKA", "NORWEGIA", "NIEMCY", "2020-11-21 11:50"],
+    [8, 2, "KUBACKI Dawid", "EISENBICHLER Markus", "GEIGER Karl", "2020-11-21 18:04"],
+    # [4, 2, "STOCH Kamil", "GRANERUD Halvor Egner", "EISENBICHLER Markus", "2020-11-22 14:02"],
+    # [1, 2, "GEIGER Karl", "KUBACKI Dawid", "FORFANG Johann Andre", "2020-11-22 13:33"],
+    # [3, 2, "STOCH Kamil", "SATO Yukiya", "EISENBICHLER Markus", "2020-11-22 14:06"],
+    # [5, 2, "STOCH Kamil", "KUBACKI Dawid", "KOBAYASHI Ryoyu", "2020-11-22 14:14"],
+    # [7, 2, "KUBACKI Dawid", "GEIGER Karl", "HUBER Daniel", "2020-11-22 14:44"],
+    # [5, 3, "GEIGER Karl", "GRANERUD Halvor Egner", "STOCH Kamil", "2020-11-27 15:45"],
+    # [8, 3, "EISENBICHLER Markus", "GEIGER Karl", "GRANERUD Halvor Egner", "2020-11-27 16:41"],
+    # [4, 3, "GRANERUD Halvor Egner", "EISENBICHLER Markus", "ZYLA Piotr", "2020-11-27 17:16"],
+    # [1, 3, "GEIGER Karl", "ZYLA Piotr", "EISENBICHLER Markus", "2020-11-28 00:07"],
+    # [3, 3, "GRANERUD Halvor Egner", "STOCH Kamil", "EISENBICHLER Markus", "2020-11-28 14:58"],
+    # [8, 4, "EISENBICHLER Markus", "KUBACKI Dawid", "GRANERUD Halvor Egner", "2020-11-28 18:08"],
+    # [3, 4, "EISENBICHLER Markus", "ZYLA Piotr", "AIGRO Artti", "2020-11-28 18:09"],
+    # [1, 4, "ZYLA Piotr", "GEIGER Karl", "EISENBICHLER Markus", "2020-11-28 18:25"],
+    # [5, 4, "EISENBICHLER Markus", "KUBACKI Dawid", "GRANERUD Halvor Egner", "2020-11-28 19:40"],
+    # [7, 4, "ZYLA Piotr", "GRANERUD Halvor Egner", "EISENBICHLER Markus", "2020-11-29 11:21"],
+    # [4, 4, "GRANERUD Halvor Egner", "ZYLA Piotr", "EISENBICHLER Markus", "2020-11-29 13:27"]
+]
