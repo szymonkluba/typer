@@ -14,9 +14,9 @@ import flaskr.pony_db as pony_db
 def with_logging(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        print('LOG: Running job "%s"' % func.__name__)
+        print('LOG: Running job "%s"' % func.__name__, flush=True)
         result = func(*args, **kwargs)
-        print('LOG: Job "%s" completed' % func.__name__)
+        print('LOG: Job "%s" completed' % func.__name__, flush=True)
         return result
 
     return wrapper
@@ -65,17 +65,17 @@ if now.year == t_date_time.year and now.month == t_date_time.month and now.day =
     time_finish = time_start
     time_start = datetime.strftime(time_start, "%H:%M")
     schedule.every().day.at(time_start).do(get_results).tag("checking_results")
-    print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of results')
+    print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of results', flush=True)
     for _ in range(18):
         time_finish = t_date_time + timedelta(minutes=10)
         time_finish_S = datetime.strftime(time_finish, "%H:%M")
         schedule.every().day.at(time_finish_S).do(get_results).tag("checking_results")
 schedule.every().day.at("09:00").do(tournament_updates)
-print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of tournaments updates')
+print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of tournaments updates', flush=True)
 schedule.every().day.at("09:15").do(new_tournaments)
-print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of new tournaments')
+print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of new tournaments', flush=True)
 schedule.every().day.at("02:00").do(kill_task)
-print(f'{datetime.now().strftime("%H:%M")} - Scheduled kill task')
+print(f'{datetime.now().strftime("%H:%M")} - Scheduled kill task', flush=True)
 if schedule.jobs:
     for job in schedule.jobs:
         print(job)
