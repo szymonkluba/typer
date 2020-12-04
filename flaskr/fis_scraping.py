@@ -212,26 +212,22 @@ def check_new_qualifications():
                                 pony_db.new_qualifications(fis_id, tournament.id, date_time)
 
 
-def get_participants():
-    today = datetime.now()
-    with db_session:
-        qualifications = pony_db.select_qualifications_by_date(today)
-    if qualifications:
-        for quali in qualifications:
-            page = requests.get(f'{PATH_RACES}{quali.fis_id}')
-            tree = html.fromstring(page.content)
-            column_index = 1
-            column = tree.xpath(f'{PATH_COLUMNS_HEADERS_PREF}{column_index}]/text()')[0]
-            if column:
-                while column != 'Athlete':
-                    column_index += 1
-                    column = tree.xpath(f'{PATH_COLUMNS_HEADERS_PREF}{column_index}]/text()')[0]
-                participants = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
-                if participants:
-                    for participant in participants:
-                        participant = participant.replace('\n', '').strip()
-                        with db_session:
-                            pony_db.new_participant(participant, quali.tournament_id)
+def get_participants(qualifications):
+    for quali in qualifications:
+        page = requests.get(f'{PATH_RACES}{quali.fis_id}')
+        tree = html.fromstring(page.content)
+        column_index = 1
+        column = tree.xpath(f'{PATH_COLUMNS_HEADERS_PREF}{column_index}]/text()')[0]
+        if column:
+            while column != 'Athlete':
+                column_index += 1
+                column = tree.xpath(f'{PATH_COLUMNS_HEADERS_PREF}{column_index}]/text()')[0]
+            participants = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
+            if participants:
+                for participant in participants:
+                    participant = participant.replace('\n', '').strip()
+                    with db_session:
+                        pony_db.new_participant(participant, quali.tournament_id)
 
 # get_results()
 # get_active_jumpers()
