@@ -34,6 +34,7 @@ def my_bets():
 def create():
     tournament = pony_db.get_tournament_by_status('następne')
     participants = False
+    jumpers = None
     if tournament.participants:
         participants = tournament.participants
     else:
@@ -72,6 +73,7 @@ def update(id):
         abort(404, f"Post id {id} does not exist.")
     tournament = pony_db.get_tournament(bet.tournament_id.id)
     participants = False
+    competitors = None
     if tournament.participants:
         participants = tournament.participants
     else:
