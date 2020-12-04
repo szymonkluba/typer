@@ -84,11 +84,11 @@ print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of new tournamen
 schedule.every().day.at("02:00").do(kill_task)
 print(f'{datetime.now().strftime("%H:%M")} - Scheduled kill task', flush=True)
 if qualifications:
-    schedule.every().day.at("13:00").do(participants, qualifications=qualifications)
+    schedule.every().day.at("13:00").do(participants, qualifications=qualifications).tag('checking_participants')
     print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of tournaments updates', flush=True)
     for i in range(1, 13):
         time_schedule = f'{13 + (i % 4)}:{15 * (i % 4)}'
-        schedule.every().day.at(time_schedule).do(participants, qualifications=qualifications)
+        schedule.every().day.at(time_schedule).do(participants, qualifications=qualifications).tag('checking_participants')
         print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of tournaments updates', flush=True)
 if schedule.jobs:
     for job in schedule.jobs:
