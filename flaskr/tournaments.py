@@ -45,7 +45,7 @@ def update(id):
     tournament = pony_db.get_tournament(id)
     if tournament is None:
         abort(404, f"Post id {id} does not exist.")
-    if g.user['id'] != 1:
+    if g.user.id != 1:
         abort(403)
     jumpers = get_competitors(tournament)
     if request.method == "POST":
