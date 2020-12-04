@@ -26,6 +26,7 @@ class Jumpers(db.Entity):
     first_ten = Set('FirstTen')
     second_ten = Set('SecondTen')
     third_ten = Set('ThirdTen')
+    participants = Set('Participants')
 
 
 class Countries(db.Entity):
@@ -80,6 +81,7 @@ class Tournaments(db.Entity):
     status = Required(str)
     fis_id = Required(int)
     bets = Set('Bets')
+    participants = Set('Participants')
 
 
 class Bets(db.Entity):
