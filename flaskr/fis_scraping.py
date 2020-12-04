@@ -36,6 +36,12 @@ def check_world_cup(field):
     return False
 
 
+def check_qualifications(field):
+    if 'Viessmann' in field[0] and 'Qualification' in field[0]:
+        return True
+    return False
+
+
 def team_or_individual(field):
     if 'Team' in field[0]:
         return True
@@ -177,6 +183,55 @@ def get_results():
                 calculate_points()
             clear("checking_results")
 
+
+def check_new_qualifications():
+    with db_session():
+        last_fis_id = pony_db.get_last_fis_id()
+    for fis_id in range(last_fis_id, 5900):
+        if not pony_db.quali_fis_id_exists(fis_id):
+            page = requests.get(f'{PATH_RACES}{fis_id}')
+            tree = html.fromstring(page.content)
+            time_starts = tree.xpath(XPATH_TIME)
+            if not time_starts:
+                continue
+            subtitle = tree.xpath(XPATH_SUBTITLE)
+            kind = tree.xpath(XPATH_KIND)
+            if not check_woman(kind) and not check_children(subtitle):
+                if check_qualifications(subtitle):
+                    if not team_or_individual(kind):
+                        place = tree.xpath('//*[@class="event-header__name heading_off-sm-style"]/h1/text()')
+                        place = place[0].replace('\n', '').strip()
+                        place = place[:place.index(' (')]
+                        date = tree.xpath(XPATH_DATE)
+                        date = datetime.strptime(date[0], '%B %d, %Y')
+                        time_starts = time_starts[0].split(':')
+                        date_time = date + timedelta(hours=int(time_starts[0]), minutes=int(time_starts[1]))
+                        margin = date_time + timedelta(days=4)
+                        for tournament in pony_db.get_tournaments_by_place(place):
+                            if date_time < tournament.date_time < margin and tournament.type == 'indywidualne':
+                                pony_db.new_qualifications(fis_id, tournament.id, date_time)
+
+
+def get_participants():
+    today = datetime.now()
+    with db_session:
+        qualifications = pony_db.select_qualifications_by_date(today)
+    if qualifications:
+        for quali in qualifications:
+            page = requests.get(f'{PATH_RACES}{quali.fis_id}')
+            tree = html.fromstring(page.content)
+            column_index = 1
+            column = tree.xpath(f'{PATH_COLUMNS_HEADERS_PREF}{column_index}]/text()')[0]
+            if column:
+                while column != 'Athlete':
+                    column_index += 1
+                    column = tree.xpath(f'{PATH_COLUMNS_HEADERS_PREF}{column_index}]/text()')[0]
+                participants = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
+                if participants:
+                    for participant in participants:
+                        participant = participant.replace('\n', '').strip()
+                        with db_session:
+                            pony_db.new_participant(participant, quali.tournament_id)
 
 # get_results()
 # get_active_jumpers()
