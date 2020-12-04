@@ -130,6 +130,17 @@ class NewsFeed(db.Entity):
     created = Required(datetime, sql_default='CURRENT_TIMESTAMP')
 
 
+class Qualifications(db.Entity):
+    fis_id = Required(int)
+    tournament_id = Required(int)
+    date_time = Required(datetime)
+
+
+class Participants(db.Entity):
+    tournament_id = Required(Tournaments)
+    jumper_id = Required(Jumpers)
+
+
 db.generate_mapping(create_tables=True)
 
 
@@ -249,6 +260,11 @@ def get_tournament(id):
 def get_tournament_by_status(status):
     current_tournament = Tournaments.get(lambda t: t.status == status)
     return current_tournament
+
+
+def get_tournaments_by_place(place):
+    tournaments = Tournaments.select(lambda t: t.place == place)
+    return tournaments
 
 
 def select_tournaments_for_update():
@@ -514,3 +530,26 @@ def get_news():
             body.append(news.body)
             created.append(news.created)
     return dict(level=level, header=header, body=body, created=created)
+
+
+def new_qualifications(fis_id, tournament_id, date_time):
+    Qualifications(fis_id=fis_id, tournament_id=tournament_id, date_time=date_time)
+    commit()
+
+
+def select_qualifications_by_date(date_time):
+    qualifications = Qualifications.select(lambda q: check_date(q.date_time, date_time))
+    return qualifications
+
+
+def check_date(date1, date2):
+    return date1.year == date2.year and date1.month == date2.month and date1.day == date2.day
+
+
+def quali_fis_id_exists(fis_id):
+    return exists(q for q in Qualifications if q.fis_id == fis_id)
+
+
+def new_participant(name, tournament_id):
+    jumper = get_jumper_by_name(name)
+    Participants(tournament_id=tournament_id, jumper_id=jumper.id)
