@@ -7,7 +7,9 @@ from datetime import datetime, timedelta
 
 sys.path.append("/home/szymonkluba/mysite/typer/")
 
-from flaskr.fis_scraping import get_results, check_new_tournaments, check_tournament_updates, get_participants
+from flaskr.fis_scraping import (
+    get_results, check_new_tournaments, check_tournament_updates, get_participants, check_new_qualifications
+)
 import flaskr.pony_db as pony_db
 
 
@@ -54,18 +56,24 @@ def tournament_updates():
 
 
 @with_logging
+def new_qualifications():
+    check_new_qualifications()
+
+
+@with_logging
 def participants(qualifications):
     with db_session:
         get_participants(qualifications)
 
 
+new_qualifications()
 now = datetime.now()
 with db_session:
     current_tournament = pony_db.get_tournament_by_status("następne")
     qualifications = pony_db.select_qualifications_by_date(now)
 with db_session:
     if qualifications:
-        schedule.every().day.at("13:00").do(participants, qualifications=qualifications).tag('checking_participants')
+        schedule.every().day.at("21:50").do(participants, qualifications=qualifications).tag('checking_participants')
         print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of tournaments updates', flush=True)
         for i in range(1, 13):
             time_schedule = f'{13 + (i % 4)}:{15 * (i % 4)}'
@@ -91,9 +99,12 @@ schedule.every().day.at("09:15").do(new_tournaments)
 print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of new tournaments', flush=True)
 schedule.every().day.at("02:00").do(kill_task)
 print(f'{datetime.now().strftime("%H:%M")} - Scheduled kill task', flush=True)
+schedule.every().day.at("09:30").do(kill_task)
+print(f'{datetime.now().strftime("%H:%M")} - Scheduled kill task', flush=True)
 if schedule.jobs:
     for job in schedule.jobs:
         print(job)
+
 
 while True:
     schedule.run_pending()
