@@ -222,12 +222,17 @@ def get_participants(qualifications):
             while column != 'Athlete':
                 column_index += 1
                 column = tree.xpath(f'{PATH_COLUMNS_HEADERS_PREF}{column_index}]/text()')[0]
+                if column:
+                    break
             participants = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
             if participants:
                 for participant in participants:
                     participant = participant.replace('\n', '').strip()
                     with db_session:
                         pony_db.new_participant(participant, quali.tournament_id)
+                return clear('checking_participants')
+
+
 
 # get_results()
 # get_active_jumpers()
