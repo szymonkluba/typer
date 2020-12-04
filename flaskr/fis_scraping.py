@@ -235,21 +235,3 @@ def get_participants(qualifications):
                         pony_db.new_participant(participant, quali.tournament_id)
                     clear('checking_participants')
 
-
-for i in range(1, 13):
-    time_schedule = f'{13 + (i // 4)}:{15 * (i % 4) if i % 4 != 0 else "00"}'
-    print(time_schedule)
-# check_new_qualifications()
-# now = datetime.now()
-# with db_session:
-#     qualifications = pony_db.select_qualifications_by_date(now)
-#     get_participants(qualifications)
-# get_results()
-# get_active_jumpers()
-# get_countries_from_list()
-# with db_session:
-#     check_new_tournaments()
-# with db_session:
-#     for bet in constants.BETS_TEMP:
-#         date_time = datetime.strptime(bet[5], "%Y-%m-%d %H:%M")
-#         pony_db.create_bet_temp(bet[2], bet[3], bet[4], bet[0], bet[1], date_time)
