@@ -55,19 +55,20 @@ def tournament_updates():
 
 @with_logging
 def participants(qualifications):
-    get_participants(qualifications)
+    with db_session:
+        get_participants(qualifications)
 
 
 now = datetime.now()
 with db_session:
     current_tournament = pony_db.get_tournament_by_status("następne")
     qualifications = pony_db.select_qualifications_by_date(now)
-    if qualifications:
-        schedule.every().day.at("13:00").do(participants, qualifications=qualifications).tag('checking_participants')
-        print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of tournaments updates', flush=True)
-        for i in range(1, 13):
-            time_schedule = f'{13 + (i % 4)}:{15 * (i % 4)}'
-            schedule.every().day.at(time_schedule).do(participants, qualifications=qualifications).tag(
+if qualifications:
+    schedule.every().day.at("13:00").do(participants, qualifications=qualifications).tag('checking_participants')
+    print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of tournaments updates', flush=True)
+    for i in range(1, 13):
+        time_schedule = f'{13 + (i % 4)}:{15 * (i % 4)}'
+        schedule.every().day.at(time_schedule).do(participants, qualifications=qualifications).tag(
                 'checking_participants')
 t_date_time = current_tournament.date_time + timedelta(hours=1)
 if now.year == t_date_time.year and now.month == t_date_time.month and now.day == t_date_time.day:
