@@ -41,7 +41,8 @@ def update(id):
     jumper = pony_db.get_jumper_by_id(id)
     if jumper is None:
         abort(404, f"Post id {id} does not exist.")
-
+    if g.user.id != 1:
+        abort(403)
     if request.method == "POST":
         name = request.form['name']
         error = None

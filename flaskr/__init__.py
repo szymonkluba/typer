@@ -1,8 +1,20 @@
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 from pony.flask import Pony
 from flaskr.pony_db import get_news
+
+
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+def forbidden(e):
+    return render_template('403.html'), 403
+
+
+def internal_server_error(e):
+    return render_template('500.html'), 500
 
 
 def create_app(test_config=None):
@@ -16,6 +28,9 @@ def create_app(test_config=None):
         }
 
     )
+    app.register_error_handler(404, page_not_found)
+    app.register_error_handler(403, forbidden)
+    app.register_error_handler(500, internal_server_error)
 
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
