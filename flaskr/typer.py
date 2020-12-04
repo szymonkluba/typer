@@ -49,6 +49,11 @@ def create():
         if not first_place or not second_place or not third_place:
             error = 'Nie podano wszystkich typów'
 
+        if (not pony_db.check_valid_bet(first_place)
+                or not pony_db.check_valid_bet(second_place)
+                or not pony_db.check_valid_bet(first_place)):
+            error = "Nie ma takiego typowania! Co kurwa osiemnastka jest? Proszę wybrać z listy;)"
+
         if error is not None:
             flash(error)
         else:
@@ -83,6 +88,11 @@ def update(id):
         second_place = request.form['second_place']
         third_place = request.form['third_place']
         error = None
+
+        if (not pony_db.check_valid_bet(first_place)
+                or not pony_db.check_valid_bet(second_place)
+                or not pony_db.check_valid_bet(first_place)):
+            error = "Nie ma takiego typowania! Co kurwa osiemnastka jest? Proszę wybrać z listy;)"
 
         if not first_place or not second_place or not third_place:
             error = 'Nie podano wszystkich typów'
