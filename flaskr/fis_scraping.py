@@ -236,6 +236,9 @@ def get_participants(qualifications):
                     clear('checking_participants')
 
 
+for i in range(1, 13):
+    time_schedule = f'{13 + (i // 4)}:{15 * (i % 4) if i % 4 != 0 else "00"}'
+    print(time_schedule)
 # check_new_qualifications()
 # now = datetime.now()
 # with db_session:

@@ -66,17 +66,17 @@ def participants(qualifications):
         get_participants(qualifications)
 
 
-new_qualifications()
+
 now = datetime.now()
 with db_session:
     current_tournament = pony_db.get_tournament_by_status("następne")
     qualifications = pony_db.select_qualifications_by_date(now)
 with db_session:
     if qualifications:
-        schedule.every().day.at("21:50").do(participants, qualifications=qualifications).tag('checking_participants')
+        schedule.every().day.at("21:59").do(participants, qualifications=qualifications).tag('checking_participants')
         print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of tournaments updates', flush=True)
         for i in range(1, 13):
-            time_schedule = f'{13 + (i % 4)}:{15 * (i % 4)}'
+            time_schedule = f'{13 + (i // 4)}:{15 * (i % 4) if i % 4 != 0 else "00"}'
             schedule.every().day.at(time_schedule).do(participants, qualifications=qualifications).tag(
                     'checking_participants')
 t_date_time = current_tournament.date_time + timedelta(hours=1)
