@@ -555,3 +555,9 @@ def quali_fis_id_exists(fis_id):
 def new_participant(name, tournament_id):
     jumper = get_jumper_by_name(name)
     Participants(tournament_id=tournament_id, jumper_id=jumper.id)
+
+
+def check_valid_bet(name):
+    if exists(j for j in Jumpers if j.name == name) or exists(c for c in Countries if c.name == name):
+        return True
+    return False
