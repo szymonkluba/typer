@@ -33,7 +33,11 @@ def my_bets():
 @login_required
 def create():
     tournament = pony_db.get_tournament_by_status('następne')
-    jumpers = get_competitors()
+    participants = False
+    if tournament.participants:
+        participants = tournament.participants
+    else:
+        jumpers = get_competitors()
 
     if request.method == 'POST':
         first_place = request.form['first_place']
@@ -56,7 +60,8 @@ def create():
 
     return render_template('typer/create.html',
                            tournament=tournament,
-                           jumpers=jumpers)
+                           jumpers=jumpers,
+                           participants=participants)
 
 
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
@@ -66,7 +71,11 @@ def update(id):
     if bet is None:
         abort(404, f"Post id {id} does not exist.")
     tournament = pony_db.get_tournament(bet.tournament_id.id)
-    competitors = get_competitors(tournament)
+    participants = False
+    if tournament.participants:
+        participants = tournament.participants
+    else:
+        competitors = get_competitors(tournament)
     if request.method == "POST":
         first_place = request.form['first_place']
         second_place = request.form['second_place']
@@ -82,7 +91,7 @@ def update(id):
             pony_db.update_bet(first_place, second_place, third_place, id)
             return redirect(url_for('typer.index'))
 
-    return render_template('typer/update.html', bet=bet, jumpers=competitors)
+    return render_template('typer/update.html', bet=bet, jumpers=competitors, participants=participants)
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))

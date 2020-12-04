@@ -10,11 +10,19 @@
 {% block content %}
     <form method="post">
         <datalist id="jumpers">
-            {% for jumper in jumpers %}
-                {% if jumper.name != "TBA" %}
-                <option>{{ jumper.name }}</option>
-                {% endif %}
-            {% endfor %}
+            {% if participants %}
+                {% for participant in participants %}
+                    {% if participant.jumper_id.name != "TBA" %}
+                    <option>{{ participant.jumper_id.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {% for jumper in jumpers %}
+                    {% if jumper.name != "TBA" %}
+                    <option>{{ jumper.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         </datalist>
         <div class="form-group p-3">
             <label for="first_place">Pierwsze miejsce:</label>
