@@ -5,7 +5,7 @@ import time
 from pony.orm import db_session
 from datetime import datetime, timedelta
 
-sys.path.append("/home/szymonkluba/mysite/typer/flaskr/")
+sys.path.append("/home/szymonkluba/mysite/typer/")
 
 from flaskr.fis_scraping import get_results, check_new_tournaments, check_tournament_updates
 import flaskr.pony_db as pony_db
