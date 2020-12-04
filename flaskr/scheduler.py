@@ -1,12 +1,14 @@
 import functools
 import sys
-
 import schedule
 import time
 from pony.orm import db_session
 from datetime import datetime, timedelta
-from home.szymonkluba.mysite.typer.flaskr.fis_scraping import get_results, check_new_tournaments, check_tournament_updates
-import home.szymonkluba.mysite.typer.flaskr.pony_db as pony_db
+
+sys.path.append("/home/szymonkluba/mysite/typer/flaskr/")
+
+from flaskr.fis_scraping import get_results, check_new_tournaments, check_tournament_updates
+import flaskr.pony_db as pony_db
 
 
 def with_logging(func):
@@ -16,6 +18,7 @@ def with_logging(func):
         result = func(*args, **kwargs)
         print('LOG: Job "%s" completed' % func.__name__)
         return result
+
     return wrapper
 
 
