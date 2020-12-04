@@ -56,7 +56,7 @@ def tournament_updates():
 now = datetime.now()
 with db_session:
     current_tournament = pony_db.get_tournament_by_status("następne")
-t_date_time = current_tournament.date_time
+t_date_time = current_tournament.date_time + timedelta(hours=1)
 if now.year == t_date_time.year and now.month == t_date_time.month and now.day == t_date_time.day:
     schedule.every().day.at(datetime.strftime(t_date_time, "%H:%M")).do(close_tournament,
                                                                         tournament=current_tournament,
