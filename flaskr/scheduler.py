@@ -36,7 +36,7 @@ def close_tournament(tournament, status):
         pony_db.update_tournament_status(tournament.id, status)
         body = f'{tournament.place} - {tournament.type}\n' \
                f'{datetime.strftime(tournament.date_time, "%d.%m.%Y")} ' \
-               f'godzina: {tournament.datetime.strftime(tournament.date_time, "%H:%M")}'
+               f'godzina: {datetime.strftime(tournament.date_time, "%H:%M")}'
     with db_session:
         pony_db.new_info('warning', 'Zamknięto typowanie zawodów', body)
     with db_session:
@@ -94,7 +94,7 @@ with db_session:
             time_schedule = f'{13 + (i // 4)}:{15 * (i % 4) if i % 4 != 0 else "00"}'
             schedule.every().day.at(time_schedule).do(participants, qualifications=qualifications).tag(
                 'checking_participants')
-t_date_time = current_tournament.date_time - timedelta(hours=1)
+t_date_time = current_tournament.date_time + timedelta(minutes=10)
 if now.year == t_date_time.year and now.month == t_date_time.month and now.day == t_date_time.day:
     schedule.every().day.at(datetime.strftime(t_date_time, "%H:%M")).do(close_tournament,
                                                                         tournament=current_tournament,
