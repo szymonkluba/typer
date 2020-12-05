@@ -109,7 +109,7 @@ if now.year == t_date_time.year and now.month == t_date_time.month and now.day =
         time_finish = time_finish + timedelta(minutes=10)
         time_finish_s = datetime.strftime(time_finish, "%H:%M")
         schedule.every().day.at(time_finish_s).do(get_results).tag("checking_results")
-        print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled closing of tournament - attempt: {i + 2}', flush=True)
+        print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking results - attempt: {i + 2}', flush=True)
 schedule.every().day.at("08:30").do(tournament_updates)
 print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking of tournaments updates', flush=True)
 schedule.every().day.at("08:35").do(new_tournaments)
