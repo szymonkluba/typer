@@ -24,6 +24,12 @@ def with_logging(func):
     return wrapper
 
 
+def print_schedule():
+    if schedule.jobs:
+        for job in schedule.jobs:
+            print(job, flush=True)
+
+
 @with_logging
 def close_tournament(tournament, status):
     with db_session:
@@ -31,9 +37,12 @@ def close_tournament(tournament, status):
         body = f'{tournament.place} - {tournament.type}\n' \
                f'{datetime.strftime(tournament.date_time, "%d.%m.%Y")} ' \
                f'godzina: {tournament.datetime.strftime(tournament.date_time, "%H:%M")}'
+    with db_session:
         pony_db.new_info('warning', 'Zamknięto typowanie zawodów', body)
+    with db_session:
         pony_db.open_next_tournament()
-    return schedule.CancelJob
+    schedule.clear('closing_tournament')
+    print_schedule()
 
 
 def print_something():
@@ -47,23 +56,30 @@ def kill_task():
 
 @with_logging
 def new_tournaments():
-    check_new_tournaments()
+    with db_session:
+        check_new_tournaments()
+    print_schedule()
 
 
 @with_logging
 def tournament_updates():
-    check_tournament_updates()
+    with db_session:
+        check_tournament_updates()
+    print_schedule()
 
 
 @with_logging
 def new_qualifications():
-    check_new_qualifications()
+    with db_session:
+        check_new_qualifications()
+    print_schedule()
 
 
 @with_logging
 def participants(qualifications):
     with db_session:
         get_participants(qualifications)
+    print_schedule()
 
 
 now = datetime.now()
@@ -73,7 +89,7 @@ with db_session:
 with db_session:
     if qualifications:
         schedule.every().day.at("11:00").do(participants, qualifications=qualifications).tag('checking_participants')
-        print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of participants updates', flush=True)
+        print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking of participants updates', flush=True)
         for i in range(1, 13):
             time_schedule = f'{13 + (i // 4)}:{15 * (i % 4) if i % 4 != 0 else "00"}'
             schedule.every().day.at(time_schedule).do(participants, qualifications=qualifications).tag(
@@ -82,27 +98,27 @@ t_date_time = current_tournament.date_time - timedelta(hours=1)
 if now.year == t_date_time.year and now.month == t_date_time.month and now.day == t_date_time.day:
     schedule.every().day.at(datetime.strftime(t_date_time, "%H:%M")).do(close_tournament,
                                                                         tournament=current_tournament,
-                                                                        status='koniec')
+                                                                        status='koniec').tag("closing_tournament")
+    print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled closing of tournament', flush=True)
     time_start = t_date_time + timedelta(hours=2, minutes=10)
     time_finish = time_start
     time_start = datetime.strftime(time_start, "%H:%M")
     schedule.every().day.at(time_start).do(get_results).tag("checking_results")
-    print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of results', flush=True)
-    for _ in range(18):
-        time_finish = t_date_time + timedelta(minutes=10)
-        time_finish_S = datetime.strftime(time_finish, "%H:%M")
-        schedule.every().day.at(time_finish_S).do(get_results).tag("checking_results")
-schedule.every().day.at("07:00").do(tournament_updates)
-print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of tournaments updates', flush=True)
-schedule.every().day.at("07:15").do(new_tournaments)
-print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking of new tournaments', flush=True)
+    print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking of results', flush=True)
+    for i in range(18):
+        time_finish = time_finish + timedelta(minutes=10)
+        time_finish_s = datetime.strftime(time_finish, "%H:%M")
+        schedule.every().day.at(time_finish_s).do(get_results).tag("checking_results")
+        print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled closing of tournament - attempt: {i + 2}', flush=True)
+schedule.every().day.at("08:30").do(tournament_updates)
+print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking of tournaments updates', flush=True)
+schedule.every().day.at("08:35").do(new_tournaments)
+print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking of new tournaments', flush=True)
 schedule.every().day.at("01:00").do(kill_task)
-print(f'{datetime.now().strftime("%H:%M")} - Scheduled kill task', flush=True)
-schedule.every().day.at("07:30").do(new_qualifications)
-print(f'{datetime.now().strftime("%H:%M")} - Scheduled checking new qualifications', flush=True)
-if schedule.jobs:
-    for job in schedule.jobs:
-        print(job, flush=True)
+print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled kill task', flush=True)
+schedule.every().day.at("08:40").do(new_qualifications)
+print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking new qualifications', flush=True)
+print_schedule()
 
 while True:
     schedule.run_pending()
