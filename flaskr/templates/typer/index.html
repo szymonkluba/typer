@@ -77,12 +77,12 @@
 {% block news %}
 <h2><span class="badge badge-pill badge-secondary">Nowe wydarzenia</span></h2>
             {% for _ in level %}
-            <div class="card border-dark m-1 p-1 w-100">
-                <div class="card-header p-1">
+            <div class="card border-dark m-1 p-1">
+                <div class="card-header p-1 w-auto">
                     <h5><span class="badge badge-pill badge-{{ level[loop.index0] }}">{{ header[loop.index0] }}</span></h5>
                     <small class="card-subtitle text-muted">{{ created[loop.index0] }}</small>
                 </div>
-                <div class="card-body p-1">
+                <div class="card-body p-1 text-wrap">
                     <small>{{ body[loop.index0] }}</small>
                 </div>
             </div>
