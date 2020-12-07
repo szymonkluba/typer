@@ -1,19 +1,14 @@
 {% extends 'base.html' %}
 {% block header %}
-<div class="container mt-3">
-        <div class="row">
-            <div class="col">
-                <h2><span class="badge badge-pill badge-secondary">{% block title %}Zawody:{% endblock %}</span></h2>
-            </div>
-            <div class="col text-right">
-                <a class="btn btn-dark"
-                   role="button"
-                   href="{{ url_for('tournaments.create') }}">
-                    Nowe zawody
-                </a>
-            </div>
-        </div>
-    </div>
+<h2><span class="badge rounded-pill bg-secondary">{% block title %}Zawody:{% endblock %}</span></h2>
+<div class="position-relative">
+    <a class="btn btn-dark position-absolute end-0 bottom-0 w-25"
+       role="button"
+       href="{{ url_for('tournaments.create') }}">
+        Nowe zawody
+    </a>
+</div>
+
 {% endblock %}
 
 {% block content %}
@@ -26,7 +21,7 @@
                         <h5>{{ post.place }} - {{ post.type }} - {{ post.date_time.strftime("%d.%m.%Y godzina: %H:%M") }}</h5>
                     </div>
                     <div class="col-auto p-0">
-                        <h4><span class="badge badge-pill badge-secondary">{{post.status}}</span></h4>
+                        <h4><span class="badge rounded-pill bg-secondary">{{post.status}}</span></h4>
                     </div>
                 </div>
             </div>
@@ -34,15 +29,15 @@
             <div class="card-body p-0">
                 <ol class="list-group list-group-flush p-1">
                     <li class="list-group-item p-1">
-                        <span class="badge badge-secondary">1</span>
+                        <span class="badge bg-secondary">1</span>
                         {{ post.first_place.country_id.name }}
                     </li>
                     <li class="list-group-item p-1">
-                        <span class="badge badge-secondary">2</span>
+                        <span class="badge bg-secondary">2</span>
                         {{ post.second_place.country_id.name }}
                     </li>
                     <li class="list-group-item p-1">
-                        <span class="badge badge-secondary">3</span>
+                        <span class="badge bg-secondary">3</span>
                         {{ post.third_place.country_id.name }}
                     </li>
                 </ol>
@@ -51,23 +46,23 @@
             <div class="card-body p-0">
                 <ol class="list-group list-group-flush p-1">
                     <li class="list-group-item p-1">
-                        <span class="badge badge-secondary">1</span>
+                        <span class="badge bg-secondary">1</span>
                         {{ post.first_place.jumper_id.name }}
                     </li>
                     <li class="list-group-item p-1">
-                        <span class="badge badge-secondary">2</span>
+                        <span class="badge bg-secondary">2</span>
                         {{ post.second_place.jumper_id.name }}
                     </li>
                     <li class="list-group-item p-1">
-                        <span class="badge badge-secondary">3</span>
+                        <span class="badge bg-secondary">3</span>
                         {{ post.third_place.jumper_id.name }}
                     </li>
                 </ol>
            </div>
             {% endif %}
-            <div class="card-footer text-right p-1">
+            <div class="card-footer text-right position-relative" style="height: 50px;">
                 {% if g.user.id == 1 %}
-                <a class="btn btn-dark"
+                <a class="btn w-25 w-100-xl btn-dark position-absolute end-0 bottom-0"
                    role="button"
                    href="{{ url_for('tournaments.update', id=post.id)  }}">
                     Edytuj
@@ -119,19 +114,4 @@
             </div>
         </div>
     {% endfor %}
-{% endblock %}
-
-{% block news %}
-<h2><span class="badge badge-pill badge-secondary">Nowe wydarzenia</span></h2>
-            {% for _ in level %}
-            <div class="card border-dark m-1 p-1 w-100">
-                <div class="card-header p-1 text-truncate">
-                    <h5 class="text-truncate"><span class="badge badge-pill badge-{{ level[loop.index0] }}">{{ header[loop.index0] }}</span></h5>
-                    <small class="card-subtitle text-muted text-truncate">{{ created[loop.index0] }}</small>
-                </div>
-                <div class="card-body p-1">
-                    <small>{{ body[loop.index0] }}</small>
-                </div>
-            </div>
-            {% endfor %}
 {% endblock %}

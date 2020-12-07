@@ -1,90 +1,71 @@
 {% extends 'base.html' %}
 {% block header %}
-    <div class="container mt-3">
-        {% if current_tournament %}
-        <div class="row">
-            <div class="card w-100">
-                <div class="card-header">
-                    <h2 class="card-title"><span class="badge badge-pill badge-secondary">Aktualnie typujemy:</span></h2>
-                </div>
-                <div class="card-body pt-1 pb-1">
-                    <h5>{{ current_tournament.place }} - {{ current_tournament.type }}</h5>
-                    <h6 class="text-muted">{{ current_tournament.date_time.strftime('%d.%m.%Y godzina: %H:%M') }}</h6>
-                </div>
-                <div class="card-footer text-right">
-                    {% if g.user and not duplicate %}
-                    <a class="btn btn-danger w-25" role="button" href="{{ url_for('typer.create') }}">Typuj</a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        {% endif %}
-        <div class="row">
-            <h2><span class="badge badge-pill badge-secondary ml-4">{% block title %}Ostatnie typy:{% endblock %}</span></h2>
-        </div>
+{% if current_tournament %}
+<h2 class="card-title"><span class="badge rounded-pill bg-secondary">Aktualnie typujemy:</span></h2>
+<div class="card border-dark m-1">
+    <div class="card-header">
     </div>
+    <div class="card-body p-0 position-relative">
+        <h5>{{ current_tournament.place }} - {{ current_tournament.type }}</h5>
+        <h6 class="text-muted">{{ current_tournament.date_time.strftime('%d.%m.%Y godzina: %H:%M') }}</h6>
+        {% if g.user and not duplicate %}
+        <a class="btn btn-danger w-25 position-absolute end-0 bottom-0" role="button" href="{{ url_for('typer.create') }}">Typuj</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
 {% endblock %}
 
 {% block content %}
-    {% for bet in bets %}
-        <div class="card border-dark m-1">
-            <div class="card-header">
-                <h5 class="card-title">{{ bet.tournament_id.place }} -
-                    {{ bet.tournament_id.type }} -
-                    {{ bet.tournament_id.date_time.strftime("%d.%m.%Y godzina: %H:%M") }}</h5>
-                <h6 class="card-subtitle text-muted">przez {{ bet.user_id.username }} z {{ bet.created.strftime("%d.%m.%Y %H:%M:%S") }}</h6>
-            </div>
-            <div class="card-body p-0">
-                    <ol class="list-group list-group-flush p-1">
-                        {% if bet.tournament_id.type == "drużynowe" %}
-                        <li class="list-group-item p-1">
-                            <span class="badge badge-secondary">1</span>
-                            {{ bet.first_place.country_id.name }}
-                        </li>
-                        <li class="list-group-item p-1">
-                            <span class="badge badge-secondary">2</span>
-                            {{ bet.second_place.country_id.name }}
-                        </li>
-                        <li class="list-group-item p-1">
-                            <span class="badge badge-secondary">3</span>
-                            {{ bet.third_place.country_id.name }}
-                        </li>
-                        {% else %}
-                        <li class="list-group-item p-1">
-                            <span class="badge badge-secondary">1</span>
-                            {{ bet.first_place.jumper_id.name }}
-                        </li>
-                        <li class="list-group-item p-1">
-                            <span class="badge badge-secondary">2</span>
-                            {{ bet.second_place.jumper_id.name }}
-                        </li>
-                        <li class="list-group-item p-1">
-                            <span class="badge badge-secondary">3</span>
-                            {{ bet.third_place.jumper_id.name }}
-                        </li>
-                        {% endif %}
-                    </ol>
-            </div>
-            <div class="card-footer text-right">
-                {% if g.user.id == bet.user_id.id and bet.tournament_id.status != 'koniec' and bet.tournament_id.status != 'archiwum' %}
-                <a class="btn btn-dark" role="button" href="{{ url_for('typer.update', id=bet.id)  }}">Edytuj</a>
-                {% endif %}
-            </div>
-        </div>
-    {% endfor %}
-{% endblock %}
-
-{% block news %}
-<h2><span class="badge badge-pill badge-secondary">Nowe wydarzenia</span></h2>
-            {% for _ in level %}
-            <div class="card border-dark m-1 p-1 w-100">
-                <div class="card-header p-1 text-truncate">
-                    <h5 class="text-truncate"><span class="badge badge-pill badge-{{ level[loop.index0] }}">{{ header[loop.index0] }}</span></h5>
-                    <small class="card-subtitle text-muted text-truncate">{{ created[loop.index0] }}</small>
-                </div>
-                <div class="card-body p-1">
-                    <small>{{ body[loop.index0] }}</small>
-                </div>
-            </div>
-            {% endfor %}
+<h2><span class="badge rounded-pill bg-secondary ml-4">{% block title %}Ostatnie typy:{% endblock %}</span></h2>
+{% for bet in bets %}
+<div class="card border-dark m-1">
+    <div class="card-header">
+        <h5 class="card-title">{{ bet.tournament_id.place }} -
+            {{ bet.tournament_id.type }} -
+            {{ bet.tournament_id.date_time.strftime("%d.%m.%Y godzina: %H:%M") }}</h5>
+        <h6 class="card-subtitle text-muted">przez {{ bet.user_id.username }} z {{ bet.created.strftime("%d.%m.%Y %H:%M:%S") }}</h6>
+    </div>
+    <div class="card-body p-0">
+        <ol class="list-group list-group-flush p-1">
+            {% if bet.tournament_id.type == "drużynowe" %}
+            <li class="list-group-item p-1">
+                <span class="badge bg-secondary">1</span>
+                {{ bet.first_place.country_id.name }}
+            </li>
+            <li class="list-group-item p-1">
+                <span class="badge bg-secondary">2</span>
+                {{ bet.second_place.country_id.name }}
+            </li>
+            <li class="list-group-item p-1">
+                <span class="badge bg-secondary">3</span>
+                {{ bet.third_place.country_id.name }}
+            </li>
+            {% else %}
+            <li class="list-group-item p-1">
+                <span class="badge bg-secondary">1</span>
+                {{ bet.first_place.jumper_id.name }}
+            </li>
+            <li class="list-group-item p-1">
+                <span class="badge bg-secondary">2</span>
+                {{ bet.second_place.jumper_id.name }}
+            </li>
+            <li class="list-group-item p-1">
+                <span class="badge bg-secondary">3</span>
+                {{ bet.third_place.jumper_id.name }}
+            </li>
+            {% endif %}
+        </ol>
+    </div>
+    <div class="card-footer text-right position-relative" style="height: 50px">
+        {% if g.user.id == bet.user_id.id and bet.tournament_id.status != 'koniec' and bet.tournament_id.status != 'archiwum' %}
+        <a class="btn btn-dark position-absolute end-0 bottom-0 w-25"
+           role="button"
+           href="{{ url_for('typer.update', id=bet.id)  }}">
+            Edytuj
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
 {% endblock %}
