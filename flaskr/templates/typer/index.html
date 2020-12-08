@@ -26,6 +26,7 @@
             {{ bet.tournament_id.date_time.strftime("%d.%m.%Y godzina: %H:%M") }}</h5>
         <h6 class="card-subtitle text-muted">przez {{ bet.user_id.username }} z {{ bet.created.strftime("%d.%m.%Y %H:%M:%S") }}</h6>
     </div>
+    {% if bet.tournament_id.status != "następne" or g.user.id == bet.user_id.id and bet.tournament_id.status == "następne" %}
     <div class="card-body p-0">
         <ol class="list-group list-group-flush p-1">
             {% if bet.tournament_id.type == "drużynowe" %}
@@ -57,6 +58,7 @@
             {% endif %}
         </ol>
     </div>
+    {% endif %}
     <div class="card-footer text-right position-relative" style="height: 50px">
         {% if g.user.id == bet.user_id.id and bet.tournament_id.status != 'koniec' and bet.tournament_id.status != 'archiwum' %}
         <a class="btn btn-dark position-absolute end-0 bottom-0 w-25"
