@@ -11,9 +11,7 @@ class User(db.Entity):
     id = PrimaryKey(int, auto=True)
     username = Required(str, unique=True)
     password = Required(str)
-    times_bet = Optional(int, default=0)
-    times_exact = Optional(int, default=0)
-    points = Optional(int, default=0)
+    points = Set('Points')
     bets = Set("Bets")
 
 
@@ -82,6 +80,7 @@ class Tournaments(db.Entity):
     fis_id = Required(int)
     bets = Set('Bets')
     participants = Set('Participants')
+    points = Set('Points')
 
 
 class Bets(db.Entity):
@@ -143,7 +142,35 @@ class Participants(db.Entity):
     jumper_id = Required(Jumpers)
 
 
+class Points(db.Entity):
+    user = Required(User)
+    tournament = Required(Tournaments)
+    times_exact = Required(int, sql_default='0')
+    classic = Required(int, sql_default='0')
+    mg = Required(int, sql_default='0')
+    three_two = Required(int, sql_default='0')
+    three_one = Required(int, sql_default='0')
+
+
 db.generate_mapping(create_tables=True)
+
+
+def create_points(user, tournament):
+    Points(user=user, tournament=tournament)
+    commit()
+
+
+def update_points(user, tournament, **kwargs):
+    points = Points.get(lambda p: p.user == user and p.tournament == tournament)
+    if 'classic' in kwargs:
+        points.classic += kwargs['classic']
+    if 'mg' in kwargs:
+        points.mg += kwargs['mg']
+    if 'three_two' in kwargs:
+        points.three_two += kwargs['three_two']
+    if 'three_one' in kwargs:
+        points.three_one += kwargs['three_one']
+    commit()
 
 
 def get_bets(id=None):
