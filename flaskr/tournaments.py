@@ -17,6 +17,22 @@ def tournaments():
     return render_template("tournaments/tournaments.html", tournaments=tournaments)
 
 
+@bp.route('/<status>')
+def tournaments_filter(status):
+    tournaments = tournaments_status(status)
+    return render_template("tournaments/tournaments.html", tournaments=tournaments, status=status)
+
+
+def tournaments_status(status):
+    return {
+        "future": pony_db.select_tournaments_by_status('przyszłe'),
+        "next": pony_db.select_tournaments_by_status('następne'),
+        "end": pony_db.select_tournaments_by_status('koniec'),
+        "archive": pony_db.select_tournaments_by_status('archiwum'),
+        "cancelled": pony_db.select_tournaments_by_status('odwołane')
+    }.get(status)
+
+
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():

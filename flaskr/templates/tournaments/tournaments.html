@@ -8,7 +8,43 @@
         Nowe zawody
     </a>
 </div>
-
+<ul class="nav nav-tabs nav-fill mb-3">
+    <li class="nav-item">
+        {% if status and status == "future" %}
+        <a class="nav-link active" aria-current="page" href="{{ url_for('tournaments.tournaments_filter', status = 'future') }}">Przyszłe</a>
+        {% else %}
+        <a class="nav-link text-muted" href="{{ url_for('tournaments.tournaments_filter', status = 'future') }}">Przyszłe</a>
+        {% endif %}
+    </li>
+    <li class="nav-item">
+        {% if status and status == "next" %}
+        <a class="nav-link active" aria-current="page" href="{{ url_for('tournaments.tournaments_filter', status = 'next') }}">Następne</a>
+        {% else %}
+        <a class="nav-link text-muted" href="{{ url_for('tournaments.tournaments_filter', status = 'next') }}">Następne</a>
+        {% endif %}
+    </li>
+    <li class="nav-item">
+        {% if status and status == "end" %}
+        <a class="nav-link active" aria-current="page" href="{{ url_for('tournaments.tournaments_filter', status = 'end') }}">Koniec</a>
+        {% else %}
+        <a class="nav-link text-muted" href="{{ url_for('tournaments.tournaments_filter', status = 'end') }}">Koniec</a>
+        {% endif %}
+    </li>
+    <li class="nav-item">
+        {% if status and status == "archive" %}
+        <a class="nav-link active" aria-current="page" href="{{ url_for('tournaments.tournaments_filter', status = 'archive') }}">Archiwum</a>
+        {% else %}
+        <a class="nav-link text-muted" href="{{ url_for('tournaments.tournaments_filter', status = 'archive') }}">Archiwum</a>
+        {% endif %}
+    </li>
+    <li class="nav-item">
+        {% if status and status == "cancelled" %}
+        <a class="nav-link active" aria-current="page" href="{{ url_for('tournaments.tournaments_filter', status = 'cancelled') }}">Odwołane</a>
+        {% else %}
+        <a class="nav-link text-muted" href="{{ url_for('tournaments.tournaments_filter', status = 'cancelled') }}">Odwołane</a>
+        {% endif %}
+    </li>
+</ul>
 {% endblock %}
 
 {% block content %}
