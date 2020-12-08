@@ -5,7 +5,7 @@
 <div class="card border-dark m-1">
     <div class="card-header">
     </div>
-    <div class="card-body p-0 position-relative">
+    <div class="card-body position-relative py-0">
         <h5>{{ current_tournament.place }} - {{ current_tournament.type }}</h5>
         <h6 class="text-muted">{{ current_tournament.date_time.strftime('%d.%m.%Y godzina: %H:%M') }}</h6>
         {% if g.user and not duplicate %}
