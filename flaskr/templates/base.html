@@ -21,7 +21,7 @@
             <ul class="navbar-nav mr-auto">
                 {% if g.user %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('typer.my_bets') }}">Moje typy</a>
+                    <a class="nav-link" href="{{ url_for('typer.my_bets', page = 1) }}">Moje typy</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('ranking.ranking', system='classic') }}">Ranking</a>
@@ -52,20 +52,20 @@
         </div>
     </div>
 </header>
-<div class="container-xxl container-fluid mt-3" style="height: 1000px;">
+<div class="container-xxl container-fluid mt-3">
     <div class="row p-0">
-        <div class="col justify-content-center" >
-            <div class="container-fluid pe-3">
+        <div class="col justify-content-center overflow-auto vh-100">
+            <div class="container pe-3">
             {% block header %}{% endblock %}
             </div>
             {% for message in get_flashed_messages() %}
             <div class="alert alert-danger">{{ message }}</div>
             {% endfor %}
-            <div class="container-fluid overflow-auto pe-0" style="height: 1000px;">
+            <div class="container overflow-auto pe-0">
             {% block content %}{% endblock %}
             </div>
         </div>
-        <div class="col-sm-3 justify-content-center overflow-auto p-0 pe-1" style="height: 1080px;">
+        <div class="col-sm-3 justify-content-center overflow-auto p-0 pe-1 vh-100">
             {% include 'news.html' %}
         </div>
     </div>

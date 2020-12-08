@@ -11,20 +11,50 @@ bp = Blueprint('typer', __name__)
 
 @bp.route('/')
 @login_required
-def index():
+def index(page=None):
+    if not page:
+        page = 1
+    bets = pony_db.get_bets()
+    pages = int(bets.count() / 10)
+    bets = bets.page(page)
     return render_template('typer/index.html',
-                           bets=pony_db.get_bets(),
+                           bets=bets,
+                           page=page,
+                           pages=pages,
+                           url='typer.index_pages',
                            duplicate=check_for_duplicates(),
                            current_tournament=pony_db.get_tournament_by_status('następne'))
 
 
-@bp.route('/my_bets')
+@bp.route('/page/<int:page>')
 @login_required
-def my_bets():
+def index_pages(page=1):
+    bets = pony_db.get_bets()
+    pages = int(bets.count() / 10)
+    bets = bets.page(page)
+    return render_template('typer/index.html',
+                           bets=bets,
+                           page=page,
+                           pages=pages,
+                           url='typer.index_pages',
+                           duplicate=check_for_duplicates(),
+                           current_tournament=pony_db.get_tournament_by_status('następne'))
+
+
+@bp.route('/my_bets/page/<int:page>')
+@login_required
+def my_bets(page=None):
     if g.user.id is not None:
-        posts = pony_db.get_bets(g.user.id)
+        if not page:
+            page = 1
+        bets = pony_db.get_bets(g.user.id)
+        pages = int(bets.count() / 10)
+        bets = bets.page(page)
         return render_template('typer/index.html',
-                               bets=posts,
+                               bets=bets,
+                               page=page,
+                               pages=pages,
+                               url='typer.my_bets',
                                duplicate=check_for_duplicates(),
                                current_tournament=pony_db.get_tournament_by_status('następne'))
 
