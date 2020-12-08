@@ -55,17 +55,17 @@
 <div class="container-xxl container-fluid mt-3" style="height: 1000px;">
     <div class="row p-0">
         <div class="col justify-content-center" >
-            <div class="container-fluid">
+            <div class="container-fluid pe-3">
             {% block header %}{% endblock %}
             </div>
             {% for message in get_flashed_messages() %}
             <div class="alert alert-danger">{{ message }}</div>
             {% endfor %}
-            <div class="container-fluid overflow-auto" style="height: 1000px;">
+            <div class="container-fluid overflow-auto pe-0" style="height: 1000px;">
             {% block content %}{% endblock %}
             </div>
         </div>
-        <div class="col-sm-3 justify-content-center overflow-auto" style="height: 1080px;">
+        <div class="col-sm-3 justify-content-center overflow-auto p-0 pe-1" style="height: 1080px;">
             {% include 'news.html' %}
         </div>
     </div>

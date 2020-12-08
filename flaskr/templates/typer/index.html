@@ -13,11 +13,11 @@
         {% endif %}
     </div>
 </div>
+<h2><span class="badge rounded-pill bg-secondary ml-4">{% block title %}Ostatnie typy:{% endblock %}</span></h2>
 {% endif %}
 {% endblock %}
 
 {% block content %}
-<h2><span class="badge rounded-pill bg-secondary ml-4">{% block title %}Ostatnie typy:{% endblock %}</span></h2>
 {% for bet in bets %}
 <div class="card border-dark m-1">
     <div class="card-header">
@@ -58,7 +58,6 @@
             {% endif %}
         </ol>
     </div>
-    {% endif %}
     <div class="card-footer text-right position-relative" style="height: 50px">
         {% if g.user.id == bet.user_id.id and bet.tournament_id.status != 'koniec' and bet.tournament_id.status != 'archiwum' %}
         <a class="btn btn-dark position-absolute end-0 bottom-0 w-25"
@@ -68,6 +67,7 @@
         </a>
         {% endif %}
     </div>
+    {% endif %}
 </div>
 {% endfor %}
 {% endblock %}
