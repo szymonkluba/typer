@@ -1,81 +1,96 @@
 import flaskr.pony_db as pony_db
+from pony.orm import db_session
 
 
+@db_session
 def calculate_points():
     tournament = pony_db.get_tournament_by_status('koniec')
     if tournament:
-        if tournament.type == 'drużynowe':
-            first_part = pony_db.get_first_five(tournament.id)
-            second_part = pony_db.get_second_five(tournament.id)
-        else:
-            first_part = pony_db.get_first_ten(tournament.id)
-            second_part = pony_db.get_second_ten(tournament.id)
-        print(first_part)
-        print(second_part)
-        bets = pony_db.get_bets_by_status('koniec')
-        if bets is not None:
-            for bet in bets:
-                if bet.tournament_id.type == 'drużynowe':
-                    places = [bet.tournament_id.first_place.country_id.id,
-                              bet.tournament_id.second_place.country_id.id,
-                              bet.tournament_id.third_place.country_id.id]
-                    first_place = bet.first_place.country_id.id
-                    second_place = bet.second_place.country_id.id
-                    third_place = bet.third_place.country_id.id
-                else:
-                    places = [bet.tournament_id.first_place.jumper_id.id,
-                              bet.tournament_id.second_place.jumper_id.id,
-                              bet.tournament_id.third_place.jumper_id.id]
-                    first_place = bet.first_place.jumper_id.id
-                    second_place = bet.second_place.jumper_id.id
-                    third_place = bet.third_place.jumper_id.id
-                points = 0
-                exact_bets = 0
-                if first_place in places:
-                    points += 1
-                if second_place in places:
-                    points += 1
-                if third_place in places:
-                    points += 1
-                if first_place == places[0]:
-                    points += 2
-                    exact_bets += 1
-                if second_place == places[1]:
-                    points += 1
-                    exact_bets += 1
-                if third_place == places[2]:
-                    points += 1
-                    exact_bets += 1
-                if check_fives_or_tens(first_place, first_part):
-                    points -= 1
-                    print(f'{pony_db.Jumpers[first_place].name}')
-                    print('Nie ma w pierwszej części_________________________')
-                    if check_fives_or_tens(first_place, second_part):
-                        points -= 1
-                        print(f'{pony_db.Jumpers[first_place].name}')
-                        print('Nie ma w drugiej części--------------------------')
-                if check_fives_or_tens(second_place, first_part):
-                    points -= 1
-                    print(f'{pony_db.Jumpers[second_place].name}')
-                    print('Nie ma w pierwszej części_________________________')
-                    if check_fives_or_tens(second_place, second_part):
-                        points -= 1
-                        print(f'{pony_db.Jumpers[second_place].name}')
-                        print('Nie ma w drugiej części--------------------------')
-                if check_fives_or_tens(third_place, first_part):
-                    points -= 1
-                    print(f'{pony_db.Jumpers[third_place].name}')
-                    print('Nie ma w pierwszej części_________________________')
-                    if check_fives_or_tens(third_place, second_part):
-                        points -= 1
-                        print(f'{pony_db.Jumpers[third_place].name}')
-                        print('Nie ma w drugiej części--------------------------')
-                pony_db.update_user_stats(bet.user_id.id, points, exact_bets)
-    pony_db.update_tournament_status(tournament.id, 'archiwum')
+        pony_db.update_tournament_status(tournament.id, 'archiwum')
+    tournaments = pony_db.select_tournaments_by_status('archiwum')
+    if tournaments:
+        for tournament in tournaments:
+            if tournament.bets:
+                for bet in tournament.bets:
+                    if not pony_db.points_exists(bet.user_id, tournament):
+                        pony_db.create_points(bet.user_id, tournament)
+                        if tournament.type == "drużynowe":
+                            if (bet.first_place.country_id == tournament.second_place.country_id or
+                                    bet.first_place.country_id == tournament.third_place.country_id):
+                                pony_db.update_points(bet.user_id, tournament,
+                                                      classic=1, mg=1, three_two=1, three_one=1)
+                            if (bet.second_place.country_id == tournament.first_place.country_id or
+                                    bet.second_place.country_id == tournament.third_place.country_id):
+                                pony_db.update_points(bet.user_id, tournament,
+                                                      classic=1, mg=1, three_two=1, three_one=1)
+                            if (bet.third_place.country_id == tournament.first_place.country_id or
+                                    bet.third_place.country_id == tournament.second_place.country_id):
+                                pony_db.update_points(bet.user_id, tournament,
+                                                      classic=1, mg=1, three_two=1, three_one=1)
+                            if bet.first_place.country_id == tournament.first_place.country_id:
+                                pony_db.update_points(bet.user_id, tournament,
+                                                      classic=3, mg=3, three_two=3, three_one=3, exact=1)
+                            if bet.second_place.country_id == tournament.second_place.country_id:
+                                pony_db.update_points(bet.user_id, tournament,
+                                                      classic=3, mg=2, three_two=2, three_one=1, exact=1)
+                            if bet.third_place.country_id == tournament.third_place.country_id:
+                                pony_db.update_points(bet.user_id, tournament,
+                                                      classic=3, mg=2, three_two=2, three_one=1, exact=1)
+                            if bet.first_place.country_id not in tournament.first_five.country_id:
+                                pony_db.update_points(bet.user_id, tournament, mg=-1)
+                                if bet.first_place.country_id not in tournament.second_five.country_id:
+                                    pony_db.update_points(bet.user_id, tournament, mg=-1)
+                            if bet.second_place.country_id not in tournament.first_five.country_id:
+                                pony_db.update_points(bet.user_id, tournament, mg=-1)
+                                if bet.second_place.country_id not in tournament.second_five.country_id:
+                                    pony_db.update_points(bet.user_id, tournament, mg=-1)
+                            if bet.third_place.country_id not in tournament.first_five.country_id:
+                                pony_db.update_points(bet.user_id, tournament, mg=-1)
+                                if bet.third_place.country_id not in tournament.second_five.country_id:
+                                    pony_db.update_points(bet.user_id, tournament, mg=-1)
+                        else:
+                            if (bet.first_place.jumper_id == tournament.second_place.jumper_id or
+                                    bet.first_place.jumper_id == tournament.third_place.jumper_id):
+                                pony_db.update_points(bet.user_id, tournament,
+                                                      classic=1, mg=1, three_two=1, three_one=1)
+                            if (bet.second_place.jumper_id == tournament.first_place.jumper_id or
+                                    bet.second_place.jumper_id == tournament.third_place.jumper_id):
+                                pony_db.update_points(bet.user_id, tournament,
+                                                      classic=1, mg=1, three_two=1, three_one=1)
+                            if (bet.third_place.jumper_id == tournament.first_place.jumper_id or
+                                    bet.third_place.jumper_id == tournament.second_place.jumper_id):
+                                pony_db.update_points(bet.user_id, tournament,
+                                                      classic=1, mg=1, three_two=1, three_one=1)
+                            if bet.first_place.jumper_id == tournament.first_place.jumper_id:
+                                pony_db.update_points(bet.user_id, tournament,
+                                                      classic=3, mg=3, three_two=3, three_one=3, exact=1)
+                            if bet.second_place.jumper_id == tournament.second_place.jumper_id:
+                                pony_db.update_points(bet.user_id, tournament,
+                                                      classic=3, mg=2, three_two=2, three_one=1, exact=1)
+                            if bet.third_place.jumper_id == tournament.third_place.jumper_id:
+                                pony_db.update_points(bet.user_id, tournament,
+                                                      classic=3, mg=2, three_two=2, three_one=1, exact=1)
+                            if bet.first_place.jumper_id not in tournament.first_ten.jumper_id:
+                                pony_db.update_points(bet.user_id, tournament, mg=-1)
+                                if bet.first_place.jumper_id not in tournament.second_ten.jumper_id:
+                                    pony_db.update_points(bet.user_id, tournament, mg=-1)
+                            if bet.second_place.jumper_id not in tournament.first_ten.jumper_id:
+                                pony_db.update_points(bet.user_id, tournament, mg=-1)
+                                if bet.second_place.jumper_id not in tournament.second_ten.jumper_id:
+                                    pony_db.update_points(bet.user_id, tournament, mg=-1)
+                            if bet.third_place.jumper_id not in tournament.first_ten.jumper_id:
+                                pony_db.update_points(bet.user_id, tournament, mg=-1)
+                                if bet.third_place.jumper_id not in tournament.second_ten.jumper_id:
+                                    pony_db.update_points(bet.user_id, tournament, mg=-1)
+                            print(f"LOG: Points for {tournament.place} - {tournament.type} for user: "
+                                  f"{bet.user_id.username} have been calculated", flush=True)
+                    else:
+                        print(f"LOG: Points for {tournament.place} - {tournament.type} are already calculated.",
+                              flush=True)
+            else:
+                print(f"LOG: No bets for {tournament.place} - {tournament.type}.", flush=True)
+    else:
+        print("LOG: No tournaments for points calculation.", flush=True)
 
 
-def check_fives_or_tens(place, list_of_places):
-    for i in list_of_places:
-        if place == i:
-            return False
-    return True
+calculate_points()
