@@ -170,7 +170,13 @@ def update_points(user, tournament, **kwargs):
         points.three_two += kwargs['three_two']
     if 'three_one' in kwargs:
         points.three_one += kwargs['three_one']
+    if 'exact' in kwargs:
+        points.times_exact += kwargs['exact']
     commit()
+
+
+def points_exists(user, tournament):
+    return exists(p for p in Points if p.user == user and p.tournament == tournament)
 
 
 def get_bets(id=None):
@@ -289,6 +295,11 @@ def get_tournament(id):
 def get_tournament_by_status(status):
     current_tournament = Tournaments.get(lambda t: t.status == status)
     return current_tournament
+
+
+def select_tournaments_by_status(status):
+    tournaments = Tournaments.select(lambda t: t.status == status)
+    return tournaments
 
 
 def get_tournaments_by_place(place):
