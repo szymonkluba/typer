@@ -4,32 +4,62 @@
 {% endblock %}
 
 {% block content %}
-    <div class="table-responsive-lg">
-        <table class="table table-sm table-striped table-secondary text-center">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Użytkownik</th>
-                    <th scope="col">Punkty</th>
-                    <th scope="col">Ile razy typował</th>
-                    <th scope="col">Ile razy za 3</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for user in users %}
-                <tr style="border-bottom:1px">
-                    <th scope="row">{{ loop.index }}</th>
-                    {% if user.id == g.user.id %}
-                    <td class="font-weight-bold">{{ user.username }}</td>
-                    {% else %}
-                    <td>{{ user.username }}</td>
-                    {% endif %}
-                    <td>{{ user.points }}</td>
-                    <td>{{ user.times_bet }}</td>
-                    <td>{{ user.times_exact }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+<ul class="nav nav-tabs nav-fill mb-3">
+    <li class="nav-item">
+        {% if system == "classic" %}
+        <a class="nav-link active" aria-current="page" href="{{ url_for('ranking.ranking', system = 'classic') }}">Klasyczny</a>
+        {% else %}
+        <a class="nav-link text-muted" href="{{ url_for('ranking.ranking', system = 'classic') }}">Klasyczny</a>
+        {% endif %}
+    </li>
+    <li class="nav-item">
+        {% if system == "mg" %}
+        <a class="nav-link active" aria-current="page" href="{{ url_for('ranking.ranking', system = 'mg') }}">MG_rev.2020</a>
+        {% else %}
+        <a class="nav-link text-muted" href="{{ url_for('ranking.ranking', system = 'mg') }}">MG_rev.2020</a>
+        {% endif %}
+    </li>
+    <li class="nav-item">
+        {% if system == "three_two" %}
+        <a class="nav-link active" aria-current="page" href="{{ url_for('ranking.ranking', system = 'three_two') }}">3-2</a>
+        {% else %}
+        <a class="nav-link text-muted" href="{{ url_for('ranking.ranking', system = 'three_two') }}">3-2</a>
+        {% endif %}
+    </li>
+    <li class="nav-item">
+        {% if system == "three_one" %}
+        <a class="nav-link active" aria-current="page" href="{{ url_for('ranking.ranking', system = 'three_one') }}">3-1</a>
+        {% else %}
+        <a class="nav-link text-muted" href="{{ url_for('ranking.ranking', system = 'three_one') }}">3-1</a>
+        {% endif %}
+    </li>
+</ul>
+<div class="table-responsive-lg">
+    <table class="table table-sm table-striped table-light text-center">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Użytkownik</th>
+                <th scope="col">Punkty</th>
+                <th scope="col">Ile razy typował</th>
+            <th scope="col">Ile razy za 3</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for p in points %}
+        <tr style="border-bottom:1px">
+            <th scope="row">{{ loop.index }}</th>
+            {% if p[0].id == g.user.id %}
+            <td class="font-weight-bold">{{ p[0].username }}</td>
+            {% else %}
+            <td>{{ p[0].username }}</td>
+            {% endif %}
+            <td>{{ p[1] }}</td>
+            <td>{{ p[3] }}</td>
+            <td>{{ p[2] }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
