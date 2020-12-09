@@ -91,6 +91,3 @@ def calculate_points():
                 print(f"LOG: No bets for {tournament.place} - {tournament.type}.", flush=True)
     else:
         print("LOG: No tournaments for points calculation.", flush=True)
-
-
-calculate_points()
