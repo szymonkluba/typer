@@ -115,7 +115,7 @@ if now.year == t_date_time.year and now.month == t_date_time.month and now.day =
         time_finish_s = datetime.strftime(time_finish, "%H:%M")
         schedule.every().day.at(time_finish_s).do(get_results).tag("checking_results")
         print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking results - attempt: {i + 2}', flush=True)
-schedule.every().day.at("08:30").do(tournament_updates)
+schedule.every(3).hours.do(tournament_updates)
 print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking of tournaments updates', flush=True)
 schedule.every().day.at("08:35").do(new_tournaments)
 print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking of new tournaments', flush=True)
@@ -123,8 +123,6 @@ schedule.every().day.at("01:00").do(kill_task)
 print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled kill task', flush=True)
 schedule.every().day.at("08:40").do(new_qualifications)
 print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking new qualifications', flush=True)
-schedule.every().day.at("11:10").do(points)
-print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled points calculation', flush=True)
 print_schedule()
 
 while True:

@@ -308,7 +308,7 @@ def get_tournaments_by_place(place):
 
 
 def select_tournaments_for_update():
-    tournaments = Tournaments.select(lambda t: t.status == 'następne' or t.status == 'przyszłe')
+    tournaments = Tournaments.select(lambda t: t.status in ['następne', 'przyszłe', 'odwołane'])
     return tournaments
 
 
@@ -583,7 +583,7 @@ def select_qualifications_by_date(date_time):
 
 
 def check_date(date1, date2):
-    return date1.year == date2.year and date1.month == date2.month and date1.day == date2.day
+    return date1.date() == date2.date()
 
 
 def quali_fis_id_exists(fis_id):
