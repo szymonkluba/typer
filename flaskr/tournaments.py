@@ -13,14 +13,20 @@ bp = Blueprint('tournaments', __name__, url_prefix='/tournaments')
 
 @bp.route('/')
 def tournaments():
-    tournaments = pony_db.get_tournaments()
-    return render_template("tournaments/tournaments.html", tournaments=tournaments)
-
-
-@bp.route('/<status>')
-def tournaments_filter(status):
-    tournaments = tournaments_status(status)
-    return render_template("tournaments/tournaments.html", tournaments=tournaments, status=status)
+    page = int(request.args.get('page'))
+    status = request.args.get('status')
+    if status:
+        tournaments = tournaments_status(status)
+    else:
+        tournaments = pony_db.get_tournaments()
+    pages = int(tournaments.count() / 5)
+    tournaments = tournaments.page(page, 5)
+    print(page, pages, status)
+    return render_template("tournaments/tournaments.html",
+                           tournaments=tournaments,
+                           status=status,
+                           page=page,
+                           pages=pages)
 
 
 def tournaments_status(status):

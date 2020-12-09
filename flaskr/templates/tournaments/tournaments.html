@@ -11,43 +11,89 @@
 <ul class="nav nav-tabs nav-fill mb-3">
     <li class="nav-item">
         {% if status and status == "future" %}
-        <a class="nav-link active" aria-current="page" href="{{ url_for('tournaments.tournaments_filter', status = 'future') }}">Przyszłe</a>
+        <a class="nav-link active" aria-current="page" href="{{ url_for('tournaments.tournaments', status = 'future', page = 1) }}">Przyszłe</a>
         {% else %}
-        <a class="nav-link text-muted" href="{{ url_for('tournaments.tournaments_filter', status = 'future') }}">Przyszłe</a>
+        <a class="nav-link text-muted" href="{{ url_for('tournaments.tournaments', status = 'future', page = 1) }}">Przyszłe</a>
         {% endif %}
     </li>
     <li class="nav-item">
         {% if status and status == "next" %}
-        <a class="nav-link active" aria-current="page" href="{{ url_for('tournaments.tournaments_filter', status = 'next') }}">Następne</a>
+        <a class="nav-link active" aria-current="page" href="{{ url_for('tournaments.tournaments', status = 'next', page = 1) }}">Następne</a>
         {% else %}
-        <a class="nav-link text-muted" href="{{ url_for('tournaments.tournaments_filter', status = 'next') }}">Następne</a>
+        <a class="nav-link text-muted" href="{{ url_for('tournaments.tournaments', status = 'next', page = 1) }}">Następne</a>
         {% endif %}
     </li>
     <li class="nav-item">
         {% if status and status == "end" %}
-        <a class="nav-link active" aria-current="page" href="{{ url_for('tournaments.tournaments_filter', status = 'end') }}">Koniec</a>
+        <a class="nav-link active" aria-current="page" href="{{ url_for('tournaments.tournaments', status = 'end', page = 1) }}">Koniec</a>
         {% else %}
-        <a class="nav-link text-muted" href="{{ url_for('tournaments.tournaments_filter', status = 'end') }}">Koniec</a>
+        <a class="nav-link text-muted" href="{{ url_for('tournaments.tournaments', status = 'end', page = 1) }}">Koniec</a>
         {% endif %}
     </li>
     <li class="nav-item">
         {% if status and status == "archive" %}
-        <a class="nav-link active" aria-current="page" href="{{ url_for('tournaments.tournaments_filter', status = 'archive') }}">Archiwum</a>
+        <a class="nav-link active" aria-current="page" href="{{ url_for('tournaments.tournaments', status = 'archive', page = 1) }}">Archiwum</a>
         {% else %}
-        <a class="nav-link text-muted" href="{{ url_for('tournaments.tournaments_filter', status = 'archive') }}">Archiwum</a>
+        <a class="nav-link text-muted" href="{{ url_for('tournaments.tournaments', status = 'archive', page = 1) }}">Archiwum</a>
         {% endif %}
     </li>
     <li class="nav-item">
         {% if status and status == "cancelled" %}
-        <a class="nav-link active" aria-current="page" href="{{ url_for('tournaments.tournaments_filter', status = 'cancelled') }}">Odwołane</a>
+        <a class="nav-link active" aria-current="page" href="{{ url_for('tournaments.tournaments', status = 'cancelled', page = 1) }}">Odwołane</a>
         {% else %}
-        <a class="nav-link text-muted" href="{{ url_for('tournaments.tournaments_filter', status = 'cancelled') }}">Odwołane</a>
+        <a class="nav-link text-muted" href="{{ url_for('tournaments.tournaments', status = 'cancelled', page = 1) }}">Odwołane</a>
         {% endif %}
     </li>
 </ul>
 {% endblock %}
 
 {% block content %}
+{% if pages > 1 %}
+<nav>
+  <ul class="pagination pagination-sm">
+      {% if page > 1 %}
+      <li class="page-item">
+          <a class="page-link text-dark" href="{{ url_for('tournaments.tournaments', page = page - 1, status = status) }}">Nowsze</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+          <a class="page-link"
+             href="{{ url_for('tournaments.tournaments', page = page - 1, status = status) }}"
+             tabindex="-1"
+             aria-disabled="true">
+              Nowsze
+          </a>
+      </li>
+      {% endif %}
+      {% if page - 1 >= 1 %}
+      <li class="page-item">
+          <a class="page-link text-dark"
+             href="{{ url_for('tournaments.tournaments', page = page - 1, status = status) }}">
+              {{ page - 1 }}
+          </a>
+      </li>
+      {% endif %}
+      <li class="page-item active" aria-current="page">
+          <a class="page-link text-light bg-secondary border-secondary"
+             href="{{ url_for('tournaments.tournaments', page = page, status = status) }}">
+              {{ page }}
+          </a>
+      </li>
+      {% if page + 1 <= pages + 1%}
+      <li class="page-item"><a class="page-link text-dark" href="{{ url_for('tournaments.tournaments', page = page + 1, status = status) }}">{{ page + 1 }}</a></li>
+      {% endif %}
+      {% if page <= pages %}
+      <li class="page-item">
+          <a class="page-link text-dark" href="{{ url_for('tournaments.tournaments', page = page + 1, status = status) }}">Starsze</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+          <a class="page-link" href="{{ url_for('tournaments.tournaments', page = page + 1, status = status) }}" tabindex="-1" aria-disabled="true">Starsze</a>
+      </li>
+      {% endif %}
+  </ul>
+</nav>
+{% endif %}
     {% for post in tournaments|sort(attribute="date_time", reverse=True) %}
         <div class="card border-dark m-1">
 
