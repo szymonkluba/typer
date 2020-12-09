@@ -11,7 +11,13 @@
 <body class="bg-light">
 <header class="navbar navbar-expand-md navbar-dark bg-dark">
     <div class="container-xxl flex-wrap flex-md-nowrap position-relative">
-        <a class="navbar-brand" href="{{ url_for('typer.index') }}">Typer</a>
+        <a class="navbar-brand" href="{{ url_for('typer.index') }}">
+            <img src="{{ url_for('static', filename='typer_logo.png') }}"
+                 class="d-inline-block align-top"
+                 height="30px"
+            >
+            Typer
+        </a>
         <button class="navbar-toggler" type="button"
                 data-toggle="collapse" data-target="#navbarText"
                 aria-label="Toggle navigation">
@@ -52,7 +58,7 @@
         </div>
     </div>
 </header>
-<div class="container-xxl container-fluid mt-3">
+<div class="container-xxl container-fluid mt-3 p-0">
     <div class="row p-0">
         <div class="col justify-content-center overflow-auto vh-100">
             <div class="container pe-3">
