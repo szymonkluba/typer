@@ -11,6 +11,7 @@ from flaskr.fis_scraping import (
     get_results, check_new_tournaments, check_tournament_updates, get_participants, check_new_qualifications
 )
 import flaskr.pony_db as pony_db
+from flaskr.points import calculate_points
 
 
 def with_logging(func):
@@ -31,16 +32,14 @@ def print_schedule():
 
 
 @with_logging
+@db_session
 def close_tournament(tournament, status):
-    with db_session:
-        pony_db.update_tournament_status(tournament.id, status)
-        body = f'{tournament.place} - {tournament.type}\n' \
+    pony_db.update_tournament_status(tournament.id, status)
+    body = f'{tournament.place} - {tournament.type}\n' \
                f'{datetime.strftime(tournament.date_time, "%d.%m.%Y")} ' \
                f'godzina: {datetime.strftime(tournament.date_time, "%H:%M")}'
-    with db_session:
-        pony_db.new_info('warning', 'Zamknięto typowanie zawodów', body)
-    with db_session:
-        pony_db.open_next_tournament()
+    pony_db.new_info('warning', 'Zamknięto typowanie zawodów', body)
+    pony_db.open_next_tournament()
     schedule.clear('closing_tournament')
     print_schedule()
 
@@ -55,31 +54,37 @@ def kill_task():
 
 
 @with_logging
+@db_session
 def new_tournaments():
-    with db_session:
-        check_new_tournaments()
+    check_new_tournaments()
     print_schedule()
 
 
 @with_logging
+@db_session
 def tournament_updates():
-    with db_session:
-        check_tournament_updates()
+    check_tournament_updates()
     print_schedule()
 
 
 @with_logging
+@db_session
 def new_qualifications():
-    with db_session:
-        check_new_qualifications()
+    check_new_qualifications()
     print_schedule()
 
 
 @with_logging
+@db_session
 def participants(qualifications):
-    with db_session:
-        get_participants(qualifications)
+    get_participants(qualifications)
     print_schedule()
+
+
+@with_logging
+@db_session
+def points():
+    calculate_points()
 
 
 now = datetime.now()
@@ -118,6 +123,8 @@ schedule.every().day.at("01:00").do(kill_task)
 print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled kill task', flush=True)
 schedule.every().day.at("08:40").do(new_qualifications)
 print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking new qualifications', flush=True)
+schedule.every().day.at("11:10").do(points)
+print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled points calculation', flush=True)
 print_schedule()
 
 while True:
