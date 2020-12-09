@@ -13,7 +13,11 @@ bp = Blueprint('tournaments', __name__, url_prefix='/tournaments')
 
 @bp.route('/')
 def tournaments():
-    page = int(request.args.get('page'))
+    page = request.args.get('page')
+    if not page:
+        page = 1
+    else:
+        page = int(page)
     status = request.args.get('status')
     if status:
         tournaments = tournaments_status(status)

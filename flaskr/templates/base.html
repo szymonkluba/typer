@@ -21,7 +21,7 @@
             <ul class="navbar-nav mr-auto">
                 {% if g.user %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('typer.my_bets', page = 1) }}">Moje typy</a>
+                    <a class="nav-link" href="{{ url_for('typer.index', page = 1, bets = 'my') }}">Moje typy</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('ranking.ranking', system='classic') }}">Ranking</a>
