@@ -12,7 +12,7 @@
         <div class="list-group p-1">
     {% for jumper in jumpers %}
         {% if jumper.name != "TBA" %}
-            <div class="list-group-item d-flex justify-content-between border-dark">
+            <div class="list-group-item d-flex justify-content-between border-secondary">
                 {{ jumper.name }}
                 {% if g.user.id == 1 %}
                 <a class="btn btn-dark p-1"

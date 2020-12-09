@@ -35,19 +35,19 @@
     </li>
 </ul>
 <div class="table-responsive-lg">
-    <table class="table table-sm table-striped table-light text-center">
-        <thead class="thead-dark">
+    <table class="table table-sm table-striped text-center table-borderless">
+        <thead>
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Użytkownik</th>
                 <th scope="col">Punkty</th>
                 <th scope="col">Ile razy typował</th>
-            <th scope="col">Ile razy za 3</th>
-        </tr>
+                <th scope="col">Ile razy dokładnie</th>
+            </tr>
         </thead>
         <tbody>
         {% for p in points %}
-        <tr style="border-bottom:1px">
+        <tr>
             <th scope="row">{{ loop.index }}</th>
             {% if p[0].id == g.user.id %}
             <td class="font-weight-bold">{{ p[0].username }}</td>

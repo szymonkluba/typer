@@ -2,7 +2,7 @@
 {% block header %}
 {% if current_tournament %}
 <h2 class="card-title"><span class="badge rounded-pill bg-secondary">Aktualnie typujemy:</span></h2>
-<div class="card border-dark m-1">
+<div class="card border-secondary m-1">
     <div class="card-header">
     </div>
     <div class="card-body position-relative py-0">
@@ -56,7 +56,7 @@
 
 {% block content %}
 {% for bet in bets %}
-<div class="card border-dark m-1">
+<div class="card border-secondary m-1">
     <div class="card-header">
         <h5 class="card-title">{{ bet.tournament_id.place }} -
             {{ bet.tournament_id.type }} -
