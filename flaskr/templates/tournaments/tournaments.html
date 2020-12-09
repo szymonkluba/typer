@@ -48,7 +48,7 @@
 {% endblock %}
 
 {% block content %}
-    {% for post in tournaments %}
+    {% for post in tournaments|sort(attribute="date_time", reverse=True) %}
         <div class="card border-dark m-1">
 
                 <div class="card-header">
@@ -63,34 +63,34 @@
             </div>
             {% if post.type == "drużynowe" %}
             <div class="card-body p-0">
-                <ol class="list-group list-group-flush p-1">
-                    <li class="list-group-item p-1">
-                        <span class="badge bg-secondary">1</span>
+                <ol class="list-group list-group-flush p-0 px-1">
+                    <li class="list-group-item p-0">
+                        <span class="badge bg-secondary rounded-0 rounded-start p-2 m-0" style="width: 30px;">1</span>
                         {{ post.first_place.country_id.name }}
                     </li>
-                    <li class="list-group-item p-1">
-                        <span class="badge bg-secondary">2</span>
+                    <li class="list-group-item p-0">
+                        <span class="badge bg-secondary rounded-0 rounded-start p-2 m-0" style="width: 30px;">2</span>
                         {{ post.second_place.country_id.name }}
                     </li>
-                    <li class="list-group-item p-1">
-                        <span class="badge bg-secondary">3</span>
+                    <li class="list-group-item p-0">
+                        <span class="badge bg-secondary rounded-0 rounded-start p-2 m-0" style="width: 30px;">3</span>
                         {{ post.third_place.country_id.name }}
                     </li>
                 </ol>
            </div>
             {% else %}
             <div class="card-body p-0">
-                <ol class="list-group list-group-flush p-1">
-                    <li class="list-group-item p-1">
-                        <span class="badge bg-secondary">1</span>
+                <ol class="list-group list-group-flush p-0">
+                    <li class="list-group-item p-0">
+                        <span class="badge bg-secondary rounded-0 rounded-start p-2 m-0" style="width: 30px;">1</span>
                         {{ post.first_place.jumper_id.name }}
                     </li>
-                    <li class="list-group-item p-1">
-                        <span class="badge bg-secondary">2</span>
+                    <li class="list-group-item p-0">
+                        <span class="badge bg-secondary rounded-0 rounded-start p-2 m-0" style="width: 30px;">2</span>
                         {{ post.second_place.jumper_id.name }}
                     </li>
-                    <li class="list-group-item p-1">
-                        <span class="badge bg-secondary">3</span>
+                    <li class="list-group-item p-0">
+                        <span class="badge bg-secondary rounded-0 rounded-start p-2 m-0" style="width: 30px;">3</span>
                         {{ post.third_place.jumper_id.name }}
                     </li>
                 </ol>
@@ -106,15 +106,30 @@
                 {% endif %}
                 {% if post.status == "archiwum" %}
                 <div class="row mt-1 position absolute top-0">
-                    <div class="col pe-1">
+                    <h6>Wyniki:</h6>
+                    <div class="col px-1">
                         <ul class="list-group">
                             {% if post.type == "drużynowe" %}
                             {% for country in post.first_five|sort(attribute="id") %}
-                                <li class="list-group-item p-0 px-1"><small>{{loop.index}}. {{ country.country_id.name }}</small></li>
+                            <li class="list-group-item p-0">
+                                <span class="badge rounded-0 bg-secondary m-0 p-2 h-100" style="width: 30px;">
+                                    {{loop.index}}
+                                </span>
+                                <small>
+                                    {{ country.country_id.name }}
+                                </small>
+                            </li>
                             {% endfor %}
                             {% else %}
                             {% for jumper in post.first_ten|sort(attribute="id") %}
-                                <li class="list-group-item p-0 px-1"><small>{{loop.index}}. {{ jumper.jumper_id.name }}</small></li>
+                            <li class="list-group-item p-0">
+                                <span class="badge rounded-0 bg-secondary m-0 p-2 h-100" style="width: 30px;">
+                                    {{loop.index}}
+                                </span>
+                                <small>
+                                    {{ jumper.jumper_id.name }}
+                                </small>
+                            </li>
                             {% endfor %}
                             {% endif %}
                         </ul>
@@ -123,28 +138,76 @@
                         <ul class="list-group">
                             {% if post.type == "drużynowe" %}
                             {% for country in post.second_five|sort(attribute="id") %}
-                                <li class="list-group-item p-0 px-1"><small>{{loop.index + 5}}. {{ country.country_id.name }}</small></li>
+                            <li class="list-group-item p-0">
+                                <span class="badge rounded-0 bg-secondary m-0 p-2 h-100" style="width: 30px;">
+                                    {{loop.index + 5}}
+                                </span>
+                                <small>
+                                    {{ country.country_id.name }}
+                                </small>
+                            </li>
                             {% endfor %}
                             {% else %}
                             {% for jumper in post.second_ten|sort(attribute="id") %}
-                                <li class="list-group-item p-0 px-1"><small>{{loop.index + 10}}. {{ jumper.jumper_id.name }}</small></li>
+                            <li class="list-group-item p-0">
+                                <span class="badge rounded-0 bg-secondary m-0 p-2 h-100" style="width: 30px;">
+                                    {{loop.index + 10}}
+                                </span>
+                                <small>
+                                    {{ jumper.jumper_id.name }}
+                                </small>
+                            </li>
                             {% endfor %}
                             {% endif %}
                         </ul>
                     </div>
-                    <div class="col ps-1">
+                    <div class="col px-1">
                         <ul class="list-group">
                             {% if post.type == "drużynowe" %}
                             {% for country in post.third_five|sort(attribute="id") %}
-                                <li class="list-group-item p-0 px-1"><small>{{loop.index + 10}}. {{ country.country_id.name }}</small></li>
+                            <li class="list-group-item p-0">
+                                <span class="badge rounded-0 bg-secondary m-0 p-2 h-100" style="width: 30px;">
+                                    {{loop.index + 10}}
+                                </span>
+                                <small>
+                                    {{ country.country_id.name }}
+                                </small>
+                            </li>
                             {% endfor %}
                             {% else %}
                             {% for jumper in post.third_ten|sort(attribute="id") %}
-                                <li class="list-group-item p-0 px-1"><small>{{loop.index + 20}}. {{ jumper.jumper_id.name }}</small></li>
+                            <li class="list-group-item p-0">
+                                <span class="badge rounded-0 bg-secondary m-0 p-2 h-100" style="width: 30px;">
+                                    {{loop.index + 20}}
+                                </span>
+                                <small>
+                                    {{ jumper.jumper_id.name }}
+                                </small>
+                            </li>
                             {% endfor %}
                             {% endif %}
                         </ul>
                     </div>
+                </div>
+                {% elif post.participants %}
+                <div class="row mt-1 position absolute top-0">
+                    <h6>Po kwalifikacjach:</h6>
+                    {% for column in post.participants|sort(attribute="id")|slice(3) %}
+                    <div class="col px-1">
+                        <ul class="list-group">
+                            {% for item in column %}
+                            <li class="list-group-item p-0">
+                                <span class="badge rounded-0 bg-secondary m-0 p-2 h-100 text-secondary" style="width: 30px;">
+                                    {{ loop.index }}
+                                </span>
+                                <small>
+                                    {{ item.jumper_id.name }}
+                                </small>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
                 </div>
                 {% endif %}
             </div>
