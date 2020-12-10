@@ -40,10 +40,10 @@
         border-radius: 5px;
     }
 </style>
-<meta name="viewport" content="height=device-height, initial-scale=1">
+<meta name="viewport" content="height=device-height, width=device-width, initial-scale=1">
 </head>
 <body class="bg-light">
-<header class="navbar navbar-expand-md navbar-dark bg-dark position-static">
+<header class="navbar navbar-expand-md navbar-dark bg-dark">
     <div class="container-xxl flex-wrap flex-md-nowrap position-relative">
         <a class="navbar-brand" href="{{ url_for('typer.index') }}">
             <img src="{{ url_for('static', filename='typer_logo.png') }}"
@@ -53,7 +53,8 @@
             Typer
         </a>
         <button class="navbar-toggler" type="button"
-                data-toggle="collapse" data-target="#navbarText"
+                data-bs-toggle="collapse" data-bs-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false"
                 aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
