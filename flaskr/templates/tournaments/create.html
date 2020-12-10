@@ -16,36 +16,42 @@
             <option>drużynowe</option>
         </datalist>
         <div class="form-group p-3">
-            <label for="place">Gdzie:</label>
-            <input name="place"
-                   id="place"
-                   class="form-control w-50"
-                   value="{{ request.form['place'] }}"
-                   required>
-            <label for="typ">Typ: indywidualne / drużynowe</label>
-            <input name="typ"
-                   id="typ"
-                   list="typy"
-                   class="form-control w-50"
-                   value="{{ request.form['typ'] }}"
-                   required>
-            <label for="status">Status: koniec / następne / przyszłe</label>
-            <input name="status"
-                   id="status"
-                   list="statusy"
-                   class="form-control w-50"
-                   value="{{ request.form['status'] }}"
-                   required>
-            <label for="date_time">Data:</label>
-            <input name="date_time"
-                   id="date_time"
-                   type="datetime-local"
-                   class="form-control w-50"
-                   value="{{ request.form['date_time'] }}"
-                   required>
+            <div class="row p-0 m-0">
+                <div class="col-md-6 m-0">
+                    <label for="place">Gdzie:</label>
+                    <input name="place"
+                           id="place"
+                           class="form-control"
+                           value="{{ request.form['place'] }}"
+                           required>
+                    <label for="typ">Typ: indywidualne / drużynowe</label>
+                    <input name="typ"
+                           id="typ"
+                           list="typy"
+                           class="form-control"
+                           value="{{ request.form['typ'] }}"
+                           required>
+                </div>
+                <div class="col-md-6 m-0">
+                    <label for="status">Status: koniec / następne / przyszłe</label>
+                    <input name="status"
+                           id="status"
+                           list="statusy"
+                           class="form-control"
+                           value="{{ request.form['status'] }}"
+                           required>
+                    <label for="date_time">Data:</label>
+                    <input name="date_time"
+                           id="date_time"
+                           type="datetime-local"
+                           class="form-control"
+                           value="{{ request.form['date_time'] }}"
+                           required>
+                </div>
+            </div>
         </div>
-        <div class="text-center">
-            <input class="btn btn-dark w-25" type="submit" value="Zapisz">
+        <div class="d-grid d-md-block px-1 text-center">
+            <input class="btn btn-dark" type="submit" value="Zapisz">
         </div>
     </form>
 {% endblock %}

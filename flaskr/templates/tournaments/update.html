@@ -25,88 +25,109 @@
             <option>indywidualne</option>
             <option>drużynowe</option>
         </datalist>
-        <div class="form-gropu p-3">
-            <label for="place">Gdzie:</label>
-            <input name="place"
-                   id="place"
-                   class="form-control w-50"
-                   value="{{ request.form['place'] or tournament.place }}"
-                   required>
-            <label for="type">Typ: indywidualne / drużynowe</label>
-            <input name="type"
-                   id="type"
-                   list="typy"
-                   class="form-control w-50"
-                   value="{{ request.form['type'] or tournament.type }}" required>
-            <label for="status">Status: koniec / następne / przyszłe</label>
-            <input name="status"
-                   id="status"
-                   list="statusy"
-                   class="form-control w-50"
-                   value="{{ request.form['status'] or tournament.status }}"
-                   required>
-            <label for="date_time">Data:</label>
-            <input name="date_time"
-                   id="date_time"
-                   type="datetime-local"
-                   class="form-control w-50"
-                   value="{{ request.form['date_time'] or tournament.date_time }}"
-                   required>
-            {% if tournament.type == "drużynowe" %}
-            <label for="first_place">Pierwsze miejsce:</label>
-            <input name="first_place"
-                   id="first_place"
-                   list="jumpers"
-                   class="form-control w-50"
-                   value="{{ request.form['first_place'] or tournament.first_place.country_id.name }}"
-                   required>
-            <label for="second_place">Drugie miejsce:</label>
-            <input name="second_place"
-                   id="second_place"
-                   list="jumpers"
-                   class="form-control w-50"
-                   value="{{ request.form['second_place'] or tournament.second_place.country_id.name }}"
-                   required>
-            <label for="third_place">Trzecie miejsce:</label>
-            <input name="third_place"
-                   id="third_place"
-                   list="jumpers"
-                   class="form-control w-50"
-                   value="{{ request.form['third_place'] or tournament.third_place.country_id.name }}"
-                   required>
-            {% else %}
-            <label for="first_place">Pierwsze miejsce:</label>
-            <input name="first_place"
-                   id="first_place"
-                   list="jumpers"
-                   class="form-control w-50"
-                   value="{{ request.form['first_place'] or tournament.first_place.jumper_id.name }}"
-                   required>
-            <label for="second_place">Drugie miejsce:</label>
-            <input name="second_place"
-                   id="second_place"
-                   list="jumpers"
-                   class="form-control w-50"
-                   value="{{ request.form['second_place'] or tournament.second_place.jumper_id.name }}"
-                   required>
-            <label for="third_place">Trzecie miejsce:</label>
-            <input name="third_place"
-                   id="third_place"
-                   list="jumpers"
-                   class="form-control w-50"
-                   value="{{ request.form['third_place'] or tournament.third_place.jumper_id.name }}"
-                   required>
-            {% endif %}
+        <div class="form-group p-3">
+            <div class="row p-0 m-0">
+                <div class="col-md-6 m-0">
+                    <label for="place">Gdzie:</label>
+                    <input name="place"
+                           id="place"
+                           class="form-control"
+                           value="{{ request.form['place'] or tournament.place }}"
+                           required>
+                    <label for="type">Typ: indywidualne / drużynowe</label>
+                    <input name="type"
+                           id="type"
+                           list="typy"
+                           class="form-control"
+                           value="{{ request.form['type'] or tournament.type }}" required>
+                </div>
+                <div class="col-md-6 m-0">
+                    <label for="status">Status: koniec / następne / przyszłe</label>
+                    <input name="status"
+                           id="status"
+                           list="statusy"
+                           class="form-control"
+                           value="{{ request.form['status'] or tournament.status }}"
+                           required>
+                    <label for="date_time">Data:</label>
+                    <input name="date_time"
+                           id="date_time"
+                           type="datetime-local"
+                           class="form-control"
+                           value="{{ request.form['date_time'] or tournament.date_time }}"
+                           required>
+                </div>
+            </div>
+
+            <div class="row p-0 m-0">
+                {% if tournament.type == "drużynowe" %}
+                <div class="col-md-4 m-0">
+                    <label for="first_place">Pierwsze miejsce:</label>
+                    <input name="first_place"
+                           id="first_place"
+                           list="jumpers"
+                           class="form-control"
+                           value="{{ request.form['first_place'] or tournament.first_place.country_id.name }}"
+                           required>
+                </div>
+                <div class="col-md-4 m-0">
+                    <label for="second_place">Drugie miejsce:</label>
+                    <input name="second_place"
+                           id="second_place"
+                           list="jumpers"
+                           class="form-control"
+                           value="{{ request.form['second_place'] or tournament.second_place.country_id.name }}"
+                           required>
+                </div>
+                <div class="col-md-4 m-0">
+                    <label for="third_place">Trzecie miejsce:</label>
+                    <input name="third_place"
+                           id="third_place"
+                           list="jumpers"
+                           class="form-control"
+                           value="{{ request.form['third_place'] or tournament.third_place.country_id.name }}"
+                           required>
+                </div>
+                    {% else %}
+                <div class="col-md-4 m-0">
+                    <label for="first_place">Pierwsze miejsce:</label>
+                    <input name="first_place"
+                           id="first_place"
+                           list="jumpers"
+                           class="form-control"
+                           value="{{ request.form['first_place'] or tournament.first_place.jumper_id.name }}"
+                           required>
+                </div>
+                <div class="col-md-4 m-0">
+                    <label for="second_place">Drugie miejsce:</label>
+                    <input name="second_place"
+                           id="second_place"
+                           list="jumpers"
+                           class="form-control"
+                           value="{{ request.form['second_place'] or tournament.second_place.jumper_id.name }}"
+                           required>
+                </div>
+                <div class="col-md-4 m-0">
+                    <label for="third_place">Trzecie miejsce:</label>
+                    <input name="third_place"
+                           id="third_place"
+                           list="jumpers"
+                           class="form-control"
+                           value="{{ request.form['third_place'] or tournament.third_place.jumper_id.name }}"
+                           required>
+                </div>
+                    {% endif %}
+            </div>
         </div>
-        <div class="text-center">
-            <input class="bt btn-dark w-25" type="submit" value="Zapisz">
+        <div class="d-grid d-md-block px-1 text-center">
+            <input class="btn btn-dark" type="submit" value="Zapisz">
         </div>
     </form>
     <hr>
-    <form class="text-right"
+    <form class="d-grid d-md-block px-1 text-end"
           action="{{ url_for('tournaments.delete', id=tournament.id) }}"
           method="post">
-        <input class="btn btn-danger w-25"
+        <input class="btn btn-danger"
                type="submit"
                value="Usuń"
                onclick="return confirm('Jesteś pewien?');">

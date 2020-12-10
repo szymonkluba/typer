@@ -10,18 +10,18 @@
             <label for="name">Nazwisko:</label>
             <input name="name"
                    id="name"
-                   class="form-control w-50"
+                   class="form-control"
                    value="{{ request.form['name'] or jumper.name }}"
                    required>
         </div>
-        <div class="text-center">
-            <input type="submit" class="btn btn-dark w-25" value="Zapisz">
+        <div class="d-grid d-md-block px-1 text-center">
+            <input type="submit" class="btn btn-dark" value="Zapisz">
         </div>
     </form>
     <hr>
-    <form class="text-right" action="{{ url_for('jumpers.delete', id=jumper.id) }}"
+    <form class="d-grid d-md-block px-1 text-end" action="{{ url_for('jumpers.delete', id=jumper.id) }}"
           method="post">
-        <input class="btn btn-danger w-25"
+        <input class="btn btn-danger"
                type="submit"
                value="Usuń"
                onclick="return confirm('Jesteś pewien?');">

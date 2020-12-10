@@ -28,60 +28,64 @@
         </datalist>
         <div class="form-group p-3">
             {% if bet.tournament_id.type == "drużynowe" %}
-            <label for="first_place">Pierwsze miejsce:</label>
-            <input name="first_place"
-                   id="first_place"
-                   list="jumpers"
-                   class="form-control w-50"
-                   value="{{ request.form['first_place'] or bet.first_place.country_id.name }}"
-                   required>
-            <label for="second_place">Drugie miejsce:</label>
-            <input name="second_place"
-                   id="second_place"
-                   list="jumpers"
-                   class="form-control w-50"
-                   value="{{ request.form['second_place'] or bet.second_place.country_id.name }}"
-                   required>
-            <label for="third_place">Trzecie miejsce:</label>
-            <input name="third_place"
-                   id="third_place"
-                   list="jumpers"
-                   class="form-control w-50"
-                   value="{{ request.form['third_place'] or bet.third_place.country_id.name }}"
-                   required>
+            <div class="col-md-6 m-0">
+                <label for="first_place">Pierwsze miejsce:</label>
+                <input name="first_place"
+                       id="first_place"
+                       list="jumpers"
+                       class="form-control w-50"
+                       value="{{ request.form['first_place'] or bet.first_place.country_id.name }}"
+                       required>
+                <label for="second_place">Drugie miejsce:</label>
+                <input name="second_place"
+                       id="second_place"
+                       list="jumpers"
+                       class="form-control w-50"
+                       value="{{ request.form['second_place'] or bet.second_place.country_id.name }}"
+                       required>
+                <label for="third_place">Trzecie miejsce:</label>
+                <input name="third_place"
+                       id="third_place"
+                       list="jumpers"
+                       class="form-control w-50"
+                       value="{{ request.form['third_place'] or bet.third_place.country_id.name }}"
+                       required>
+            </div>
             {% else %}
-            <label for="first_place">Pierwsze miejsce:</label>
-            <input name="first_place"
-                   id="first_place"
-                   list="jumpers"
-                   class="form-control w-50"
-                   value="{{ request.form['first_place'] or bet.first_place.jumper_id.name }}"
-                   required>
-            <label for="second_place">Drugie miejsce:</label>
-            <input name="second_place"
-                   id="second_place"
-                   list="jumpers"
-                   class="form-control w-50"
-                   value="{{ request.form['second_place'] or bet.second_place.jumper_id.name }}"
-                   required>
-            <label for="third_place">Trzecie miejsce:</label>
-            <input name="third_place"
-                   id="third_place"
-                   list="jumpers"
-                   class="form-control w-50"
-                   value="{{ request.form['third_place'] or bet.third_place.jumper_id.name }}"
-                   required>
+            <div class="col-md-6 m-0">
+                <label for="first_place">Pierwsze miejsce:</label>
+                <input name="first_place"
+                       id="first_place"
+                       list="jumpers"
+                       class="form-control w-50"
+                       value="{{ request.form['first_place'] or bet.first_place.jumper_id.name }}"
+                       required>
+                <label for="second_place">Drugie miejsce:</label>
+                <input name="second_place"
+                       id="second_place"
+                       list="jumpers"
+                       class="form-control w-50"
+                       value="{{ request.form['second_place'] or bet.second_place.jumper_id.name }}"
+                       required>
+                <label for="third_place">Trzecie miejsce:</label>
+                <input name="third_place"
+                       id="third_place"
+                       list="jumpers"
+                       class="form-control w-50"
+                       value="{{ request.form['third_place'] or bet.third_place.jumper_id.name }}"
+                       required>
+            </div>
             {% endif %}
         </div>
-        <div class="text-center">
-            <input class="btn btn-dark w-25" type="submit" value="Zapisz">
+        <div class="d-grid d-md-block px-1 text-center">
+            <input class="btn btn-dark" type="submit" value="Zapisz">
         </div>
     </form>
     <hr>
-    <form class="text-right p-3"
+    <form class="d-grid d-md-block px-1 text-end"
           action="{{ url_for('typer.delete', id=bet.id) }}"
           method="post">
-        <input class="btn btn-danger w-25"
+        <input class="btn btn-danger"
                type="submit"
                value="Usuń"
                onclick="return confirm('Jesteś pewien?');">
