@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% block header %}
 <h2><span class="badge rounded-pill bg-secondary">{% block title %}Zawody:{% endblock %}</span></h2>
-<div class="mb-3 text-end">
-    <a class="btn btn-dark w-25"
+<div class="d-grid d-md-block mb-3 text-end">
+    <a class="btn btn-dark"
        role="button"
        href="{{ url_for('tournaments.create') }}">
         Nowe zawody
@@ -153,7 +153,7 @@
                 {% if post.status == "archiwum" %}
                 <div class="row mt-1 position absolute top-0">
                     <h6>Wyniki:</h6>
-                    <div class="col px-1">
+                    <div class="col-md-4 px-1">
                         <ul class="list-group">
                             {% if post.type == "drużynowe" %}
                             {% for country in post.first_five|sort(attribute="id") %}
@@ -180,7 +180,7 @@
                             {% endif %}
                         </ul>
                     </div>
-                    <div class="col px-1">
+                    <div class="col-md-4 px-1">
                         <ul class="list-group">
                             {% if post.type == "drużynowe" %}
                             {% for country in post.second_five|sort(attribute="id") %}
@@ -207,7 +207,7 @@
                             {% endif %}
                         </ul>
                     </div>
-                    <div class="col px-1">
+                    <div class="col-md-4 px-1">
                         <ul class="list-group">
                             {% if post.type == "drużynowe" %}
                             {% for country in post.third_five|sort(attribute="id") %}
@@ -239,7 +239,7 @@
                 <div class="row mt-1 position absolute top-0">
                     <h6>Po kwalifikacjach:</h6>
                     {% for column in post.participants|sort(attribute="id")|slice(3) %}
-                    <div class="col-md px-1">
+                    <div class="col-md-4 px-1">
                         <ul class="list-group">
                             {% for item in column %}
                             <li class="list-group-item p-0">

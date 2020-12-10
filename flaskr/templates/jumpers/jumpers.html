@@ -7,8 +7,8 @@
         }
 </style>
 <h2><span class="badge rounded-pill bg-secondary">{% block title %}Skoczkowie:{% endblock %}</span></h2>
-<div class="mb-3 text-end">
-    <a class="btn btn-dark w-25" role="button" href="{{ url_for('jumpers.create') }}">
+<div class="d-grid d-md-block mb-3 text-end">
+    <a class="btn btn-dark" role="button" href="{{ url_for('jumpers.create') }}">
         Nowy skoczek
     </a>
 </div>
@@ -16,7 +16,7 @@
 
 {% block content %}
 <div class="row p-0 m-0">
-<div class="col-auto p-1 m-0 ">
+<div class="col-auto">
 <nav id="navbar-alpha" class="navbar navbar-light bg-light p-0 m-0 text-center content">
     <nav class="nav nav-pills flex-column">
         {% for groups in jumpers %}
@@ -26,7 +26,7 @@
 </nav>
 </div>
 <div class="col p-0 m-0">
-<div class="list-group p-1 content"
+<div class="list-group p-1 position-relative content"
      data-bs-spy="scroll"
      data-bs-target="#navbar-alpha"
      data-bs-offset="0"
