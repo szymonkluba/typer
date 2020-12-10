@@ -102,11 +102,11 @@
             {% for message in get_flashed_messages() %}
             <div class="alert alert-danger">{{ message }}</div>
             {% endfor %}
-            <div class="container pe-0">
+            <div class="container pe-0 pb-2">
             {% block content %}{% endblock %}
             </div>
         </div>
-        <div class="col-sm-3 justify-content-center overflow-auto p-0 pe-1 content-news">
+        <div class="col-sm-3 justify-content-center overflow-auto p-0 pe-1 pb-2 content-news">
             {% include 'news.html' %}
         </div>
     </div>

@@ -15,8 +15,8 @@
 </div>
 <h2><span class="badge rounded-pill bg-secondary ml-4">{% block title %}Ostatnie typy:{% endblock %}</span></h2>
 {% if pages > 1 %}
-<nav class="position-relative">
-  <ul class="pagination pagination-sm position-absolute end-0 bottom-0">
+<nav>
+  <ul class="pagination pagination-sm justify-content-end">
       {% if page > 1 %}
       <li class="page-item">
           <a class="page-link text-dark" href="{{ url_for('typer.index', page = page - 1, bets = status) }}">Nowsze</a>
