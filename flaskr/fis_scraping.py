@@ -220,11 +220,11 @@ def get_participants(qualifications):
         page = requests.get(f'{PATH_RACES}{quali.fis_id}')
         tree = html.fromstring(page.content)
         column_index = 1
-        column = tree.xpath(f'{PATH_COLUMNS_HEADERS_QUAL}{column_index}]/text()')[0]
+        column = tree.xpath(f'{PATH_COLUMNS_HEADERS_QUAL}{column_index}]/text()')
         if column:
-            while column != 'Athlete':
+            while column[0] != 'Athlete':
                 column_index += 1
-                column = tree.xpath(f'{PATH_COLUMNS_HEADERS_QUAL}{column_index}]/text()')[0]
+                column = tree.xpath(f'{PATH_COLUMNS_HEADERS_QUAL}{column_index}]/text()')
                 if not column:
                     break
             participants = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
