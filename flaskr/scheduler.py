@@ -93,16 +93,17 @@ with db_session:
     qualifications = pony_db.select_qualifications_by_date(now)
 with db_session:
     if qualifications:
-        t_date_time = qualifications.date_time
-        schedule.every().day.at(datetime.strftime(t_date_time, "%H:%M")).do(participants,
-                                                                            qualifications=qualifications).tag(
-            'checking_participants')
-        print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking of participants updates', flush=True)
-        for i in range(16):
-            t_date_time = t_date_time + timedelta(minutes=15)
+        for q in qualifications:
+            t_date_time = qualifications.date_time
             schedule.every().day.at(datetime.strftime(t_date_time, "%H:%M")).do(participants,
                                                                                 qualifications=qualifications).tag(
                 'checking_participants')
+            print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking of participants updates', flush=True)
+            for i in range(16):
+                t_date_time = t_date_time + timedelta(minutes=15)
+                schedule.every().day.at(datetime.strftime(t_date_time, "%H:%M")).do(participants,
+                                                                                    qualifications=qualifications).tag(
+                    'checking_participants')
 t_date_time = current_tournament.date_time - timedelta(hours=1)
 if now.date() == t_date_time.date():
     schedule.every().day.at(datetime.strftime(t_date_time, "%H:%M")).do(close_tournament,
