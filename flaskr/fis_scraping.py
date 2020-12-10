@@ -97,7 +97,7 @@ def check_tournament_updates():
         date = datetime.strptime(date[0], '%B %d, %Y')
         time_starts = time_starts[0].split(':')
         date_time = date + timedelta(hours=int(time_starts[0]), minutes=int(time_starts[1]))
-        if cancelled:
+        if cancelled and tournament.status != 'odwołane':
             pony_db.update_tournament_status(tournament.id, 'odwołane')
             body = f'{tournament.place} - {tournament.type}\n' \
                    f'{datetime.strftime(tournament.date_time, "%d.%m.%Y")} ' \
