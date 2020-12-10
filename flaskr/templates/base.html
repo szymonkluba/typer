@@ -7,9 +7,43 @@
       crossorigin="anonymous">
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
+<style type="text/css">
+    .content {
+        height: 85vh;
+        overflow-y: scroll;
+    }
+
+    .content-news {
+        height: 92vh;
+        overflow-y: scroll;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: #ffffff!important;
+    }
+
+    ::-webkit-scrollbar-track:hover {
+        background-color: #e8e9ea!important;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #d8d9da!important;
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: #6c757d!important;
+        border-radius: 5px;
+    }
+</style>
+<meta name="viewport" content="height=device-height, initial-scale=1">
 </head>
 <body class="bg-light">
-<header class="navbar navbar-expand-md navbar-dark bg-dark">
+<header class="navbar navbar-expand-md navbar-dark bg-dark position-static">
     <div class="container-xxl flex-wrap flex-md-nowrap position-relative">
         <a class="navbar-brand" href="{{ url_for('typer.index') }}">
             <img src="{{ url_for('static', filename='typer_logo.png') }}"
@@ -60,18 +94,18 @@
 </header>
 <div class="container-xxl container-fluid mt-3 p-0">
     <div class="row p-0">
-        <div class="col justify-content-center overflow-auto vh-100">
+        <div class="col justify-content-center overflow-auto content-news">
             <div class="container pe-3">
             {% block header %}{% endblock %}
             </div>
             {% for message in get_flashed_messages() %}
             <div class="alert alert-danger">{{ message }}</div>
             {% endfor %}
-            <div class="container overflow-auto pe-0">
+            <div class="container pe-0">
             {% block content %}{% endblock %}
             </div>
         </div>
-        <div class="col-sm-3 justify-content-center overflow-auto p-0 pe-1 vh-100">
+        <div class="col-sm-3 justify-content-center overflow-auto p-0 pe-1 content-news">
             {% include 'news.html' %}
         </div>
     </div>

@@ -4,6 +4,7 @@ from flask import (
 from werkzeug.exceptions import abort
 
 from flaskr.auth import login_required
+from itertools import groupby
 import flaskr.pony_db as pony_db
 
 bp = Blueprint('jumpers', __name__, url_prefix='/jumpers')
@@ -12,6 +13,7 @@ bp = Blueprint('jumpers', __name__, url_prefix='/jumpers')
 @bp.route('/')
 def jumpers():
     jumpers = pony_db.get_jumpers()
+    jumpers = [list(g) for k, g in groupby(sorted(jumpers, key=lambda x: x.name), lambda x: x.name[0])]
     return render_template("jumpers/jumpers.html", jumpers=jumpers)
 
 

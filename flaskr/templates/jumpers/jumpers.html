@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 {% block header %}
+<style type="text/css">
+    .active {
+        background-color: #6c757d!important;
+        color: #ffffff!important;
+        }
+</style>
 <h2><span class="badge rounded-pill bg-secondary">{% block title %}Skoczkowie:{% endblock %}</span></h2>
 <div class="position-relative">
     <a class="btn btn-dark position-absolute end-0 bottom-0 w-25" role="button" href="{{ url_for('jumpers.create') }}">
@@ -9,20 +15,40 @@
 {% endblock %}
 
 {% block content %}
-        <div class="list-group p-1">
-    {% for jumper in jumpers %}
+<div class="row p-0 m-0">
+<div class="col-1 p-0 m-0 ">
+<nav id="navbar-alpha" class="navbar navbar-light bg-light text-center content">
+    <nav class="nav nav-pills flex-column">
+        {% for groups in jumpers %}
+        <a class="nav-link" href="#item-{{ groups[0].name[0] }}" style="color: #212529;">{{ groups[0].name[0] }}</a>
+        {% endfor %}
+    </nav>
+</nav>
+</div>
+<div class="col p-0 m-0">
+<div class="list-group p-1 position-relative end-0 content"
+     data-bs-spy="scroll"
+     data-bs-target="#navbar-alpha"
+     data-bs-offset="0"
+     tabindex="0">
+{% for groups in jumpers %}
+    <h5 id="item-{{ groups[0].name[0] }}">{{ groups[0].name[0] }}</h5>
+    {% for jumper in groups %}
         {% if jumper.name != "TBA" %}
-            <div class="list-group-item d-flex justify-content-between border-secondary">
-                {{ jumper.name }}
-                {% if g.user.id == 1 %}
-                <a class="btn btn-dark p-1"
-                   role="button"
-                   href="{{ url_for('jumpers.update', id=jumper.id)  }}">
-                    Edytuj
-                </a>
-                {% endif %}
-            </div>
+    <div class="list-group-item d-flex justify-content-between border-secondary">
+        {{ jumper.name }}
+        {% if g.user.id == 1 %}
+        <a class="btn btn-dark p-1"
+           role="button"
+           href="{{ url_for('jumpers.update', id=jumper.id)  }}">
+            Edytuj
+        </a>
+        {% endif %}
+    </div>
         {% endif %}
     {% endfor %}
-        </div>
+{% endfor %}
+</div>
+</div>
+</div>
 {% endblock %}
