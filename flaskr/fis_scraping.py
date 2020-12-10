@@ -60,7 +60,7 @@ def create_new_tournament(tree, typ, fis_id, time_starts):
     date_time = date + timedelta(hours=int(time_starts[0]), minutes=int(time_starts[1]))
     pony_db.create_tournament(place, typ, 'przyszłe', date_time, fis_id)
     body = f'{place} - {typ}\n' \
-            f'{datetime.strftime(date_time, "%d.%m.%Y")} godzina: {datetime.strftime(date_time, "%H:%M")}'
+           f'{datetime.strftime(date_time, "%d.%m.%Y")} godzina: {datetime.strftime(date_time, "%H:%M")}'
     pony_db.new_info('info', 'Nowe zawody', body)
 
 
