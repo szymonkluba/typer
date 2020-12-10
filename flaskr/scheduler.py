@@ -94,7 +94,7 @@ with db_session:
 with db_session:
     if qualifications:
         for q in qualifications:
-            t_date_time = qualifications.date_time
+            t_date_time = q.date_time
             schedule.every().day.at(datetime.strftime(t_date_time, "%H:%M")).do(participants,
                                                                                 qualifications=qualifications).tag(
                 'checking_participants')
