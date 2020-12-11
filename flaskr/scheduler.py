@@ -83,6 +83,17 @@ def points():
 
 
 @with_logging
+def schedule_result_checking():
+    schedule.every(5).minutes.do(get_results).tag("checking_results")
+    schedule.clear("schedule_results")
+
+
+def schedule_participants_checking(qualifications):
+    schedule.every(15).minutes.do(participants, qualifications=qualifications).tag('checking_participants')
+    schedule.clear("schedule_participants")
+
+
+@with_logging
 @db_session
 def is_tournament_today():
     now = datetime.now()
@@ -93,17 +104,9 @@ def is_tournament_today():
                                                                             tournament=current_tournament,
                                                                             status='koniec').tag("closing_tournament")
         print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled closing of tournament', flush=True)
-        time_start = t_date_time + timedelta(hours=2, minutes=10)
-        time_finish = time_start
+        time_start = t_date_time + timedelta(hours=1, minutes=30)
         time_start = datetime.strftime(time_start, "%H:%M")
-        schedule.every().day.at(time_start).do(get_results).tag("checking_results")
-        print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking of results', flush=True)
-        for i in range(18):
-            time_finish = time_finish + timedelta(minutes=10)
-            time_finish_s = datetime.strftime(time_finish, "%H:%M")
-            schedule.every().day.at(time_finish_s).do(get_results).tag("checking_results")
-            print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking results - attempt: {i + 2}',
-                  flush=True)
+        schedule.every().day.at(time_start).do(schedule_result_checking).tag("schedule_results")
 
 
 @with_logging
@@ -111,18 +114,15 @@ def is_tournament_today():
 def is_qualification_today():
     now = datetime.now()
     qualifications = pony_db.select_qualifications_by_date(now)
+    delta = 1
     if qualifications:
         for q in qualifications:
-            t_date_time = q.date_time
+            t_date_time = q.date_time + timedelta(minutes=delta)
+            delta += 2
             time_string = datetime.strftime(t_date_time, "%H:%M")
-            schedule.every().day.at(time_string).do(participants,
-                                                    qualifications=qualifications).tag('checking_participants')
+            schedule.every().day.at(time_string).do(schedule_participants_checking,
+                                                    qualifications=qualifications).tag('schedule_participants')
             print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking of participants updates', flush=True)
-            for i in range(16):
-                t_date_time = t_date_time + timedelta(minutes=15)
-                time_string = datetime.strftime(t_date_time, "%H:%M")
-                schedule.every().day.at(time_string).do(participants,
-                                                        qualifications=qualifications).tag('checking_participants')
 
 
 schedule.every().day.at("08:00").do(is_tournament_today)
