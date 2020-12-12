@@ -152,7 +152,7 @@ class Points(db.Entity):
     three_one = Required(int, sql_default='0')
 
 
-db.generate_mapping(create_tables=True)
+db.generate_mapping(create_tables=False)
 
 
 def create_points(user, tournament):

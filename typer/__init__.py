@@ -23,7 +23,7 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         PONY={
             'provider': 'sqlite',
-            'filename': 'typer.sqlite',
+            'filename': 'flaskr.sqlite',
             'create_db': True
         }
 
