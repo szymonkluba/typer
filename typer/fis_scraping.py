@@ -2,11 +2,11 @@ from lxml import html
 from pony.orm import *
 from schedule import clear
 import requests
-import flaskr.pony_db as pony_db
-import flaskr.constants as constants
-from flaskr.points import calculate_points
+import typer.pony_db as pony_db
+import typer.constants as constants
+from typer.points import calculate_points
 from datetime import datetime, timedelta
-from flaskr.scheduler import with_logging
+from typer.scheduler import with_logging
 
 PATH_RACES = 'https://www.fis-ski.com/DB/general/results.html?sectorcode=JP&raceid='
 PATH_JUMPERS = 'https://www.fis-ski.com/DB/ski-jumping/biographies.html?lastname=&firstname=&sectorcode=JP&gendercode' \

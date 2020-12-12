@@ -7,15 +7,15 @@ from datetime import datetime, timedelta
 
 sys.path.append("/home/szymonkluba/mysite/typer/")
 
-from flaskr.fis_scraping import (
+from typer.fis_scraping import (
     get_results,
     check_new_tournaments,
     check_tournament_updates,
     get_participants,
     check_new_qualifications,
 )
-import flaskr.pony_db as pony_db
-from flaskr.points import calculate_points
+import typer.pony_db as pony_db
+from typer.points import calculate_points
 
 
 def with_logging(func):

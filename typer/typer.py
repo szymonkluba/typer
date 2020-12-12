@@ -3,8 +3,8 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from flaskr.auth import login_required
-import flaskr.pony_db as pony_db
+from typer.auth import login_required
+import typer.pony_db as pony_db
 
 bp = Blueprint('typer', __name__)
 

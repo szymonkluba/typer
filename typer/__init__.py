@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, render_template
 from pony.flask import Pony
-from flaskr.pony_db import get_news
+from typer.pony_db import get_news
 
 
 def page_not_found(e):
@@ -23,7 +23,7 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         PONY={
             'provider': 'sqlite',
-            'filename': 'flaskr.sqlite',
+            'filename': 'typer.sqlite',
             'create_db': True
         }
 

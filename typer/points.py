@@ -1,4 +1,4 @@
-import flaskr.pony_db as pony_db
+import typer.pony_db as pony_db
 from pony.orm import db_session
 
 

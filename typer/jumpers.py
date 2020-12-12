@@ -3,9 +3,9 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from flaskr.auth import login_required
+from typer.auth import login_required
 from itertools import groupby
-import flaskr.pony_db as pony_db
+import typer.pony_db as pony_db
 
 bp = Blueprint('jumpers', __name__, url_prefix='/jumpers')
 

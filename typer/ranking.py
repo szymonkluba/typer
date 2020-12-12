@@ -2,8 +2,8 @@ from flask import (
     Blueprint, g, render_template,
 )
 
-from flaskr.auth import login_required
-import flaskr.pony_db as pony_db
+from typer.auth import login_required
+import typer.pony_db as pony_db
 from pony.orm import count, sum
 from operator import itemgetter
 

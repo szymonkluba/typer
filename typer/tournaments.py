@@ -3,9 +3,9 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from flaskr.auth import login_required
-from flaskr.typer import get_competitors
-import flaskr.pony_db as pony_db
+from typer.auth import login_required
+from typer.typer import get_competitors
+import typer.pony_db as pony_db
 
 
 bp = Blueprint('tournaments', __name__, url_prefix='/tournaments')
@@ -89,7 +89,7 @@ def update(id):
         else:
             pony_db.update_tournament(id, place, typ, status, date_time, first_place, second_place, third_place)
             if status == "koniec" and first_place != "TBA" and second_place != 'TBA' and third_place != 'TBA':
-                from flaskr.points import calculate_points
+                from typer.points import calculate_points
                 calculate_points()
             return redirect(url_for('tournaments.tournaments'))
 
