@@ -66,7 +66,7 @@ def create():
                                third_place,
                                g.user.id,
                                tournament)
-            return redirect(url_for('typer.index'))
+            return redirect(url_for('index.index'))
 
     return render_template('typer/create.html',
                            tournament=tournament,
@@ -107,7 +107,7 @@ def update(id):
             flash(error)
         else:
             pony_db.update_bet(first_place, second_place, third_place, id)
-            return redirect(url_for('typer.index'))
+            return redirect(url_for('index.index'))
 
     return render_template('typer/update.html', bet=bet, jumpers=competitors, participants=participants)
 
@@ -119,7 +119,7 @@ def delete(id):
     if post is None:
         abort(404, f"Post id {id} does not exist.")
     pony_db.delete_bet(id)
-    return redirect(url_for('typer.index'))
+    return redirect(url_for('index.index'))
 
 
 def get_competitors(selected_tournament=None):
