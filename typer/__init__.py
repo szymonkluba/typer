@@ -51,8 +51,8 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
-    from . import typer
-    app.register_blueprint(typer.bp)
+    from . import index
+    app.register_blueprint(index.bp)
     app.add_url_rule('/', endpoint='index')
 
     from . import tournaments

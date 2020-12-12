@@ -4,7 +4,7 @@ from flask import (
 from werkzeug.exceptions import abort
 
 from typer.auth import login_required
-from typer.typer import get_competitors
+from typer.index import get_competitors
 import typer.pony_db as pony_db
 
 

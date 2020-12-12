@@ -6,7 +6,7 @@ from werkzeug.exceptions import abort
 from typer.auth import login_required
 import typer.pony_db as pony_db
 
-bp = Blueprint('typer', __name__)
+bp = Blueprint('index', __name__)
 
 
 @bp.route('/')

@@ -45,7 +45,7 @@
 <body class="bg-light">
 <header class="navbar navbar-expand-md navbar-dark bg-dark">
     <div class="container-xxl flex-wrap flex-md-nowrap position-relative">
-        <a class="navbar-brand" href="{{ url_for('typer.index') }}">
+        <a class="navbar-brand" href="{{ url_for('index.index') }}">
             <img src="{{ url_for('static', filename='typer_logo.png') }}"
                  class="d-inline-block align-top"
                  height="30px"
@@ -62,7 +62,7 @@
             <ul class="navbar-nav mr-auto">
                 {% if g.user %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('typer.index', page = 1, bets = 'my') }}">Moje typy</a>
+                    <a class="nav-link" href="{{ url_for('index.index', page = 1, bets = 'my') }}">Moje typy</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('ranking.ranking', system='classic') }}">Ranking</a>

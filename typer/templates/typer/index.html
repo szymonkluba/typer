@@ -9,7 +9,7 @@
         <h5>{{ current_tournament.place }} - {{ current_tournament.type }}</h5>
         <h6 class="text-muted">{{ current_tournament.date_time.strftime('%d.%m.%Y godzina: %H:%M') }}</h6>
         {% if g.user and not duplicate %}
-        <a class="btn btn-danger w-25 position-absolute end-0 bottom-0" role="button" href="{{ url_for('typer.create') }}">Typuj</a>
+        <a class="btn btn-danger w-25 position-absolute end-0 bottom-0" role="button" href="{{ url_for('index.create') }}">Typuj</a>
         {% endif %}
     </div>
 </div>
@@ -19,33 +19,33 @@
   <ul class="pagination pagination-sm justify-content-end">
       {% if page > 1 %}
       <li class="page-item">
-          <a class="page-link text-dark" href="{{ url_for('typer.index', page = page - 1, bets = status) }}">Nowsze</a>
+          <a class="page-link text-dark" href="{{ url_for('type.index', page = page - 1, bets = status) }}">Nowsze</a>
       </li>
       {% else %}
       <li class="page-item disabled">
-          <a class="page-link" href="{{ url_for('typer.index', page = page - 1, bets = status) }}" tabindex="-1" aria-disabled="true">Nowsze</a>
+          <a class="page-link" href="{{ url_for('index.index', page = page - 1, bets = status) }}" tabindex="-1" aria-disabled="true">Nowsze</a>
       </li>
       {% endif %}
       {% if page - 1 >= 1 %}
       <li class="page-item">
-          <a class="page-link text-dark" href="{{ url_for('typer.index', page = page - 1, bets = status) }}">{{ page - 1 }}</a>
+          <a class="page-link text-dark" href="{{ url_for('index.index', page = page - 1, bets = status) }}">{{ page - 1 }}</a>
       </li>
       {% endif %}
       <li class="page-item active" aria-current="page">
-          <a class="page-link text-light bg-secondary border-secondary" href="{{ url_for('typer.index', page = page, bets = status) }}">{{ page }}</a>
+          <a class="page-link text-light bg-secondary border-secondary" href="{{ url_for('index.index', page = page, bets = status) }}">{{ page }}</a>
       </li>
       {% if page <= pages %}
       <li class="page-item">
-          <a class="page-link text-dark" href="{{ url_for('typer.index', page = page + 1, bets = status) }}">{{ page + 1 }}</a>
+          <a class="page-link text-dark" href="{{ url_for('index.index', page = page + 1, bets = status) }}">{{ page + 1 }}</a>
       </li>
       {% endif %}
       {% if page <= pages %}
       <li class="page-item">
-          <a class="page-link text-dark" href="{{ url_for('typer.index', page = page + 1, bets = status) }}">Starsze</a>
+          <a class="page-link text-dark" href="{{ url_for('index.index', page = page + 1, bets = status) }}">Starsze</a>
       </li>
       {% else %}
       <li class="page-item disabled">
-          <a class="page-link" href="{{ url_for('typer.index', page = page + 1, bets = status) }}" tabindex="-1" aria-disabled="true">Starsze</a>
+          <a class="page-link" href="{{ url_for('index.index', page = page + 1, bets = status) }}" tabindex="-1" aria-disabled="true">Starsze</a>
       </li>
       {% endif %}
   </ul>
@@ -99,7 +99,7 @@
         {% if g.user.id == bet.user_id.id and bet.tournament_id.status != 'koniec' and bet.tournament_id.status != 'archiwum' %}
         <a class="btn btn-dark position-absolute end-0 bottom-0 w-25"
            role="button"
-           href="{{ url_for('typer.update', id=bet.id)  }}">
+           href="{{ url_for('index.update', id=bet.id)  }}">
             Edytuj
         </a>
         {% endif %}
@@ -112,33 +112,33 @@
   <ul class="pagination pagination-sm justify-content-end">
       {% if page > 1 %}
       <li class="page-item">
-          <a class="page-link text-dark" href="{{ url_for('typer.index', page = page - 1, bets = status) }}">Nowsze</a>
+          <a class="page-link text-dark" href="{{ url_for('index.index', page = page - 1, bets = status) }}">Nowsze</a>
       </li>
       {% else %}
       <li class="page-item disabled">
-          <a class="page-link" href="{{ url_for('typer.index', page = page - 1, bets = status) }}" tabindex="-1" aria-disabled="true">Nowsze</a>
+          <a class="page-link" href="{{ url_for('index.index', page = page - 1, bets = status) }}" tabindex="-1" aria-disabled="true">Nowsze</a>
       </li>
       {% endif %}
       {% if page - 1 >= 1 %}
       <li class="page-item">
-          <a class="page-link text-dark" href="{{ url_for('typer.index', page = page - 1, bets = status) }}">{{ page - 1 }}</a>
+          <a class="page-link text-dark" href="{{ url_for('index.index', page = page - 1, bets = status) }}">{{ page - 1 }}</a>
       </li>
       {% endif %}
       <li class="page-item active" aria-current="page">
-          <a class="page-link text-light bg-secondary border-secondary" href="{{ url_for('typer.index', page = page, bets = status) }}">{{ page }}</a>
+          <a class="page-link text-light bg-secondary border-secondary" href="{{ url_for('index.index', page = page, bets = status) }}">{{ page }}</a>
       </li>
       {% if page <= pages %}
       <li class="page-item">
-          <a class="page-link text-dark" href="{{ url_for('typer.index', page = page + 1, bets = status) }}">{{ page + 1 }}</a>
+          <a class="page-link text-dark" href="{{ url_for('index.index', page = page + 1, bets = status) }}">{{ page + 1 }}</a>
       </li>
       {% endif %}
       {% if page <= pages %}
       <li class="page-item">
-          <a class="page-link text-dark" href="{{ url_for('typer.index', page = page + 1, bets = status) }}">Starsze</a>
+          <a class="page-link text-dark" href="{{ url_for('index.index', page = page + 1, bets = status) }}">Starsze</a>
       </li>
       {% else %}
       <li class="page-item disabled">
-          <a class="page-link" href="{{ url_for('typer.index', page = page + 1, bets = status) }}" tabindex="-1" aria-disabled="true">Starsze</a>
+          <a class="page-link" href="{{ url_for('index.index', page = page + 1, bets = status) }}" tabindex="-1" aria-disabled="true">Starsze</a>
       </li>
       {% endif %}
   </ul>
