@@ -184,6 +184,9 @@ def get_results():
             pony_db.new_info('success', 'Podsumowanie wyników', body)
             calculate_points()
             clear("checking_results")
+    else:
+        print(f"LOG: No tournament to check results")
+        clear("checking_results")
 
 
 @db_session

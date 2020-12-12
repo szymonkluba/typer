@@ -83,11 +83,14 @@ def points():
 
 
 @with_logging
+@db_session
 def schedule_result_checking():
     schedule.every(5).minutes.do(get_results).tag("checking_results")
     schedule.clear("schedule_results")
 
 
+@with_logging
+@db_session
 def schedule_participants_checking(qualifications):
     schedule.every(15).minutes.do(participants, qualifications=qualifications).tag('checking_participants')
     schedule.clear("schedule_participants")
@@ -125,6 +128,7 @@ def is_qualification_today():
             print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking of participants updates', flush=True)
 
 
+schedule_result_checking()
 schedule.every().day.at("08:00").do(is_tournament_today)
 print(f'LOG: {datetime.now().strftime("%H:%M")} - Scheduled checking of tournament happening', flush=True)
 schedule.every().day.at('08:10').do(is_qualification_today)
