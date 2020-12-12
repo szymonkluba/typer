@@ -6,7 +6,7 @@ import typer.pony_db as pony_db
 import typer.constants as constants
 from typer.points import calculate_points
 from datetime import datetime, timedelta
-from typer.scheduler import with_logging
+from typer.logging_wrapper import with_logging
 
 PATH_RACES = 'https://www.fis-ski.com/DB/general/results.html?sectorcode=JP&raceid='
 PATH_JUMPERS = 'https://www.fis-ski.com/DB/ski-jumping/biographies.html?lastname=&firstname=&sectorcode=JP&gendercode' \
