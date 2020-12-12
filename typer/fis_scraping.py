@@ -1,5 +1,5 @@
 from lxml import html
-from pony.orm import *
+from pony.orm import db_session
 from schedule import clear
 import requests
 import typer.pony_db as pony_db

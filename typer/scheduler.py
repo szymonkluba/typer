@@ -4,7 +4,7 @@ import time
 from pony.orm import db_session
 from datetime import datetime, timedelta
 
-sys.path.append("/home/szymonkluba/mysite/typer/")
+sys.path.append("/home/szymonkluba/mysite/typer/typer")
 
 from typer.fis_scraping import (
     get_results,
