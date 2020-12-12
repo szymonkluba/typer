@@ -266,9 +266,9 @@ def bet_places_individual(first, second, third, id, update=True):
 
 def bet_places_team(first, second, third, id, update=True):
     if update:
-        first_place = FirstPlaces.get(lambda x: x.bet_id == id)
-        second_place = SecondPlaces.get(lambda x: x.bet_id == id)
-        third_place = ThirdPlaces.get(lambda x: x.bet_id == id)
+        first_place = FirstPlaces.get(lambda x: x.bet_id.id == id)
+        second_place = SecondPlaces.get(lambda x: x.bet_id.id == id)
+        third_place = ThirdPlaces.get(lambda x: x.bet_id.id == id)
         first_place.set(jumper_id=first.id)
         second_place.set(jumper_id=second.id)
         third_place.set(jumper_id=third.id)
