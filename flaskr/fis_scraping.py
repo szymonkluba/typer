@@ -6,6 +6,7 @@ import flaskr.pony_db as pony_db
 import flaskr.constants as constants
 from flaskr.points import calculate_points
 from datetime import datetime, timedelta
+from flaskr.scheduler import with_logging
 
 PATH_RACES = 'https://www.fis-ski.com/DB/general/results.html?sectorcode=JP&raceid='
 PATH_JUMPERS = 'https://www.fis-ski.com/DB/ski-jumping/biographies.html?lastname=&firstname=&sectorcode=JP&gendercode' \
@@ -49,6 +50,7 @@ def team_or_individual(field):
     return False
 
 
+@with_logging
 @db_session
 def create_new_tournament(tree, typ, fis_id, time_starts):
     place = tree.xpath('//*[@class="event-header__name heading_off-sm-style"]/h1/text()')
@@ -64,6 +66,7 @@ def create_new_tournament(tree, typ, fis_id, time_starts):
     pony_db.new_info('info', 'Nowe zawody', body)
 
 
+@with_logging
 @db_session
 def check_new_tournaments():
     last_fis_id = pony_db.get_last_fis_id()
@@ -85,6 +88,7 @@ def check_new_tournaments():
             last_fis_id += 1
 
 
+@with_logging
 @db_session
 def check_tournament_updates():
     tournaments = pony_db.select_tournaments_for_update()
@@ -120,6 +124,7 @@ def check_tournament_updates():
             print(f'LOG: Tournament rescheduled', flush=True)
 
 
+@with_logging
 @db_session
 def get_active_jumpers():
     page = requests.get(PATH_JUMPERS)
@@ -129,12 +134,14 @@ def get_active_jumpers():
         pony_db.create_jumper(jumper)
 
 
+@with_logging
 @db_session
 def get_countries_from_list():
     for country in constants.COUNTRIES.values():
         pony_db.create_country(country)
 
 
+@with_logging
 @db_session
 def get_results():
     tournament = pony_db.get_tournament_by_status('koniec')
@@ -189,6 +196,7 @@ def get_results():
         clear("checking_results")
 
 
+@with_logging
 @db_session
 def check_new_qualifications():
     last_fis_id = pony_db.get_last_fis_id()
@@ -217,6 +225,7 @@ def check_new_qualifications():
                                 pony_db.new_qualifications(fis_id, tournament.id, date_time)
 
 
+@with_logging
 @db_session
 def get_participants(qualifications):
     for quali in qualifications:
