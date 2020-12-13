@@ -19,7 +19,7 @@
   <ul class="pagination pagination-sm justify-content-end">
       {% if page > 1 %}
       <li class="page-item">
-          <a class="page-link text-dark" href="{{ url_for('type.index', page = page - 1, bets = status) }}">Nowsze</a>
+          <a class="page-link text-dark" href="{{ url_for('index.index', page = page - 1, bets = status) }}">Nowsze</a>
       </li>
       {% else %}
       <li class="page-item disabled">
