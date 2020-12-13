@@ -20,7 +20,7 @@ def tournaments():
         page = int(page)
     status = request.args.get('status')
     if status:
-        tournaments = tournaments_status(status)
+        tournaments = tournaments_status(status).sort_by(desc(pony_db.Tournaments.date_time))
     else:
         tournaments = pony_db.Tournaments.select().sort_by(desc(pony_db.Tournaments.date_time))
     pages = int(tournaments.count() / 5)

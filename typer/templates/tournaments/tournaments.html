@@ -48,7 +48,7 @@
 {% endblock %}
 
 {% block content %}
-{% if pages > 1 %}
+{% if pages > 0 %}
 <nav>
   <ul class="pagination pagination-sm justify-content-end">
       {% if page > 1 %}
@@ -259,7 +259,7 @@
             </div>
         </div>
     {% endfor %}
-{% if pages > 1 %}
+{% if pages > 0 %}
 <nav class="mt-3">
   <ul class="pagination pagination-sm justify-content-end">
       {% if page > 1 %}
