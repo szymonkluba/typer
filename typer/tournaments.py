@@ -2,7 +2,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from werkzeug.exceptions import abort
-
+from pony.orm import desc
 from typer.auth import login_required
 from typer.index import get_competitors
 import typer.pony_db as pony_db
@@ -22,7 +22,7 @@ def tournaments():
     if status:
         tournaments = tournaments_status(status)
     else:
-        tournaments = pony_db.get_tournaments()
+        tournaments = pony_db.Tournaments.select().sort_by(desc(pony_db.Tournaments.date_time))
     pages = int(tournaments.count() / 5)
     tournaments = tournaments.page(page, 5)
     print(page, pages, status)
@@ -35,11 +35,11 @@ def tournaments():
 
 def tournaments_status(status):
     return {
-        "future": pony_db.select_tournaments_by_status('przyszłe'),
-        "next": pony_db.select_tournaments_by_status('następne'),
-        "end": pony_db.select_tournaments_by_status('koniec'),
-        "archive": pony_db.select_tournaments_by_status('archiwum'),
-        "cancelled": pony_db.select_tournaments_by_status('odwołane')
+        "future": pony_db.Tournaments.select(lambda t: t.status == 'przyszłe'),
+        "next": pony_db.Tournaments.select(lambda t: t.status == 'następne'),
+        "end": pony_db.Tournaments.select(lambda t: t.status == 'koniec'),
+        "archive": pony_db.Tournaments.select(lambda t: t.status == 'archiwum'),
+        "cancelled": pony_db.Tournaments.select(lambda t: t.status == 'odwołane')
     }.get(status)
 
 
@@ -68,7 +68,7 @@ def create():
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
-    tournament = pony_db.get_tournament(id)
+    tournament = pony_db.Tournaments[id]
     if tournament is None:
         abort(404, f"Post id {id} does not exist.")
     if g.user.id != 1:
@@ -88,9 +88,6 @@ def update(id):
             flash(error)
         else:
             pony_db.update_tournament(id, place, typ, status, date_time, first_place, second_place, third_place)
-            if status == "koniec" and first_place != "TBA" and second_place != 'TBA' and third_place != 'TBA':
-                from typer.points import calculate_points
-                calculate_points()
             return redirect(url_for('tournaments.tournaments'))
 
     return render_template('tournaments/update.html', tournament=tournament, jumpers=jumpers)
@@ -99,8 +96,8 @@ def update(id):
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
-    tournament = pony_db.get_tournament(id)
+    tournament = pony_db.Tournaments[id]
     if tournament is None:
         abort(404, f"Post id {id} does not exist.")
-    pony_db.delete_tournament(id)
+    tournament.delete()
     return redirect(url_for('tournaments.tournaments'))

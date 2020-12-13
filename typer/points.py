@@ -3,17 +3,15 @@ from pony.orm import db_session
 
 
 @db_session
-def calculate_points():
-    tournament = pony_db.get_tournament_by_status('koniec')
-    if tournament:
-        pony_db.update_tournament_status(tournament.id, 'archiwum')
-    tournaments = pony_db.select_tournaments_by_status('archiwum')
+def calculate_points(tournaments=None):
+    if not tournaments:
+        tournaments = pony_db.Tournaments.select(lambda t: t.status == "archiwum")
     if tournaments:
         for tournament in tournaments:
             if tournament.bets:
                 for bet in tournament.bets:
                     if not pony_db.points_exists(bet.user_id, tournament):
-                        pony_db.create_points(bet.user_id, tournament)
+                        pony_db.Points(user=bet.user_id, tournament=tournament)
                         if tournament.type == "drużynowe":
                             if (bet.first_place.country_id == tournament.second_place.country_id or
                                     bet.first_place.country_id == tournament.third_place.country_id):

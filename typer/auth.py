@@ -38,7 +38,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         error = None
-        user = pony_db.get_user(username=username)
+        user = pony_db.User.get(lambda u: u.username == username)
 
         if user is None:
             error = 'Incorrect username.'
@@ -62,7 +62,7 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = pony_db.get_user(id=user_id)
+        g.user = pony_db.User[user_id]
 
 
 @bp.route('/logout')
@@ -84,7 +84,7 @@ def login_required(view):
 
 @bp.route('/reset_password', methods=('GET', 'POST'))
 def reset_password():
-    user = pony_db.get_user(password='empty')
+    user = pony_db.User.get(lambda u: u.password == 'empty')
     if user is None:
         return redirect(url_for('index'))
     else:

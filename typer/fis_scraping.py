@@ -91,7 +91,7 @@ def check_new_tournaments():
 @with_logging
 @db_session
 def check_tournament_updates():
-    tournaments = pony_db.select_tournaments_for_update()
+    tournaments = pony_db.Tournaments.select(lambda t: t.status in ('następne', 'przyszłe', 'odwołane'))
     for tournament in tournaments:
         page = requests.get(f'{PATH_RACES}{tournament.fis_id}')
         tree = html.fromstring(page.content)
@@ -102,21 +102,21 @@ def check_tournament_updates():
         time_starts = time_starts[0].split(':')
         date_time = date + timedelta(hours=int(time_starts[0]), minutes=int(time_starts[1]))
         if cancelled and tournament.status != 'odwołane':
-            pony_db.update_tournament_status(tournament.id, 'odwołane')
+            tournament.set(status='odwołane')
             body = f'{tournament.place} - {tournament.type}\n' \
                    f'{datetime.strftime(tournament.date_time, "%d.%m.%Y")} ' \
                    f'godzina: {datetime.strftime(tournament.date_time, "%H:%M")}'
             pony_db.new_info('danger', 'Zawody odwołane', body)
             print(f'LOG: Tournament cancelled {tournament.place} {tournament.date_time}', flush=True)
         elif not cancelled and tournament.status == 'odwołane':
-            pony_db.update_tournament_status(tournament.id, 'przyszłe')
+            tournament.set(status='przyszłe')
             body = f'{tournament.place} - {tournament.type}\n' \
                    f'{datetime.strftime(tournament.date_time, "%d.%m.%Y")} ' \
                    f'godzina: {datetime.strftime(tournament.date_time, "%H:%M")}'
             pony_db.new_info('success', 'Odwołane zawody przywrócone', body)
             print(f'LOG: Cancelled tournament rescheduled', flush=True)
         if date_time != tournament.date_time:
-            pony_db.update_tournament_date_time(tournament.id, date_time)
+            tournament.set(date_time=date_time)
             body = f'{tournament.place} - {tournament.type}\n' \
                    f'{datetime.strftime(date_time, "%d.%m.%Y")} ' \
                    f'godzina: {datetime.strftime(date_time, "%H:%M")}'
@@ -131,66 +131,68 @@ def get_active_jumpers():
     tree = html.fromstring(page.content)
     list_of_jumpers = tree.xpath('//*[@id="athletes-search"]/div/a/div/div[2]/text()')
     for jumper in list_of_jumpers:
-        pony_db.create_jumper(jumper)
+        pony_db.Jumpers(name=jumper)
 
 
 @with_logging
 @db_session
 def get_countries_from_list():
     for country in constants.COUNTRIES.values():
-        pony_db.create_country(country)
+        pony_db.Countries(name=country)
 
 
 @with_logging
 @db_session
 def get_results():
-    tournament = pony_db.get_tournament_by_status('koniec')
-    if tournament:
-        page = requests.get(f'{PATH_RACES}{tournament.fis_id}')
-        tree = html.fromstring(page.content)
-        podium = tree.xpath('//*[@class="result-card__name"]/text()')
-        if podium:
-            for i in range(len(podium)):
-                podium[i] = podium[i].replace('\n', '').strip()
-                if podium[i] in constants.COUNTRIES.keys():
-                    podium[i] = constants.COUNTRIES[podium[i]]
-            podium = [x for x in podium if x != '']
-            pony_db.update_tournament_podium(tournament.id, tournament.type, *podium)
-            column_index = 1
-            column = tree.xpath(f'{PATH_COLUMNS_HEADERS_PREF}{column_index}]/text()')[0]
-            while column != 'Athlete' and column != 'Name':
-                column_index += 1
+    tournaments = pony_db.Tournaments.select(lambda t: t.status == "koniec")
+    if tournaments:
+        for tournament in tournaments:
+            page = requests.get(f'{PATH_RACES}{tournament.fis_id}')
+            tree = html.fromstring(page.content)
+            podium = tree.xpath('//*[@class="result-card__name"]/text()')
+            if podium:
+                for i in range(len(podium)):
+                    podium[i] = podium[i].replace('\n', '').strip()
+                    if podium[i] in constants.COUNTRIES.keys():
+                        podium[i] = constants.COUNTRIES[podium[i]]
+                podium = [x for x in podium if x != '']
+                pony_db.update_tournament_podium(tournament.id, tournament.type, *podium)
+                column_index = 1
                 column = tree.xpath(f'{PATH_COLUMNS_HEADERS_PREF}{column_index}]/text()')[0]
-            if tournament.type == 'drużynowe':
-                results = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
-                results_team = []
-                for result in results:
-                    result = result.replace('\n', '').strip()
-                    if result in constants.COUNTRIES:
-                        results_team.append(result)
-                for i in range(len(results_team)):
-                    if i < 5:
-                        pony_db.add_to_first_five(tournament.id, constants.COUNTRIES[results_team[i]])
-                    elif i < 10:
-                        pony_db.add_to_second_five(tournament.id, constants.COUNTRIES[results_team[i]])
-                    elif i < 15:
-                        pony_db.add_to_third_five(tournament.id, constants.COUNTRIES[results_team[i]])
-            else:
-                results = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
-                for i in range(len(results)):
-                    results[i] = results[i].replace('\n', '').strip()
-                    if i < 10:
-                        pony_db.add_to_first_ten(tournament.id, results[i])
-                    elif i < 20:
-                        pony_db.add_to_second_ten(tournament.id, results[i])
-                    elif i < 30:
-                        pony_db.add_to_third_ten(tournament.id, results[i])
-            body = f'{tournament.place} - {tournament.type}\n' \
-                   f'{datetime.strftime(tournament.date_time, "%d.%m.%Y")} ' \
-                   f'godzina: {datetime.strftime(tournament.date_time, "%H:%M")}'
-            pony_db.new_info('success', 'Podsumowanie wyników', body)
-            calculate_points()
-            clear("checking_results")
+                while column != 'Athlete' and column != 'Name':
+                    column_index += 1
+                    column = tree.xpath(f'{PATH_COLUMNS_HEADERS_PREF}{column_index}]/text()')[0]
+                if tournament.type == 'drużynowe':
+                    results = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
+                    results_team = []
+                    for result in results:
+                        result = result.replace('\n', '').strip()
+                        if result in constants.COUNTRIES:
+                            results_team.append(result)
+                    for i in range(len(results_team)):
+                        if i < 5:
+                            pony_db.add_to_first_five(tournament.id, constants.COUNTRIES[results_team[i]])
+                        elif i < 10:
+                            pony_db.add_to_second_five(tournament.id, constants.COUNTRIES[results_team[i]])
+                        elif i < 15:
+                            pony_db.add_to_third_five(tournament.id, constants.COUNTRIES[results_team[i]])
+                else:
+                    results = tree.xpath(f'{PATH_RESULTS}{column_index}]/text()')
+                    for i in range(len(results)):
+                        results[i] = results[i].replace('\n', '').strip()
+                        if i < 10:
+                            pony_db.add_to_first_ten(tournament.id, results[i])
+                        elif i < 20:
+                            pony_db.add_to_second_ten(tournament.id, results[i])
+                        elif i < 30:
+                            pony_db.add_to_third_ten(tournament.id, results[i])
+                body = f'{tournament.place} - {tournament.type}\n' \
+                       f'{datetime.strftime(tournament.date_time, "%d.%m.%Y")} ' \
+                       f'godzina: {datetime.strftime(tournament.date_time, "%H:%M")}'
+                pony_db.new_info('success', 'Podsumowanie wyników', body)
+                tournament.set(status="archiwum")
+        calculate_points(tournaments)
+        clear("checking_results")
     else:
         print(f"LOG: No tournament to check results")
         clear("checking_results")
@@ -220,7 +222,7 @@ def check_new_qualifications():
                         time_starts = time_starts[0].split(':')
                         date_time = date + timedelta(hours=int(time_starts[0]), minutes=int(time_starts[1]))
                         margin = date_time + timedelta(days=4)
-                        for tournament in pony_db.get_tournaments_by_place(place):
+                        for tournament in pony_db.Tournaments.select(lambda t: t.place == place):
                             if date_time < tournament.date_time < margin and tournament.type == 'indywidualne':
                                 pony_db.new_qualifications(fis_id, tournament.id, date_time)
 

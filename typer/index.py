@@ -30,13 +30,13 @@ def index():
                            pages=pages,
                            status=status,
                            duplicate=check_for_duplicates(),
-                           current_tournament=pony_db.get_tournament_by_status('następne'))
+                           current_tournament=pony_db.Tournaments.get(lambda t: t.status == 'następne'))
 
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
-    tournament = pony_db.get_tournament_by_status('następne')
+    tournament = pony_db.Tournaments.get(lambda t: t.status == 'następne')
     participants = False
     jumpers = None
     if tournament.participants:
@@ -77,12 +77,12 @@ def create():
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
-    bet = pony_db.get_bet(id)
+    bet = pony_db.Bets[id]
     if bet is None:
         abort(404, f"Post id {id} does not exist.")
     if bet.user_id.id != g.user.id:
         abort(403)
-    tournament = pony_db.get_tournament(bet.tournament_id.id)
+    tournament = bet.tournament_id
     participants = False
     competitors = None
     if tournament.participants:
@@ -115,30 +115,30 @@ def update(id):
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
-    post = pony_db.get_bet(id)
+    post = pony_db.Bets[id]
     if post is None:
         abort(404, f"Post id {id} does not exist.")
-    pony_db.delete_bet(id)
+    pony_db.Bets[id].delete()
     return redirect(url_for('index.index'))
 
 
 def get_competitors(selected_tournament=None):
     if selected_tournament is None:
         if check_type_of_tournament():
-            competitors = pony_db.get_jumpers()
+            competitors = pony_db.Jumpers.select()
         else:
-            competitors = pony_db.get_countries()
+            competitors = pony_db.Countries.select()
     else:
         if check_type_of_tournament(selected_tournament):
-            competitors = pony_db.get_jumpers()
+            competitors = pony_db.Jumpers.select()
         else:
-            competitors = pony_db.get_countries()
+            competitors = pony_db.Countries.select()
     return competitors
 
 
 def check_type_of_tournament(selected_tournament=None):
     if selected_tournament is None:
-        type_of_tournament = pony_db.get_tournament_by_status('następne')
+        type_of_tournament = pony_db.Tournaments.get(lambda t: t.status == 'następne')
         if 'indywidualne' == type_of_tournament.type:
             return True
     else:
@@ -150,7 +150,7 @@ def check_type_of_tournament(selected_tournament=None):
 
 def check_for_duplicates():
     if g.user.id is not None:
-        current_tournament = pony_db.get_tournament_by_status('następne')
+        current_tournament = pony_db.Tournaments.get(lambda t: t.status == 'następne')
         if current_tournament is not None:
             return pony_db.duplicate_bet_exists(g.user.id, current_tournament)
         else:

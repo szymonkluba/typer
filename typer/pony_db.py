@@ -155,11 +155,6 @@ class Points(db.Entity):
 db.generate_mapping(create_tables=False)
 
 
-def create_points(user, tournament):
-    Points(user=user, tournament=tournament)
-    commit()
-
-
 def update_points(user, tournament, **kwargs):
     points = Points.get(lambda p: p.user == user and p.tournament == tournament)
     if 'classic' in kwargs:
@@ -187,33 +182,18 @@ def get_bets(id=None):
     return bets
 
 
-def get_bets_by_status(status):
-    bets = Bets.select(lambda b: b.tournament_id.status == status)
-    return bets
-
-
-def get_bet(id):
-    bet = Bets.get(lambda b: b.id == id)
-    return bet
-
-
-def delete_bet(id):
-    Bets[id].delete()
-    commit()
-
-
 def create_bet(first_place, second_place, third_place, user_id, tournament_id):
     bet = Bets(user_id=user_id, tournament_id=tournament_id.id)
     bet.flush()
     if tournament_id.type == "drużynowe":
-        first_place = get_country_by_name(first_place)
-        second_place = get_country_by_name(second_place)
-        third_place = get_country_by_name(third_place)
+        first_place = Countries.get(lambda x: x.name == first_place)
+        second_place = Countries.get(lambda x: x.name == second_place)
+        third_place = Countries.get(lambda x: x.name == third_place)
         bet_places_team(first_place, second_place, third_place, bet.id, update=False)
     elif tournament_id.type == "indywidualne":
-        first_place = get_jumper_by_name(first_place)
-        second_place = get_jumper_by_name(second_place)
-        third_place = get_jumper_by_name(third_place)
+        first_place = Jumpers.get(lambda j: j.name == first_place)
+        second_place = Jumpers.get(lambda j: j.name == second_place)
+        third_place = Jumpers.get(lambda j: j.name == third_place)
         bet_places_individual(first_place, second_place, third_place, bet.id, update=False)
     commit()
 
@@ -223,28 +203,28 @@ def create_bet_temp(first_place, second_place, third_place, user_id, tournament_
     bet.flush()
     tournament = Tournaments.get(lambda t: t.id == tournament_id)
     if tournament.type == "drużynowe":
-        first_place = get_country_by_name(first_place)
-        second_place = get_country_by_name(second_place)
-        third_place = get_country_by_name(third_place)
+        first_place = Countries.get(lambda x: x.name == first_place)
+        second_place = Countries.get(lambda x: x.name == second_place)
+        third_place = Countries.get(lambda x: x.name == third_place)
         bet_places_team(first_place, second_place, third_place, bet.id, update=False)
     elif tournament.type == "indywidualne":
-        first_place = get_jumper_by_name(first_place)
-        second_place = get_jumper_by_name(second_place)
-        third_place = get_jumper_by_name(third_place)
+        first_place = Jumpers.get(lambda j: j.name == first_place)
+        second_place = Jumpers.get(lambda j: j.name == second_place)
+        third_place = Jumpers.get(lambda j: j.name == third_place)
         bet_places_individual(first_place, second_place, third_place, bet.id, update=False)
     commit()
 
 
 def update_bet(first_place, second_place, third_place, id):
     if Bets[id].tournament_id.type == 'drużynowe':
-        first_place = get_country_by_name(first_place)
-        second_place = get_country_by_name(second_place)
-        third_place = get_country_by_name(third_place)
+        first_place = Countries.get(lambda x: x.name == first_place)
+        second_place = Countries.get(lambda x: x.name == second_place)
+        third_place = Countries.get(lambda x: x.name == third_place)
         bet_places_team(first_place, second_place, third_place, id)
     else:
-        first_place = get_jumper_by_name(first_place)
-        second_place = get_jumper_by_name(second_place)
-        third_place = get_jumper_by_name(third_place)
+        first_place = Jumpers.get(lambda j: j.name == first_place)
+        second_place = Jumpers.get(lambda j: j.name == second_place)
+        third_place = Jumpers.get(lambda j: j.name == third_place)
         bet_places_individual(first_place, second_place, third_place, id)
 
     commit()
@@ -280,36 +260,6 @@ def bet_places_team(first, second, third, id, update=True):
 
 def duplicate_bet_exists(user_id, tournament_id):
     return exists(b for b in Bets if b.user_id.id == user_id and b.tournament_id.id == tournament_id.id)
-
-
-def get_tournaments():
-    tournaments = Tournaments.select().sort_by(desc(Tournaments.date_time))
-    return tournaments
-
-
-def get_tournament(id):
-    tournament = Tournaments.get(lambda t: t.id == id)
-    return tournament
-
-
-def get_tournament_by_status(status):
-    current_tournament = Tournaments.get(lambda t: t.status == status)
-    return current_tournament
-
-
-def select_tournaments_by_status(status):
-    tournaments = Tournaments.select(lambda t: t.status == status)
-    return tournaments
-
-
-def get_tournaments_by_place(place):
-    tournaments = Tournaments.select(lambda t: t.place == place)
-    return tournaments
-
-
-def select_tournaments_for_update():
-    tournaments = Tournaments.select(lambda t: t.status in ['następne', 'przyszłe', 'odwołane'])
-    return tournaments
 
 
 def get_last_fis_id():
@@ -369,46 +319,9 @@ def update_tournament_podium(id, type, first_place, second_place, third_place):
 def update_tournament_places(type, table, place, id):
     row = table.get(lambda t: t.tournament_id.id == id)
     if type == 'drużynowe':
-        row.set(country_id=get_country_by_name(place).id)
+        row.set(country_id=Countries.get(lambda x: x.name == place).id)
     elif type == "indywidualne":
-        row.set(jumper_id=get_jumper_by_name(place).id)
-
-
-def update_tournament_status(id, status):
-    Tournaments[id].set(status=status)
-    commit()
-
-
-def update_tournament_date_time(id, date_time):
-    Tournaments[id].set(date_time=date_time)
-    commit()
-
-
-def delete_tournament(id):
-    Tournaments[id].delete()
-    commit()
-
-
-def get_users():
-    users = User.select()
-    return users
-
-
-def get_user(id=None, username=None, password=None):
-    if id is not None:
-        user = User.get(lambda u: u.id == id)
-        return user
-    if username is not None:
-        user = User.get(lambda u: u.username == username)
-        return user
-    if password is not None:
-        user = User.get(lambda u: u.password == password)
-        return user
-
-
-def get_users_ranking():
-    users = User.select().sort_by(desc(User.points))
-    return users
+        row.set(jumper_id=Jumpers.get(lambda j: j.name == place).id)
 
 
 def user_exists(username):
@@ -422,58 +335,6 @@ def create_user(username, password):
 
 def update_user(id, password):
     User[id].set(password=password)
-    commit()
-
-
-def update_user_stats(id, points, times_exact):
-    User[id].points += points
-    User[id].times_exact += times_exact
-    User[id].times_bet += 1
-    commit()
-
-
-def get_jumpers():
-    jumpers = Jumpers.select()
-    return jumpers
-
-
-def get_jumper_by_id(id):
-    jumper = Jumpers.get(lambda j: j.id == id)
-    return jumper
-
-
-def get_jumper_by_name(name):
-    jumper = Jumpers.get(lambda j: j.name == name)
-    return jumper
-
-
-def create_jumper(name):
-    Jumpers(name=name)
-    commit()
-
-
-def update_jumper(id, name):
-    Jumpers[id].set(name=name)
-    commit()
-
-
-def delete_jumper(id):
-    Jumpers[id].delete()
-    commit()
-
-
-def get_countries():
-    countries = Countries.select()
-    return countries
-
-
-def get_country_by_name(name):
-    country = Countries.get(lambda x: x.name == name)
-    return country
-
-
-def create_country(name):
-    Countries(name=name)
     commit()
 
 
@@ -498,32 +359,32 @@ def get_jumpers_tba():
 
 
 def add_to_first_ten(tournament_id, name):
-    jumper = get_jumper_by_name(name)
+    jumper = Jumpers.get(lambda j: j.name == name)
     FirstTen(tournament_id=tournament_id, jumper_id=jumper.id)
 
 
 def add_to_second_ten(tournament_id, name):
-    jumper = get_jumper_by_name(name)
+    jumper = Jumpers.get(lambda j: j.name == name)
     SecondTen(tournament_id=tournament_id, jumper_id=jumper.id)
 
 
 def add_to_third_ten(tournament_id, name):
-    jumper = get_jumper_by_name(name)
+    jumper = Jumpers.get(lambda j: j.name == name)
     ThirdTen(tournament_id=tournament_id, jumper_id=jumper.id)
 
 
 def add_to_first_five(tournament_id, name):
-    country = get_country_by_name(name)
+    country = Countries.get(lambda x: x.name == name)
     FirstFive(tournament_id=tournament_id, country_id=country.id)
 
 
 def add_to_second_five(tournament_id, name):
-    country = get_country_by_name(name)
+    country = Countries.get(lambda x: x.name == name)
     SecondFive(tournament_id=tournament_id, country_id=country.id)
 
 
 def add_to_third_five(tournament_id, name):
-    country = get_country_by_name(name)
+    country = Countries.get(lambda x: x.name == name)
     ThirdFive(tournament_id=tournament_id, country_id=country.id)
 
 
@@ -591,7 +452,7 @@ def quali_fis_id_exists(fis_id):
 
 
 def new_participant(name, tournament_id):
-    jumper = get_jumper_by_name(name)
+    jumper = Jumpers.get(lambda j: j.name == name)
     Participants(tournament_id=tournament_id, jumper_id=jumper.id)
 
 

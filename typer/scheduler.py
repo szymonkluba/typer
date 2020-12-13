@@ -27,7 +27,7 @@ def print_schedule():
 @with_logging
 @db_session
 def close_tournament(tournament, status):
-    pony_db.update_tournament_status(tournament.id, status)
+    tournament.set(status=status)
     body = f'{tournament.place} - {tournament.type}\n' \
            f'{datetime.strftime(tournament.date_time, "%d.%m.%Y")} ' \
            f'godzina: {datetime.strftime(tournament.date_time, "%H:%M")}'
@@ -96,7 +96,7 @@ def schedule_participants_checking(qualifications):
 @db_session
 def is_tournament_today():
     now = datetime.now()
-    current_tournament = pony_db.get_tournament_by_status("następne")
+    current_tournament = pony_db.Tournaments.get(lambda t: t.status == 'następne')
     t_date_time = current_tournament.date_time - timedelta(hours=1)
     if now.date() == t_date_time.date():
         time_string = datetime.strftime(t_date_time, "%H:%M")

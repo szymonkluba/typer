@@ -14,7 +14,7 @@ bp = Blueprint('ranking', __name__)
 @login_required
 def ranking(system):
     points = []
-    users = pony_db.get_users()
+    users = pony_db.User.select()
     for user in users:
         points.append((
             user,
