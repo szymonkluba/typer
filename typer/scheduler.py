@@ -26,17 +26,17 @@ def print_schedule():
 
 @with_logging
 @db_session
-def close_tournament(tournament, status):
+def close_tournament():
+    tournament = pony_db.Tournaments.get(lambda t: t.status == "następne")
+    tournament.set(status="koniec")
+    body = f"{tournament.place} - {tournament.type}\n" \
+           f"{datetime.strftime(tournament.date_time, '%d.%m.%Y')} " \
+           f"godzina: {datetime.strftime(tournament.date_time, '%H:%M')}"
     with db_session:
-        tournament.set(status=status)
-    body = f'{tournament.place} - {tournament.type}\n' \
-           f'{datetime.strftime(tournament.date_time, "%d.%m.%Y")} ' \
-           f'godzina: {datetime.strftime(tournament.date_time, "%H:%M")}'
-    with db_session:
-        pony_db.new_info('warning', 'Zamknięto typowanie zawodów', body)
+        pony_db.new_info("warning", "Zamknięto typowanie zawodów", body)
         pony_db.open_next_tournament()
     print(f"LOG: Tournament closed", flush=True)
-    schedule.clear('closing_tournament')
+    schedule.clear("closing_tournament")
     print_schedule()
 
 
@@ -98,7 +98,7 @@ def schedule_participants_checking(qualifications):
 @db_session
 def is_tournament_today():
     now = datetime.now()
-    current_tournament = pony_db.Tournaments.get(lambda t: t.status == 'następne')
+    current_tournament = pony_db.Tournaments.get(lambda t: t.status == "następne")
     t_date_time = current_tournament.date_time - timedelta(hours=1)
     if now.date() == t_date_time.date():
         time_string = datetime.strftime(t_date_time, "%H:%M")
@@ -119,7 +119,7 @@ def is_qualification_today():
     delta = 1
     if qualifications:
         for q in qualifications:
-            t_date_time = q.date_time + timedelta(minutes=delta)
+            t_date_time = q.date_time + timedelta(hours=-1, minutes=delta)
             delta += 2
             time_string = datetime.strftime(t_date_time, "%H:%M")
             schedule.every().day.at(time_string).do(schedule_participants_checking,
@@ -127,19 +127,20 @@ def is_qualification_today():
             print("LOG: Scheduled checking of participants updates", flush=True)
 
 
-schedule_result_checking()
-schedule.every().day.at("08:00").do(is_tournament_today)
-print("LOG: Scheduled checking of tournament happening", flush=True)
-schedule.every().day.at('08:10').do(is_qualification_today)
-print("LOG: Scheduled checking of qualifications happening", flush=True)
-schedule.every(3).hours.do(tournament_updates)
-print("LOG: Scheduled checking of tournaments updates", flush=True)
-schedule.every().day.at("08:35").do(new_tournaments)
-print("LOG: Scheduled checking qualifications", flush=True)
-schedule.every().day.at("08:40").do(new_qualifications)
-print("LOG: Scheduled checking new qualifications", flush=True)
-print_schedule()
+if __name__ == '__main__':
+    schedule_result_checking()
+    schedule.every().day.at("08:00").do(is_tournament_today)
+    print("LOG: Scheduled checking of tournament happening", flush=True)
+    schedule.every().day.at('08:10').do(is_qualification_today)
+    print("LOG: Scheduled checking of qualifications happening", flush=True)
+    schedule.every(3).hours.do(tournament_updates)
+    print("LOG: Scheduled checking of tournaments updates", flush=True)
+    schedule.every().day.at("08:35").do(new_tournaments)
+    print("LOG: Scheduled checking qualifications", flush=True)
+    schedule.every().day.at("08:40").do(new_qualifications)
+    print("LOG: Scheduled checking new qualifications", flush=True)
+    print_schedule()
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
