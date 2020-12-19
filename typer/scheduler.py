@@ -27,12 +27,14 @@ def print_schedule():
 @with_logging
 @db_session
 def close_tournament(tournament, status):
-    tournament.set(status=status)
+    with db_session:
+        tournament.set(status=status)
     body = f'{tournament.place} - {tournament.type}\n' \
            f'{datetime.strftime(tournament.date_time, "%d.%m.%Y")} ' \
            f'godzina: {datetime.strftime(tournament.date_time, "%H:%M")}'
-    pony_db.new_info('warning', 'Zamknięto typowanie zawodów', body)
-    pony_db.open_next_tournament()
+    with db_session:
+        pony_db.new_info('warning', 'Zamknięto typowanie zawodów', body)
+        pony_db.open_next_tournament()
     print(f"LOG: Tournament closed", flush=True)
     schedule.clear('closing_tournament')
     print_schedule()
