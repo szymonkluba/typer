@@ -32,9 +32,8 @@ def close_tournament():
     body = f"{tournament.place} - {tournament.type}\n" \
            f"{datetime.strftime(tournament.date_time, '%d.%m.%Y')} " \
            f"godzina: {datetime.strftime(tournament.date_time, '%H:%M')}"
-    with db_session:
-        pony_db.new_info("warning", "Zamknięto typowanie zawodów", body)
-        pony_db.open_next_tournament()
+    pony_db.new_info("warning", "Zamknięto typowanie zawodów", body)
+    pony_db.open_next_tournament()
     print(f"LOG: Tournament closed", flush=True)
     schedule.clear("closing_tournament")
     print_schedule()
@@ -102,9 +101,7 @@ def is_tournament_today():
     t_date_time = current_tournament.date_time - timedelta(hours=1)
     if now.date() == t_date_time.date():
         time_string = datetime.strftime(t_date_time, "%H:%M")
-        schedule.every().day.at(time_string).do(close_tournament,
-                                                tournament=current_tournament,
-                                                status='koniec').tag("closing_tournament")
+        schedule.every().day.at(time_string).do(close_tournament).tag("closing_tournament")
         print("LOG: Scheduled closing of tournament", flush=True)
         time_start = t_date_time + timedelta(hours=1, minutes=30)
         time_start = datetime.strftime(time_start, "%H:%M")
