@@ -191,6 +191,8 @@ def get_results():
                        f'godzina: {datetime.strftime(tournament.date_time, "%H:%M")}'
                 pony_db.new_info('success', 'Podsumowanie wyników', body)
                 tournament.set(status="archiwum")
+            else:
+                return None
         calculate_points(tournaments)
         clear("checking_results")
     else:
