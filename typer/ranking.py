@@ -24,6 +24,7 @@ def ranking(system):
             pony_db.Points.select(lambda p: p.user == user).count(),
             get_last_tournament_points(user, system, last_tournament),
             sum(p.times_exact for p in pony_db.Points if p.user == user and p.tournament == last_tournament),
+            True if pony_db.Points.get(lambda p: p.user == user and p.tournament == last_tournament) else False
         ))
     return render_template('ranking/ranking.html',
                            points=sorted(points, key=itemgetter(1, 2), reverse=True),
