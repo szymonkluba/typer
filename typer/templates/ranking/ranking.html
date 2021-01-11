@@ -49,8 +49,8 @@
         {% for p in points %}
         <tr>
             <th scope="row">{{ loop.index }}</th>
-            {% if p[0].id == g.user.id %}
-            <td class="font-weight-bold">{{ p[0].username }}</td>
+            {% if p[0] == g.user %}
+            <td class="fw-bold">{{ p[0].username }}</td>
             {% else %}
             <td>{{ p[0].username }}</td>
             {% endif %}
@@ -58,32 +58,32 @@
                 {{ p[1] }}
                 {% if p[4] %}
                     {% if p[4] > 0 %}
-                    <span class="badge rounded-pill bg-success">+{{ p[4] }}</span>
+                    <span class="badge rounded bg-success p-1"><small>+{{ p[4] }}</small></span>
                     {% endif %}
                     {% if p[4] == 0 %}
-                    <span class="badge rounded-pill bg-info">{{ p[4] }}</span>
+                    <span class="badge rounded bg-info p-1"><small>{{ p[4] }}</small></span>
                     {% endif %}
                     {% if p[4] < 0 %}
-                    <span class="badge rounded-pill bg-danger">{{ p[4] }}</span>
+                    <span class="badge rounded bg-danger p-1"><small>{{ p[4] }}</small></span>
                     {% endif %}
                 {% else %}
-                    <span class="badge rounded-pill bg-info">+0</span>
+                    <span class="badge rounded bg-info p-1"><small>0</small></span>
                 {% endif %}
             </td>
             <td>
                 {{ p[3] }}
                 {% if p[6] %}
-                    <span class="badge rounded-pill bg-success">+1</span>
+                <span class="badge rounded bg-success p-1"><small>+1</small></span>
                 {% else %}
-                    <span class="badge rounded-pill bg-info">+0</span>
+                <span class="badge rounded bg-info p-1"><small>+0</small></span>
                 {% endif %}
             </td>
             <td>
                 {{ p[2] }}
                 {% if p[5] %}
-                    <span class="badge rounded-pill bg-success">+{{ p[5] }}</span>
+                <span class="badge rounded bg-success p-1"><small>+{{ p[5] }}</small></span>
                 {% else %}
-                    <span class="badge rounded-pill bg-info">+0</span>
+                <span class="badge rounded bg-info p-1"><small>+0</small></span>
                 {% endif %}
             </td>
         </tr>
