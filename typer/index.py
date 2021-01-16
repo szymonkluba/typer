@@ -35,14 +35,24 @@ def index():
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
-def create():
-    tournament = pony_db.Tournaments.get(lambda t: t.status == 'następne')
+def create(tournament=None):
+    tournament_id = request.args.get("tournament_id")
+    if not tournament_id:
+        tournament = pony_db.Tournaments.get(lambda t: t.status == 'następne')
+    else:
+        tournament = pony_db.Tournaments.get(lambda t: t.id == int(tournament_id))
     participants = False
     jumpers = None
+    error = None
     if tournament.participants:
         participants = tournament.participants
     else:
         jumpers = get_competitors()
+
+    if check_for_duplicates(tournament):
+        error = "Już typowałeś te zawody"
+        flash(error)
+        return redirect(url_for("index.index"))
 
     if request.method == 'POST':
         first_place = request.form['first_place']
@@ -56,7 +66,7 @@ def create():
         if (not pony_db.check_valid_bet(first_place)
                 or not pony_db.check_valid_bet(second_place)
                 or not pony_db.check_valid_bet(first_place)):
-            error = "Nie ma takiego typowania! Co kurwa osiemnastka jest? Proszę wybrać z listy;)"
+            error = "Nie ma takiego typowania! Proszę wybrać z listy;)"
 
         if error is not None:
             flash(error)
@@ -148,9 +158,12 @@ def check_type_of_tournament(selected_tournament=None):
     return False
 
 
-def check_for_duplicates():
+def check_for_duplicates(tournament=None):
     if g.user.id is not None:
-        current_tournament = pony_db.Tournaments.get(lambda t: t.status == 'następne')
+        if tournament:
+            current_tournament = tournament
+        else:
+            current_tournament = pony_db.Tournaments.get(lambda t: t.status == 'następne')
         if current_tournament is not None:
             return pony_db.duplicate_bet_exists(g.user.id, current_tournament)
         else:

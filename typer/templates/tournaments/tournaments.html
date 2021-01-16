@@ -144,10 +144,17 @@
             {% endif %}
             <div class="card-footer text-right position-relative pb-5">
                 {% if g.user.id == 1 %}
-                <a class="btn w-25 w-100-xl btn-dark position-absolute end-0 bottom-0 mt-5"
+                <a class="btn w-25 w-100-xl btn-dark position-absolute start-0 bottom-0 mt-5"
                    role="button"
                    href="{{ url_for('tournaments.update', id=post.id)  }}">
                     Edytuj
+                </a>
+                {% endif %}
+                {% if post.status == "przyszłe" or post.status == "następne" %}
+                <a class="btn w-25 w-100-xl btn-danger position-absolute end-0 bottom-0 mt-5"
+                   role="button"
+                   href="{{ url_for('index.create', tournament_id=post.id)  }}">
+                    Typuj
                 </a>
                 {% endif %}
                 {% if post.status == "archiwum" %}
