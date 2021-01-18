@@ -34,57 +34,124 @@
         {% endif %}
     </li>
 </ul>
-<div class="table-responsive-lg">
-    <table class="table table-sm table-striped text-center table-borderless">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Użytkownik</th>
-                <th scope="col">Punkty</th>
-                <th scope="col">Ile razy typował</th>
-                <th scope="col">Ile razy dokładnie</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for p in points %}
-        <tr>
-            <th scope="row">{{ loop.index }}</th>
-            {% if p[0] == g.user %}
-            <td class="fw-bold">{{ p[0].username }}</td>
-            {% else %}
-            <td>{{ p[0].username }}</td>
-            {% endif %}
-            <td>
-                {{ p[1] }}
-                {% if p[4] %}
-                    {% if p[4] > 0 %}
-                    <span class="badge rounded bg-success p-1"><small>+{{ p[4] }}</small></span>
-                    {% else %}
-                    <span class="badge rounded bg-danger p-1"><small>{{ p[4] }}</small></span>
-                    {% endif %}
-                {% else %}
-                    <span class="badge rounded bg-info p-1"><small>+0</small></span>
-                {% endif %}
-            </td>
-            <td>
-                {{ p[3] }}
-                {% if p[6] %}
-                <span class="badge rounded bg-success p-1"><small>+1</small></span>
-                {% else %}
-                <span class="badge rounded bg-info p-1"><small>+0</small></span>
-                {% endif %}
-            </td>
-            <td>
-                {{ p[2] }}
-                {% if p[5] %}
-                <span class="badge rounded bg-success p-1"><small>+{{ p[5] }}</small></span>
-                {% else %}
-                <span class="badge rounded bg-info p-1"><small>+0</small></span>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<div>
+    <div class="accordion" id="rankingTable">
+        <div class="card">
+            <div class="card-header text-center" id="header">
+                <div class="row">
+                    <div class="col-1">#</div>
+                    <div class="col-5">Użytkownik</div>
+                    <div class="col-2">Punkty</div>
+                    <div class="col-2">Typował</div>
+                    <div class="col-2">Dokładnie</div>
+                </div>
+            </div>
+            {% for p in points %}
+            <div class="card-header text-center" id="header{{ p['user'].username|replace(' ', '') }}">
+                <div class="row">
+                    <div class="col-1">{{ loop.index }}</div>
+                    <div class="col-5">
+                        {% if p["user"] == g.user %}
+                        <button class="btn btn-primary btn-sm w-75"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target="#collapse{{ p['user'].username|replace(' ', '') }}"
+                                aria-expanded="true"
+                                aria-controls="collapse{{ p['user'].username|replace(' ', '') }}">
+                            {{ p["user"].username }}
+                        </button>
+                        {% else %}
+                        <button class="btn btn-secondary btn-sm w-75"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target="#collapse{{ p['user'].username|replace(' ', '') }}"
+                                aria-expanded="true"
+                                aria-controls="collapse{{ p['user'].username|replace(' ', '') }}">
+                            {{ p["user"].username }}
+                        </button>
+                        {% endif %}
+                    </div>
+                    <div class="col-2">
+                        {{ p["points"] }}
+                        {% if p["points_recent"] %}
+                            {% if p["points_recent"] > 0 %}
+                            <span class="badge rounded bg-success p-1"><small>+{{ p["points_recent"] }}</small></span>
+                            {% else %}
+                            <span class="badge rounded bg-danger p-1"><small>{{ p["points_recent"] }}</small></span>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge rounded bg-info p-1"><small>+0</small></span>
+                        {% endif %}
+                    </div>
+                    <div class="col-2">
+                        {{ p["times_bet"] }}
+                        {% if p["bet_recent"] %}
+                        <span class="badge rounded bg-success p-1"><small>+1</small></span>
+                        {% else %}
+                        <span class="badge rounded bg-info p-1"><small>+0</small></span>
+                        {% endif %}
+                    </div>
+                    <div class="col-2">
+                        {{ p["exact"] }}
+                        {% if p["exact_recent"] %}
+                        <span class="badge rounded bg-success p-1"><small>+{{ p["exact_recent"] }}</small></span>
+                        {% else %}
+                        <span class="badge rounded bg-info p-1"><small>+0</small></span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="collapse"
+                 id="collapse{{ p['user'].username|replace(' ', '') }}"
+                 aria-labelledby="header{{ p['user'].username|replace(' ', '') }}"
+                 data-parent="#rankingTable">
+                <div class="card-body">
+                    {% for bet in p["bets"] %}
+                    <div class="row">
+                        <div class="col-1 text-center">{{ loop.index }}</div>
+                        <div class="col-2">
+                            <small class="text-left">
+                                {{ bet.tournament.place }}
+                            </small>
+                        </div>
+                        <div class="col-3 text-center">
+                            <small>
+                                {{ bet.tournament.date_time.strftime("%d.%m.%Y %H:%M") }}
+                            </small>
+                        </div>
+                        <div class="col-2 text-center">
+                            <small>
+                                {% if bet|attr(system) %}
+                                {% if bet|attr(system) > 0 %}
+                                <span class="badge rounded bg-success p-1"><small>+{{ bet|attr(system) }}</small></span>
+                                {% else %}
+                                <span class="badge rounded bg-danger p-1"><small>{{ bet|attr(system) }}</small></span>
+                                {% endif %}
+                                {% else %}
+                                <span class="badge rounded bg-info p-1"><small>+{{ bet|attr(system) }}</small></span>
+                                {% endif %}
+                            </small>
+                        </div>
+                        <div class="col-2 text-center">
+                            <small>
+                                <span class="badge rounded bg-success p-1">+1</span>
+                            </small>
+                        </div>
+                        <div class="col-2 text-center">
+                            <small>
+                                {% if bet.times_exact %}
+                                <span class="badge rounded bg-success p-1"><small>+{{ bet.times_exact }}</small></span>
+                                {% else %}
+                                <span class="badge rounded bg-info p-1"><small>+{{ bet.times_exact }}</small></span>
+                                {% endif %}
+                            </small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}

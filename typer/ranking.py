@@ -17,17 +17,20 @@ def ranking(system):
     users = pony_db.User.select()
     last_tournament = pony_db.Tournaments.select(lambda t: t.status == "archiwum").sort_by(desc(pony_db.Tournaments.date_time)).first()
     for user in users:
-        points.append((
-            user,
-            get_points_by_system(user, system),
-            sum(p.times_exact for p in pony_db.Points if p.user == user),
-            pony_db.Points.select(lambda p: p.user == user).count(),
-            get_last_tournament_points(user, system, last_tournament),
-            sum(p.times_exact for p in pony_db.Points if p.user == user and p.tournament == last_tournament),
-            True if pony_db.Points.get(lambda p: p.user == user and p.tournament == last_tournament) else False
-        ))
+        bets = pony_db.Points.select(lambda p: p.user == user)
+        recent_bet = pony_db.Points.get(lambda p: p.user == user and p.tournament == last_tournament)
+        points.append({
+            "user": user,
+            "points": get_points_by_system(user, system),
+            "exact": sum(p.times_exact for p in pony_db.Points if p.user == user),
+            "times_bet": bets.count(),
+            "points_recent": get_last_tournament_points(user, system, last_tournament),
+            "exact_recent": sum(p.times_exact for p in pony_db.Points if p.user == user and p.tournament == last_tournament),
+            "bet_recent": True if recent_bet else False,
+            "bets": bets
+        })
     return render_template('ranking/ranking.html',
-                           points=sorted(points, key=itemgetter(1, 2), reverse=True),
+                           points=sorted(points, key=itemgetter("points", "exact"), reverse=True),
                            system=system)
 
 
