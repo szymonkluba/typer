@@ -116,7 +116,7 @@ def is_qualification_today():
     delta = 1
     if qualifications:
         for q in qualifications:
-            t_date_time = q.date_time + timedelta(hours=-1, minutes=delta)
+            t_date_time = q.date_time + timedelta(hours=-3, minutes=delta)
             delta += 2
             time_string = datetime.strftime(t_date_time, "%H:%M")
             schedule.every().day.at(time_string).do(schedule_participants_checking,

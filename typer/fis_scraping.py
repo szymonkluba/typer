@@ -70,7 +70,7 @@ def create_new_tournament(tree, typ, fis_id, time_starts):
 @db_session
 def check_new_tournaments():
     last_fis_id = pony_db.get_last_fis_id()
-    for fis_id in range(last_fis_id, 5900):
+    for fis_id in range(last_fis_id, 6500):
         if not pony_db.fis_id_exists(fis_id):
             page = requests.get(f'{PATH_RACES}{fis_id}')
             tree = html.fromstring(page.content)
