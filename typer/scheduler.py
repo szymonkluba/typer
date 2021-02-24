@@ -130,7 +130,7 @@ if __name__ == '__main__':
     print("LOG: Scheduled checking of tournament happening", flush=True)
     schedule.every().day.at('08:10').do(is_qualification_today)
     print("LOG: Scheduled checking of qualifications happening", flush=True)
-    schedule.every().day.at('12:10').do(is_qualification_today)
+    schedule.every().day.at('12:30').do(is_qualification_today)
     print("LOG: Scheduled checking of qualifications happening", flush=True)
     schedule.every(1).hours.do(tournament_updates)
     print("LOG: Scheduled checking of tournaments updates", flush=True)
