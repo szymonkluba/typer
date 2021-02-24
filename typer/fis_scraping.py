@@ -33,7 +33,7 @@ def check_children(field):
 
 
 def check_world_cup(field):
-    if 'World Cup' in field[0] or 'World Championship' in field[0]:
+    if 'World Cup' in field[0] or 'World Championship' in field[0] or 'World Ski Championships' in field[0]:
         return True
     return False
 
