@@ -21,7 +21,7 @@ XPATH_TIME = '//*[@class="time__value"]/text()'
 
 
 def check_woman(field):
-    if 'Women' in field[0]:
+    if 'Women' in field[0] or "Mixed" in field[0]:
         return True
     return False
 
