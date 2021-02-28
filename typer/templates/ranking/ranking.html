@@ -73,11 +73,13 @@
                     </div>
                     <div class="col-2">
                         {{ p["points"] }}
-                        {% if p["points_recent"] %}
-                            {% if p["points_recent"] > 0 %}
-                            <span class="badge rounded bg-success p-1"><small>+{{ p["points_recent"] }}</small></span>
+                        {% if p.bets|list|last|attr("tournament") == last_tournament %}
+                            {% if p.bets|list|last|attr(system) > 0 %}
+                                <span class="badge rounded bg-success p-1"><small>+{{ p.bets|list|last|attr(system) }}</small></span>
+                            {% elif p.bets|list|last|attr(system) < 0 %}
+                                <span class="badge rounded bg-danger p-1"><small>{{ p.bets|list|last|attr(system) }}</small></span>
                             {% else %}
-                            <span class="badge rounded bg-danger p-1"><small>{{ p["points_recent"] }}</small></span>
+                                <span class="badge rounded bg-info p-1"><small>+0</small></span>
                             {% endif %}
                         {% else %}
                             <span class="badge rounded bg-info p-1"><small>+0</small></span>
@@ -85,18 +87,22 @@
                     </div>
                     <div class="col-2">
                         {{ p["times_bet"] }}
-                        {% if p["bet_recent"] %}
-                        <span class="badge rounded bg-success p-1"><small>+1</small></span>
+                        {% if p.bets|list|last|attr("tournament")|attr("id") == last_tournament.id %}
+                            <span class="badge rounded bg-success p-1"><small>+1</small></span>
                         {% else %}
-                        <span class="badge rounded bg-info p-1"><small>+0</small></span>
+                            <span class="badge rounded bg-info p-1"><small>+0</small></span>
                         {% endif %}
                     </div>
                     <div class="col-2">
                         {{ p["exact"] }}
-                        {% if p["exact_recent"] %}
-                        <span class="badge rounded bg-success p-1"><small>+{{ p["exact_recent"] }}</small></span>
+                        {% if p.bets|list|last|attr("tournament")|attr("id") == last_tournament.id %}
+                            {% if p.bets|list|last|attr("times_exact") %}
+                                <span class="badge rounded bg-success p-1"><small>+{{ p.bets|list|last|attr("times_exact") }}</small></span>
+                            {% else %}
+                                <span class="badge rounded bg-info p-1"><small>+0</small></span>
+                            {% endif %}
                         {% else %}
-                        <span class="badge rounded bg-info p-1"><small>+0</small></span>
+                            <span class="badge rounded bg-info p-1"><small>+0</small></span>
                         {% endif %}
                     </div>
                 </div>
