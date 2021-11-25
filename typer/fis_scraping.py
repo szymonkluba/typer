@@ -1,4 +1,5 @@
-<<<<<<< HEAD
+"""
+<<<<<< HEAD
 from lxml import html
 from pony.orm import db_session
 from schedule import clear
@@ -250,7 +251,7 @@ def get_participants(qualifications):
                     participant = participant.replace('\n', '').strip()
                     pony_db.new_participant(participant, quali.tournament_id)
                     clear('checking_participants')
-=======
+======="""
 from lxml import html
 from pony.orm import db_session
 from schedule import clear
@@ -502,4 +503,3 @@ def get_participants(qualifications):
                     participant = participant.replace('\n', '').strip()
                     pony_db.new_participant(participant, quali.tournament_id)
                     clear('checking_participants')
->>>>>>> origin/master

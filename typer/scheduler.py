@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+"""
 import sys
 import schedule
 import time
@@ -144,7 +144,7 @@ if __name__ == '__main__':
     while True:
         schedule.run_pending()
         time.sleep(1)
-=======
+"""
 import sys
 import schedule
 import time
@@ -290,4 +290,3 @@ if __name__ == '__main__':
     while True:
         schedule.run_pending()
         time.sleep(1)
->>>>>>> origin/master
